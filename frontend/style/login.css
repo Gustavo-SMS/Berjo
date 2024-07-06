@@ -1,0 +1,62 @@
+div.container {
+    border: 1px solid black;
+
+    width: 100vw;
+    height: 100vh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: #ced4da;
+}
+
+div.box {
+    width: 20vw;
+    height: 33vh;
+
+    border-radius: 8px;
+    box-shadow: 1px 1px 5px #333;
+    background-color: #f8f9fa;
+
+    display: flex;
+
+    align-items: start;
+    justify-content: center;
+
+    padding: 40px;
+
+    overflow: scroll;
+}
+
+label, button {
+    display: block;
+
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+}
+
+label, input {
+    width: 250px;
+    height: 30px;
+}
+
+button {
+    margin-top: 20px;
+
+    width: 250px;
+    height: 35px;
+
+    border-radius: 8px;
+}
+
+input {
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+
+    margin-bottom: 20px;
+
+    border-radius: 8px;
+}

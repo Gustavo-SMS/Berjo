@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro cliente</title>
+
+    <link rel="stylesheet" href="style/global.css">
+    <link rel="stylesheet" href="style/create_customer.css">
+</head>
+<body>
+
+    <div class="container">
+        <div class="box">
+            <form action="http://127.0.0.1:3333/customer" method="post">
+                <div class="person">
+                    <label for="name">Nome</label>
+                    <input type="text" name="name" id="name">
+                    
+                    <label for="email">Email</label>
+                    <input type="text" name="email" id="email">
+            
+                    <label for="phone">Telefone</label>
+                    <input type="number" name="phone" id="phone">
+                </div>
+        
+                <div class="adress">
+                    <label for="street">Rua</label>
+                    <input type="text" name="street" id="street">
+            
+                    <label for="house_number">Número</label>
+                    <input type="number" name="house_number" id="house_number">
+            
+                    <label for="city">Cidade</label>
+                    <input type="text" name="city" id="city">
+            
+                    <label for="district">Bairro</label>
+                    <input type="text" name="district" id="district">
+            
+                    <label for="zip">CEP</label>
+                    <input type="number" name="zip" id="zip">
+                </div>
+        
+                <button type="submit">Cadastrar</button>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>
