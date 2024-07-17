@@ -19,8 +19,8 @@ const getOne = async (req, res) => {
 }
 
 const createOrder = async (req, res) => {
-    const { cliente, quantity, type, color, width, height, command_height, model } = req.body
-    const customer_id = "307b37a5-88b6-40f7-94e0-93ee6c809570"
+    const { customer, quantity, type, color, width, height, command_height, model } = req.body
+    //const customer_id = "f32ea0c1-5bf5-43e3-9144-203e62e70c6c"
     const order = await prismaClient.order.create({
         data: {
             quantity: parseInt(quantity),
@@ -30,17 +30,18 @@ const createOrder = async (req, res) => {
             height: parseFloat(height),
             command_height: parseFloat(command_height),
             model,
+            status: "Em espera",
             customer: {
-                connect: { id: customer_id }
+                connect: { id: customer }
             }
         }
     })
 
-    return res.status(200).json(`cliente: ${cliente}, quantidade: ${quantity}, ${order}`)
+    return res.status(200).json(`cliente: ${customer}, quantidade: ${quantity}, ${order}`)
 }
 
 const updateOrder = async (req, res) => {
-    const { id, quantity, type, color, width, height, command_height, model  } = req.body
+    const { id, quantity, type, color, width, height, command_height, model, status } = req.body
 
     const order = await prismaClient.order.update({
         where: {
@@ -53,7 +54,8 @@ const updateOrder = async (req, res) => {
             width: width || undefined, 
             height: height || undefined, 
             command_height: command_height || undefined, 
-            model: model || undefined
+            model: model || undefined,
+            status: status || undefined
         }
     })
 

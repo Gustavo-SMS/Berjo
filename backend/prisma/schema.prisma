@@ -46,13 +46,14 @@ model Address {
 
 model Order {
   id              String   @id @default(uuid())
-  quantity      Int
+  quantity        Int
   type            String
-  color             String
-  width         Float
+  color           String
+  width           Float
   height          Float
   command_height  Float
-  model          String
+  model           String
+  status          String
   created_at      DateTime @default(now())
 
   customer        Customer @relation(fields: [customer_id], references: [id])

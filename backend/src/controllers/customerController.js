@@ -54,6 +54,8 @@ const updateCustomer = async (req, res) => {
             phone
         }
     })
+
+    return res.json(customer)
 }
 
 const deleteCustomer = async (req, res) => {
