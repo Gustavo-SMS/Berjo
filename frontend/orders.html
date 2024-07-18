@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedidos</title>
+</head>
+<body>
+    
+
+    <script>
+        fetch("http://127.0.0.1:3333/orders").then((res) => {
+            res.json().then((orders) => {
+                orders.map((order) => {
+                    document.querySelector('body').innerHTML += `<li> ${order.type} </li>`
+                })
+                console.log(orders)
+            })
+        })
+
+        fetch("http://127.0.0.1:3333/orders/5e019d69-7bb5-495f-9ee6-3e70ff9e7d8a").then((res) => {
+            res.json().then((orders) => {
+                console.log(orders)
+            })
+        })
+
+        // var requestURL = "http://127.0.0.1:3333/order";
+
+        // var request = new XMLHttpRequest();
+
+        // request.open("GET", requestURL);
+
+        // request.responseType = "json";
+        // request.send();
+
+        // request.onload = function () {
+        //     var orders = request.response;
+        //     console.log(orders)
+        // };
+
+
+    </script>
+</body>
+</html>

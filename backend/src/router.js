@@ -25,17 +25,17 @@ router.post('/login', userController.validateLogin)
 //     }
 // })
 
-router.get('/customer', customerController.getAll)
-router.get('/customer/:id', customerController.getOne)
-router.post('/customer', customerController.createCustomer)
-router.post('/customer/up', customerController.updateCustomer)
-router.post('/customer/del/:id', customerController.deleteCustomer)
+router.get('/customers', customerController.getAll)
+router.get('/customers/:id', customerController.getOne)
+router.post('/customers', customerController.createCustomer)
+router.post('/customers/up', customerController.updateCustomer)
+router.post('/customers/del/:id', customerController.deleteCustomer)
 
 
-router.get('/order', orderController.getAll)
-router.get('/order/:id', orderController.getOne)
-router.post('/order', orderController.createOrder)
-router.post('/order/up', orderController.updateOrder)
-router.post('/order/del/:id', orderController.deleteOrder)
+router.get('/orders', orderController.getAll)
+router.get('/orders/:id', orderController.getOne)
+router.post('/orders', orderController.createOrder)
+router.post('/orders/up', orderController.updateOrder)
+router.post('/orders/del/:id', orderController.deleteOrder)
 
 module.exports = router

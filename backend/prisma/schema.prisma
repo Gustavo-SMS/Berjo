@@ -53,7 +53,7 @@ model Order {
   height          Float
   command_height  Float
   model           String
-  status          String
+  status          String   @default("Em espera")
   created_at      DateTime @default(now())
 
   customer        Customer @relation(fields: [customer_id], references: [id])
