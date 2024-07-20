@@ -19,8 +19,8 @@ const getOne = async (req, res) => {
 }
 
 const createOrder = async (req, res) => {
-    const { customer, quantity, type, color, width, height, command_height, model } = req.body
-    
+    const { /*customer,*/quantity, type, color, width, height, command_height, model } = req.body
+    const customer = 'cd485930-e4c0-4d54-8c8b-3140cb4d5fa3'
     const order = await prismaClient.order.create({
         data: {
             quantity: parseInt(quantity),
@@ -36,7 +36,7 @@ const createOrder = async (req, res) => {
         }
     })
 
-    return res.status(200).json(`cliente: ${customer}, quantidade: ${quantity}, ${order}`)
+    return res.status(200).json(order)
 }
 
 const updateOrder = async (req, res) => {
