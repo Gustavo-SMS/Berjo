@@ -78,11 +78,11 @@ const validateLogin = async (req, res) => {
 
         const token = jwt.sign(
             {
-                id: userExists._id
+                id: userExists.id
             },
             secret
             )
-
+        res.cookie('token', token )
         res.status(200).json({ msg: 'Autenticação realizada com sucesso', token })
     } catch (err) {
         console.log(err)

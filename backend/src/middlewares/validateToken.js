@@ -1,8 +1,10 @@
+const jwt = require('jsonwebtoken')
 
 function checkToken(req, res, next) {
-    const authHeader = req.headers['authorization']
-    const token = authHeader && authHeader.split(" ")[1]
-
+    // const authHeader = req.headers['authorization']
+    // const token = authHeader && authHeader.split(" ")[1]
+    const cookies = req.cookies
+    const token = cookies.token
     if(!token) {
         return res.status(404).json({ msg: 'Acesso negado!' })
     }
