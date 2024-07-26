@@ -1,7 +1,15 @@
 const { prismaClient } = require('../database/prismaClient')
 
 const getAll = async (req, res) => {
-    const orders = await prismaClient.order.findMany()
+    const orders = await prismaClient.order.findMany({
+        include: {
+            customer: {
+                select: {
+                    name: true
+                }
+            }
+        }
+    })
 
     return res.json(orders)
 }
@@ -16,6 +24,30 @@ const getOne = async (req, res) => {
     })
 
     return res.json(order)
+}
+
+const getOrdersByCustomer = async (req, res) => {
+    const id = req.params.id
+
+    const orders = await prismaClient.order.findMany({
+        where: {
+            customer_id: id
+        }
+    })
+
+    return res.json(orders)
+}
+
+const getByStatus = async (req, res) => {
+    const status = req.params.status
+
+    const orders = await prismaClient.order.findMany({
+        where: {
+            status
+        }
+    })
+
+    return res.json(orders)
 }
 
 const createOrder = async (req, res) => {
@@ -77,6 +109,8 @@ const deleteOrder = async (req, res) => {
 module.exports = {
     getAll,
     getOne,
+    getOrdersByCustomer,
+    getByStatus,
     createOrder,
     updateOrder,
     deleteOrder,
