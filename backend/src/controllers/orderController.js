@@ -40,7 +40,7 @@ const getOrdersByCustomer = async (req, res) => {
 
 const getByStatus = async (req, res) => {
     const status = req.params.status
-
+    
     const orders = await prismaClient.order.findMany({
         where: {
             status
