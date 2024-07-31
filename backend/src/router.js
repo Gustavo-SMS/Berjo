@@ -22,7 +22,7 @@ router.post('/customers/del/:id', customerController.deleteCustomer)
 
 router.get('/orders', orderController.getAll)
 router.get('/orders/:id', orderController.getOne)
-router.get('/orders/status/:status', orderController.getByStatus)
+router.get('/orders/status/:status', orderController.getOrdersByStatus)
 router.get('/customers/orders/:id', orderController.getOrdersByCustomer)
 router.post('/orders', orderController.createOrder)
 router.post('/orders/up', orderController.updateOrder)

@@ -19,7 +19,12 @@
     </div>
    
     <script>
-        fetch("http://127.0.0.1:3333/orders").then((res) => {
+        fetch("http://127.0.0.1:3333/orders", {
+            method: 'GET',
+            headers: {
+                'Content-type': 'application/json'
+            }
+        }).then((res) => {
             res.json().then((orders) => {
                 orders.map((order) => {
                     document.querySelector('.box').innerHTML += `<div class="row"> 

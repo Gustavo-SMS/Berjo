@@ -38,7 +38,7 @@ const getOrdersByCustomer = async (req, res) => {
     return res.json(orders)
 }
 
-const getByStatus = async (req, res) => {
+const getOrdersByStatus = async (req, res) => {
     const status = req.params.status
     
     const orders = await prismaClient.order.findMany({
@@ -51,8 +51,8 @@ const getByStatus = async (req, res) => {
 }
 
 const createOrder = async (req, res) => {
-    const { /*customer,*/quantity, type, color, width, height, command_height, model } = req.body
-    const customer = 'cd485930-e4c0-4d54-8c8b-3140cb4d5fa3'
+    const { customer, quantity, type, color, width, height, command_height, model } = req.body
+    
     const order = await prismaClient.order.create({
         data: {
             quantity: parseInt(quantity),
@@ -110,7 +110,7 @@ module.exports = {
     getAll,
     getOne,
     getOrdersByCustomer,
-    getByStatus,
+    getOrdersByStatus,
     createOrder,
     updateOrder,
     deleteOrder,

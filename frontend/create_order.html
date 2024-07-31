@@ -71,6 +71,19 @@
     <script>
         const form = document.querySelector('.form')
 
+        fetch('http://127.0.0.1:3333/customers', {
+            method: 'GET',
+            headers: {
+                'Content-type': 'application/json'
+            }
+        }).then((res) => {
+            res.json().then((orders) => {
+                orders.map((order) => {
+                    console.log(order.id, order.name)
+                })
+            })
+        })
+
         form.addEventListener('submit', event => {
             event.preventDefault()
 
