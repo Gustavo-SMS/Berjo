@@ -44,6 +44,13 @@ const getOrdersByStatus = async (req, res) => {
     const orders = await prismaClient.order.findMany({
         where: {
             status
+        },
+        include: {
+            customer: {
+                select: {
+                    name: true
+                }
+            }
         }
     })
 

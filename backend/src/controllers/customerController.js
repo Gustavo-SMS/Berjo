@@ -1,7 +1,11 @@
 const { prismaClient } = require('../database/prismaClient')
 
 const getAll = async (req, res) => {
-    const customers = await prismaClient.customer.findMany()
+    const customers = await prismaClient.customer.findMany({
+        include: {
+            address: true
+        }
+    })
 
     return res.json(customers)
 }

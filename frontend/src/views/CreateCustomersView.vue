@@ -1,16 +1,5 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro cliente</title>
-
-    <link rel="stylesheet" href="style/global.css">
-    <link rel="stylesheet" href="style/create_customer.css">
-</head>
-<body>
-
-    <div class="container">
+<template>
+    <div class="wrapper">
         <div class="box">
             <form action="" class="form">
                 <div class="person">
@@ -41,33 +30,71 @@
                     <input type="number" name="zip" id="zip">
                 </div>
         
-                <button type="submit">Cadastrar</button>
+                <button type="submit" class="btn btn-primary">Cadastrar</button>
             </form>
         </div>
     </div>
+</template>
 
-    <script>
-        const form = document.querySelector('.form')
+<style scoped>
+div.wrapper {
+    width: 100vw;
+    height: 100vh;
 
-        form.addEventListener('submit', event => {
-            event.preventDefault()
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-            const formData = new FormData(form)
-            const data = Object.fromEntries(formData)
+}
 
-            fetch('http://127.0.0.1:3333/customers', {
-                method: 'POST',
-                headers: {
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(data)
+div.box {
+    width: 70vw;
+    height: 60vh;
 
-            })
-                .then(res => res.json())
-                .then(data => console.log(data))
-        })
+    border-radius: 8px;
+    box-shadow: 1px 1px 5px #333;
+    background-color: #f8f9fa;
 
-    </script>
+    padding: 40px;
 
-</body>
-</html>
+    overflow: scroll;
+}
+
+form {
+    display: flex;
+
+    align-items: start;
+    justify-content: space-between;
+    
+    flex-wrap: wrap;
+}
+
+label, button {
+    display: block;
+
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+}
+
+label {
+    width: fit-content;
+    height: fit-content;
+
+    margin-bottom: 10px;
+}
+
+input {
+    width: 400px;
+    height: 30px;
+    
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+
+    margin-bottom:20px;
+
+    border-radius: 8px;
+}
+
+</style>
