@@ -23,7 +23,7 @@
         </div>
 
         <div class="col-1 row justify-content-center">
-            <button class="btn btn-danger col-6">X</button>
+            <button type="reset" class="btn btn-danger col-6">X</button>
         </div>
     </div>
     

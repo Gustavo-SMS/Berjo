@@ -1,9 +1,10 @@
 <template>
     <div class="wrapper">
         <div class="box">
-            <form action="">
+            <form>
                 <label for="" class="form-label">Cliente</label>
-                <SelectCustomers />
+                <SelectCustomers @selectedOption="selectedCustomerID" />
+
                 <div class="row">
                     <div class="col-1">
                         <label for="" class="form-label">Quantidade</label>
@@ -30,7 +31,7 @@
                 
                     <OrderRow />
                 
-                <button type="reset" class="btn btn-primary w-100 py-1">Enviar</button>
+                <button @click="submitForm" type="submit" class="btn btn-primary w-100 py-1">Enviar</button>
             </form>
         </div>
     </div>
@@ -39,7 +40,32 @@
 <script setup>
 import SelectCustomers from '../components/formCreateOrder/SelectCustomers.vue';
 import OrderRow from '../components/formCreateOrder/OrderRow.vue'
+import { ref } from 'vue';
 
+    let customerId = ref('')
+
+    function selectedCustomerID(event, arrayNomes) {
+        customerId = arrayNomes[event.target.selectedIndex].id
+    }
+
+    function submitForm(event) {
+        event.preventDefault()
+
+        const form = document.querySelector('form')
+        const formData = new FormData(form)
+        const data = Object.fromEntries(formData)
+        data.customer = customerId
+
+        fetch('http://127.0.0.1:3333/orders', {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(data)
+            })
+            .then(res => res.json())
+            .then(data => console.log(data))
+    }
 </script>
 
 <style scoped>
