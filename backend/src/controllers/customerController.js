@@ -22,6 +22,18 @@ const getOne = async (req, res) => {
     return res.json(customer)
 }
 
+const getCustomerByName = async (req, res) => {
+    const name = req.params.name
+
+    const customer = await prismaClient.customer.findMany({
+        where: {
+            name
+        }
+    })
+
+    return res.json(customer)
+}
+
 const createCustomer = async (req, res) => {
     const { name, email, phone, street, house_number, city, district, zip  } = req.body
     
@@ -92,6 +104,7 @@ const deleteCustomer = async (req, res) => {
 module.exports = {
     getAll,
     getOne,
+    getCustomerByName,
     createCustomer,
     updateCustomer,
     deleteCustomer,
