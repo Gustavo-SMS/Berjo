@@ -60,18 +60,33 @@ const createCustomer = async (req, res) => {
 const updateCustomer = async (req, res) => {
     const { id, name, email, phone, street, house_number, city, district, zip  } = req.body
     
-    const customer = await prismaClient.customer.update({
+    const customer = prismaClient.customer.update({
         where: {
             id
         },
         data: {
-            name,
-            email,
-            phone
+            name: name || undefined,
+            email: email || undefined,
+            phone: phone || undefined
         }
     })
 
-    return res.json(customer)
+    const address = prismaClient.address.update({
+        where: {
+            customer_id: id
+        },
+        data: {
+            street: street || undefined,
+            house_number: house_number || undefined,
+            city: city || undefined,
+            district: district || undefined,
+            zip: zip || undefined
+        }
+    })
+
+    const transaction = await prismaClient.$transaction([customer, address])
+
+    return res.json(transaction)
 }
 
 const deleteCustomer = async (req, res) => {

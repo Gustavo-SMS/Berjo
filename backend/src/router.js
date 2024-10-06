@@ -1,8 +1,10 @@
 const express = require('express')
 
-const orderController = require("./controllers/orderController")
-const customerController = require("./controllers/customerController")
 const userController = require("./controllers/userController")
+const customerController = require("./controllers/customerController")
+const orderController = require("./controllers/orderController")
+const blindController = require("./controllers/blindController")
+
 const checkToken = require("./middlewares/validateToken")
 
 const router = express.Router()
@@ -20,6 +22,13 @@ router.get('/customers/name/:name', customerController.getCustomerByName)
 router.post('/customers', customerController.createCustomer)
 router.patch('/customers', customerController.updateCustomer)
 router.delete('/customers/:id', customerController.deleteCustomer)
+
+router.get('/blinds', blindController.getAll)
+router.get('/blinds/type/:type', blindController.getByType)
+router.get('/blinds/collection/:collection', blindController.getByCollection)
+router.post('/blinds', blindController.createBlind)
+router.patch('/blinds', blindController.updateBlind)
+router.delete('/blinds/:id', blindController.deleteBlind)
 
 router.get('/orders', orderController.getAll)
 router.get('/orders/:id', orderController.getOne)

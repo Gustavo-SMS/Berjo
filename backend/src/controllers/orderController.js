@@ -58,19 +58,20 @@ const getOrdersByStatus = async (req, res) => {
 }
 
 const createOrder = async (req, res) => {
-    const { customer, quantity, type, color, width, height, command_height, model } = req.body
+    const { customer, quantity, blind, width, height, command_height, model } = req.body
     
     const order = await prismaClient.order.create({
         data: {
             quantity: parseInt(quantity),
-            type,
-            color,
             width: parseFloat(width),
             height: parseFloat(height),
             command_height: parseFloat(command_height),
             model,
             customer: {
                 connect: { id: customer }
+            },
+            blind: {
+                connect: { id: blind }
             }
         }
     })
@@ -79,7 +80,7 @@ const createOrder = async (req, res) => {
 }
 
 const updateOrder = async (req, res) => {
-    const { id, quantity, type, color, width, height, command_height, model, status } = req.body
+    const { id, quantity, blind, width, height, command_height, model, status } = req.body
 
     const order = await prismaClient.order.update({
         where: {
@@ -87,13 +88,12 @@ const updateOrder = async (req, res) => {
         },
         data: {
             quantity: quantity || undefined,
-            type: type || undefined, 
-            color: color || undefined, 
             width: width || undefined, 
             height: height || undefined, 
             command_height: command_height || undefined, 
             model: model || undefined,
-            status: status || undefined
+            status: status || undefined,
+            blind_id: blind || undefined
         }
     })
 
