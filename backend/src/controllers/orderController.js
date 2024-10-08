@@ -7,7 +7,8 @@ const getAll = async (req, res) => {
                 select: {
                     name: true
                 }
-            }
+            },
+            blind: true
         }
     })
 
@@ -20,6 +21,9 @@ const getOne = async (req, res) => {
     const order = await prismaClient.order.findUnique({
         where: {
             id
+        },
+        include: {
+            blind: true
         }
     })
 
@@ -56,22 +60,19 @@ const getOrdersByStatus = async (req, res) => {
 
     return res.json(orders)
 }
-
+   
 const createOrder = async (req, res) => {
-    const { customer, quantity, blind, width, height, command_height, model } = req.body
+    const { customer, blinds/*square metre*/ } = req.body
     
     const order = await prismaClient.order.create({
         data: {
-            quantity: parseInt(quantity),
-            width: parseFloat(width),
-            height: parseFloat(height),
-            command_height: parseFloat(command_height),
-            model,
             customer: {
                 connect: { id: customer }
             },
+            total_price: 100,
             blind: {
-                connect: { id: blind }
+                create: 
+                    blinds
             }
         }
     })
