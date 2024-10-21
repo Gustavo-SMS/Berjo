@@ -74,7 +74,7 @@ const validateLogin = async (req, res) => {
 
 
     try {
-        const secret = process.env.SECRET
+        const secret = process.env.JWT_SECRET
 
         const token = jwt.sign(
             {
