@@ -17,7 +17,7 @@ const validateId = async (req, res, next) => {
         res.order = order 
 
         if(!order) {
-            res.status(404).json({ error: 'Pedido não encontrado' })
+            return res.status(404).json({ error: 'Pedido não encontrado' })
         }
     } catch (error) {
         return res.status(500).json({ error: error.message })

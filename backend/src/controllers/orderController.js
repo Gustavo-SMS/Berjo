@@ -13,8 +13,8 @@ const getAll = async (req, res) => {
             }
         })
 
-        if(!order) {
-            res.status(404).json({ error: 'Nenhum pedido foi encontrado' })
+        if(orders.length === 0) {
+            return res.status(404).json({ error: 'Nenhum pedido foi encontrado' })
         }
 
         return res.status(200).json(orders)
@@ -37,7 +37,7 @@ const getOne = async (req, res) => {
         })
 
         if(!order) {
-            res.status(404).json({ error: 'Pedido não encontrado' })
+            return res.status(404).json({ error: 'Pedido não encontrado' })
         }
 
         return res.status(200).json(order)
@@ -56,8 +56,8 @@ const getOrdersByCustomer = async (req, res) => {
             }
         })
 
-        if(!orders) {
-            res.status(404).json({ error: 'Nenhum pedido foi encontrado' })
+        if(orders.length === 0) {
+            return res.status(404).json({ error: 'Nenhum pedido foi encontrado' })
         }
 
         return res.status(200).json(orders)
@@ -83,8 +83,8 @@ const getOrdersByStatus = async (req, res) => {
             }
         })
 
-        if(!orders) {
-            res.status(404).json({ error: 'Nenhum pedido foi encontrado' })
+        if(orders.length === 0) {
+            return res.status(404).json({ error: 'Nenhum pedido foi encontrado' })
         }
 
         return res.status(200).json(orders)
@@ -111,7 +111,7 @@ const createOrder = async (req, res) => {
         })
 
         if(!order) {
-            res.status(404).json({ error: 'Não foi possível criar o pedido' })
+            return res.status(404).json({ error: 'Não foi possível criar o pedido' })
         }
 
         return res.status(201).json(order)
@@ -139,8 +139,8 @@ const updateOrder = async (req, res) => {
             }
         })
 
-        if(!order) {
-            res.status(404).json({ error: 'Não foi possível atualizar o pedido' })
+        if(!order) {S
+            return res.status(404).json({ error: 'Não foi possível atualizar o pedido' })
         }
 
         return res.status(201).json(order)
@@ -160,7 +160,7 @@ const deleteOrder = async (req, res) => {
         })
 
         if(!order) {
-            res.status(404).json({ error: 'Não foi possível excluir o pedido' })
+            return res.status(404).json({ error: 'Não foi possível excluir o pedido' })
         }
 
         return res.status(200).json(order)
