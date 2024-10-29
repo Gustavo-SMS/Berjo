@@ -94,7 +94,7 @@ const getOrdersByStatus = async (req, res) => {
 }
    
 const createOrder = async (req, res) => {
-    const { customer, blinds/*square metre*/ } = req.body
+    const { customer, blinds } = req.body
 
     try {
         const order = await prismaClient.order.create({
@@ -121,7 +121,7 @@ const createOrder = async (req, res) => {
 }
 
 const updateOrder = async (req, res) => {
-    const { id, quantity, blind, width, height, command_height, model, status } = req.body
+    const { id, status } = req.body
 
     try {
         const order = await prismaClient.order.update({
@@ -129,13 +129,7 @@ const updateOrder = async (req, res) => {
                 id
             },
             data: {
-                quantity: quantity || undefined,
-                width: width || undefined, 
-                height: height || undefined, 
-                command_height: command_height || undefined, 
-                model: model || undefined,
-                status: status || undefined,
-                blind_id: blind || undefined
+                status: status || undefined
             }
         })
 
@@ -153,17 +147,26 @@ const deleteOrder = async (req, res) => {
     const id = req.params.id
 
     try {
+        const blind = await prismaClient.blind.deleteMany({
+            where: {
+                order_id: id
+            }
+        })
+
         const order = await prismaClient.order.delete({
             where: {
                 id
             }
         })
 
-        if(!order) {
+
+        const transaction = await prismaClient.$transaction([blind, order])
+
+        if(!transaction) {
             return res.status(404).json({ error: 'Não foi possível excluir o pedido' })
         }
 
-        return res.status(200).json(order)
+        return res.status(200).json(transaction)
     } catch (error) {
         return res.status(500).json({ error: error.message })
     }
