@@ -14,48 +14,8 @@ const getAll = async (req, res) => {
     }
 }
 
-const getByType = async (req, res) => {
-    const type = req.params.type
-
-    try {
-        const blind = await prismaClient.blind.findMany({
-            where: {
-                type
-            }
-        })
-
-        if(blind.length === 0) {
-            return res.status(404).json({ error: 'Tipo não encontrado' })
-        }
-
-        return res.status(200).json(blindType)
-    } catch (error) {
-        return res.status(500).json({ error: error.message })
-    }
-}
-
-const getByCollection = async (req, res) => {
-    const collection = req.params.collection
-
-    try {
-        const blindType = await prismaClient.blind_Type.findMany({
-            where: {
-                collection
-            }
-        })
-
-        if(blindType.length === 0) {
-            return res.status(404).json({ error: 'Coleção não encontrada' })
-        }
-
-        return res.status(200).json(blindType)
-    } catch (error) {
-        return res.status(500).json({ error: error.message })
-    }
-}
-
 const createBlind = async (req, res) => {
-    const { quantity, width, height, command_height, model, observation, blindTypeId, square_metre } = req.body
+    const { quantity, width, height, command_height, model, observation, square_metre, blindTypeId, orderId } = req.body
 
     try {
         const blind = await prismaClient.blind.create({
@@ -67,8 +27,11 @@ const createBlind = async (req, res) => {
                 model,
                 observation,
                 square_metre: parseFloat(square_metre),
-                blind_Type: {
+                type: {
                     connect: { id: blindTypeId }
+                },
+                order: {
+                    connect: { id: orderId }
                 }
             }
         })
@@ -135,8 +98,6 @@ const deleteBlind = async (req, res) => {
 
 module.exports = {
     getAll,
-    getByType,
-    getByCollection,
     createBlind,
     updateBlind,
     deleteBlind

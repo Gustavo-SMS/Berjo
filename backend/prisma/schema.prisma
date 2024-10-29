@@ -71,8 +71,8 @@ model Blind {
   order           Order @relation(fields: [order_id], references: [id])
   order_id        String
 
-  type           Blind_Type @relation(fields: [type_id], references: [id])
-  type_id        String
+  type            Blind_Type @relation(fields: [type_id], references: [id])
+  type_id         String
 }
 
 model Blind_Type {
