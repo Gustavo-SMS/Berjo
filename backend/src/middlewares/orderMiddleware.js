@@ -26,6 +26,19 @@ const validateId = async (req, res, next) => {
     next()
 }
 
+const calcSquareMetre = async (req, res, next) => {
+    const { blinds } = req.body
+
+    blinds.forEach(blind => {
+        const square_metre = blind.width * blind.height
+        blind.square_metre = square_metre * blind.quantity
+    });
+
+    next()
+}
+
+
 module.exports = {
-    validateId
+    validateId,
+    calcSquareMetre
 }

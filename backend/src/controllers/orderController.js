@@ -92,9 +92,9 @@ const getOrdersByStatus = async (req, res) => {
         return res.status(500).json({ error: error.message })
     }
 }
-   
+
 const createOrder = async (req, res) => {
-    const { customer, blinds } = req.body
+    const { customer, total_price, blinds } = req.body
 
     try {
         const order = await prismaClient.order.create({
@@ -102,7 +102,7 @@ const createOrder = async (req, res) => {
                 customer: {
                     connect: { id: customer }
                 },
-                total_price: 100,
+                total_price,
                 blind: {
                     create: 
                         blinds

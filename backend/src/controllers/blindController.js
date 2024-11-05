@@ -14,8 +14,14 @@ const getAll = async (req, res) => {
     }
 }
 
+const calcSquareMetre = (quantity, width, height) => {
+    return (width * height) * quantity
+}
+
 const createBlind = async (req, res) => {
-    const { quantity, width, height, command_height, model, observation, square_metre, blindTypeId, orderId } = req.body
+    const { quantity, width, height, command_height, model, observation, blindTypeId, orderId } = req.body
+
+    const square_metre = calcSquareMetre(quantity, width, height)
 
     try {
         const blind = await prismaClient.blind.create({
@@ -26,7 +32,7 @@ const createBlind = async (req, res) => {
                 command_height: parseFloat(command_height),
                 model,
                 observation,
-                square_metre: parseFloat(square_metre),
+                square_metre,
                 type: {
                     connect: { id: blindTypeId }
                 },
