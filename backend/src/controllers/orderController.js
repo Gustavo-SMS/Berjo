@@ -94,15 +94,15 @@ const getOrdersByStatus = async (req, res) => {
 }
 
 const createOrder = async (req, res) => {
-    const { customer, total_price, blinds } = req.body
-
+    const { customer, blinds } = req.body
+    
     try {
         const order = await prismaClient.order.create({
             data: {
                 customer: {
                     connect: { id: customer }
                 },
-                total_price,
+                total_price: req.total_price,
                 blind: {
                     create: 
                         blinds

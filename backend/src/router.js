@@ -29,7 +29,7 @@ router.get('/orders', orderController.getAll)
 router.get('/orders/:id', orderMiddleware.validateId, orderController.getOne)
 router.get('/orders/status/:status', orderController.getOrdersByStatus)
 router.get('/orders/customer/:id', orderController.getOrdersByCustomer)
-router.post('/orders', orderMiddleware.calcSquareMetre, orderController.createOrder)
+router.post('/orders', orderMiddleware.totalPrice, orderController.createOrder)
 router.put('/orders', orderController.updateOrder)
 router.delete('/orders/:id', orderController.deleteOrder)
 
