@@ -7,7 +7,11 @@ const blindController = require("./controllers/blindController")
 const blindTypeController = require("./controllers/blindTypeController")
 
 const checkToken = require("./middlewares/validateToken")
+const userMiddleware = require("./middlewares/userMiddleware")
+const customerMiddleware = require("./middlewares/customerMiddleware")
 const orderMiddleware = require("./middlewares/orderMiddleware")
+const blindMiddleware = require("./middlewares/blindMiddleware")
+const blindTypeMiddleware = require("./middlewares/blindTypeMiddleware")
 
 const router = express.Router()
 
@@ -15,13 +19,13 @@ router.get('/', (req, res) => {
     res.send("Server running")
 })
 
-router.post('/register', userController.registerUser)
-router.post('/login', userController.validateLogin)
+router.post('/register', userMiddleware.validateUserData, userController.registerUser)
+router.post('/login', userMiddleware.validateLogin, userController.validateLogin)
 
 router.get('/customers', customerController.getAll)
 router.get('/customers/:id', checkToken.checkToken, customerController.getOne)
 router.get('/customers/name/:name', customerController.getCustomerByName)
-router.post('/customers', customerController.createCustomer)
+router.post('/customers', customerMiddleware.validateCustomerData, customerController.createCustomer)
 router.put('/customers', customerController.updateCustomer)
 router.delete('/customers/:id', customerController.deleteCustomer)
 
@@ -34,14 +38,14 @@ router.put('/orders', orderController.updateOrder)
 router.delete('/orders/:id', orderController.deleteOrder)
 
 router.get('/blinds', blindController.getAll)
-router.post('/blinds', blindController.createBlind)
+router.post('/blinds', blindMiddleware.validateBlindData, blindController.createBlind)
 router.put('/blinds', blindController.updateBlind)
 router.delete('/blinds/:id', blindController.deleteBlind)
 
 router.get('/blind_types', blindTypeController.getAll)
 router.get('/blind_types/type/:type', blindTypeController.getByType)
 router.get('/blind_types/collection/:collection', blindTypeController.getByCollection)
-router.post('/blind_types', blindTypeController.createBlindType)
+router.post('/blind_types', blindTypeMiddleware.validateBlindTypeData, blindTypeController.createBlindType)
 router.put('/blind_types', blindTypeController.updateBlindType)
 router.delete('/blind_types/:id', blindTypeController.deleteBlindType)
 
