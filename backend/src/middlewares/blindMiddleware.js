@@ -13,9 +13,9 @@ const validateBlindData = async (req, res, next) => {
 
         if (!order) {
             return res.status(500).json({ error: "Pedido não encontrado" })
-        } else if(!blindType) {
+        } else if (!blindType) {
             return res.status(500).json({ error: "Tipo não encontrado" })
-        } else {
+        } else if (value) {
             next()
         }
 

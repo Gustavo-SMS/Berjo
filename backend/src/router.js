@@ -35,6 +35,7 @@ router.get('/orders/status/:status', orderController.getOrdersByStatus)
 router.get('/orders/customer/:id', orderController.getOrdersByCustomer)
 router.post('/orders', orderMiddleware.totalPrice, orderController.createOrder)
 router.put('/orders', orderController.updateOrder)
+router.put('/orders/status', orderController.changeStatus)
 router.delete('/orders/:id', orderController.deleteOrder)
 
 router.get('/blinds', blindController.getAll)

@@ -120,7 +120,7 @@ const createOrder = async (req, res) => {
     }
 }
 
-const updateOrder = async (req, res) => {
+const changeStatus = async (req, res) => {
     const { id, status } = req.body
 
     try {
@@ -130,6 +130,30 @@ const updateOrder = async (req, res) => {
             },
             data: {
                 status: status || undefined
+            }
+        })
+
+        if(!order) {S
+            return res.status(404).json({ error: 'Não foi possível atualizar o pedido' })
+        }
+
+        return res.status(201).json(order)
+    } catch (error) {
+        return res.status(500).json({ error: error.message })
+    }
+}
+
+const updateOrder = async (req, res) => {
+    const { id, status, total_price } = req.body
+
+    try {
+        const order = await prismaClient.order.update({
+            where: {
+                id
+            },
+            data: {
+                status: status || undefined,
+                total_price: total_price || undefined
             }
         })
 
@@ -179,6 +203,7 @@ module.exports = {
     getOrdersByCustomer,
     getOrdersByStatus,
     createOrder,
+    changeStatus,
     updateOrder,
     deleteOrder,
 }
