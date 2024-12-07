@@ -1,4 +1,5 @@
 const { prismaClient } = require('../database/prismaClient')
+const { sendEmail } = require('../services/nodemailer')
 
 const getAll = async (req, res) => {
     try {
@@ -133,13 +134,78 @@ const changeStatus = async (req, res) => {
             }
         })
 
-        if(!order) {S
+        if(!order) {
             return res.status(404).json({ error: 'Não foi possível atualizar o pedido' })
+        }
+        
+        if(status === "Concluido" && status) {
+            createMail(id)
         }
 
         return res.status(201).json(order)
     } catch (error) {
         return res.status(500).json({ error: error.message })
+    }
+}
+
+const createMail = async (id) => {
+    const order = await getBlindsToMail(id)
+ 
+    let blindsEmail = []
+
+    const total_price = order.total_price
+    const email = order.customer.email
+
+    order.blind.forEach(blind => {
+        blindEmail = {
+            quantity: blind.quantity,
+            width: blind.width,
+            height: blind.height,
+            model: blind.model,
+            type: blind.type.type,
+            collection: blind.type.collection,
+            color: blind.type.color,
+        }
+        blindsEmail.push(blindEmail)
+    })
+
+    sendEmail(email, subject = "Pedido pronto", blindsEmail, total_price)
+}
+
+const getBlindsToMail = async (id) => {
+    try {
+        const order = await prismaClient.order.findUnique({
+            where: {
+                id
+            },
+            select: {
+                total_price: true,
+                customer: {
+                    select: {
+                        email: true
+                    }
+                },
+                blind: {
+                    select: {
+                        quantity: true,
+                        width: true,
+                        height: true,
+                        model: true,
+                        type: {
+                            select: {
+                                type: true,
+                                collection: true,
+                                color: true
+                            }
+                        }
+                    }
+                }
+            }
+        })
+
+        return order
+    } catch (error) {
+        return error.message
     }
 }
 
