@@ -153,8 +153,9 @@ const createMail = async (id) => {
  
     let blindsEmail = []
 
-    const total_price = order.total_price
+    const name = order.customer.name
     const email = order.customer.email
+    const total_price = order.total_price
 
     order.blind.forEach(blind => {
         blindEmail = {
@@ -169,7 +170,7 @@ const createMail = async (id) => {
         blindsEmail.push(blindEmail)
     })
 
-    sendEmail(email, subject = "Pedido pronto", blindsEmail, total_price)
+    sendEmail(name, email, subject = "Pedido pronto", blindsEmail, total_price)
 }
 
 const getBlindsToMail = async (id) => {
@@ -182,6 +183,7 @@ const getBlindsToMail = async (id) => {
                 total_price: true,
                 customer: {
                     select: {
+                        name:true,
                         email: true
                     }
                 },
