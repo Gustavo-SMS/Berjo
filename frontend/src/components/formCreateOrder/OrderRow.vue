@@ -7,7 +7,7 @@
             <input type="text" class="form-control" id="type" name="type">
         </div>
         <div class="col-4">
-            <input type="text" class="form-control" id="color" name="color">
+            <SelectBlindType @selectedOption="selectedBlindTypeId"/>
         </div>
         <div class="col-1">
             <input type="number" class="form-control" id="width" name="width">
@@ -28,4 +28,15 @@
     </div>
     
 </template>
+
+<script setup>
+import SelectBlindType from './SelectBlindType.vue';
+import { ref } from 'vue';
+
+    let blindTypeId = ref('')
+
+    function selectedBlindTypeId(event, arrayBlindTypes) {
+        blindTypeId = arrayBlindTypes[event.target.selectedIndex].id
+    }
+</script>
 

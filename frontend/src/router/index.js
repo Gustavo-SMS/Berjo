@@ -12,32 +12,32 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: () => import('../views/LoginView.vue')
+      component: () => import('../views/login/LoginView.vue')
     },
     {
       path: '/register',
       name: 'register',
-      component: () => import('../views/RegisterView.vue')
+      component: () => import('../views/login/RegisterView.vue')
     },
     {
       path: '/createCustomer',
       name: 'createCustomer',
-      component: () => import('../views/CreateCustomersView.vue')
+      component: () => import('../views/customers/CreateCustomersView.vue')
     },
     {
       path: '/customers',
       name: 'customers',
-      component: () => import('../views/CustomersView.vue')
+      component: () => import('../views/customers/CustomersView.vue')
     },
     {
       path: '/createOrder',
       name: 'createOrder',
-      component: () => import('../views/CreateOrdersView.vue')
+      component: () => import('../views/orders/CreateOrdersView.vue')
     },
     {
       path: '/orders',
       name: 'orders',
-      component: () => import('../views/OrdersView.vue')
+      component: () => import('../views/orders/OrdersView.vue')
     }
   ]
 })

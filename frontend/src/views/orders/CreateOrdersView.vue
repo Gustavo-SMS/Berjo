@@ -3,7 +3,7 @@
         <div class="box">
             <form>
                 <label for="" class="form-label">Cliente</label>
-                <SelectCustomers @selectedOption="selectedCustomerID" />
+                <SelectCustomers @selectedOption="selectedCustomerId" />
 
                 <div class="row">
                     <div class="col-1">
@@ -13,7 +13,7 @@
                         <label for="" class="form-label">Tipo</label>
                     </div>
                     <div class="col-4">
-                        <label for="" class="form-label">Cor</label>
+                        <label for="" class="form-label">Coleção - Cor</label>
                     </div>
                     <div class="col-1">
                         <label for="" class="form-label">Largura</label>
@@ -38,13 +38,13 @@
 </template>
 
 <script setup>
-import SelectCustomers from '../components/formCreateOrder/SelectCustomers.vue';
-import OrderRow from '../components/formCreateOrder/OrderRow.vue'
+import SelectCustomers from '../../components/formCreateOrder/SelectCustomers.vue';
+import OrderRow from '../../components/formCreateOrder/OrderRow.vue'
 import { ref } from 'vue';
 
     let customerId = ref('')
 
-    function selectedCustomerID(event, arrayNomes) {
+    function selectedCustomerId(event, arrayNomes) {
         customerId = arrayNomes[event.target.selectedIndex].id
     }
 

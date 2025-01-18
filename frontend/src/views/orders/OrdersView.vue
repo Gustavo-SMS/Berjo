@@ -2,7 +2,7 @@
     <div class="wrapper">
         <div class="box">
             <select v-model="selected" name="selectStatus" id="selectStatus">
-                <option value="">--</option>
+                <option value=""></option>
                 <option value="Em espera">Em espera</option>
                 <option value="Em produção">Em produção</option>
                 <option value="Concluido">Concluido</option>
@@ -48,33 +48,11 @@
 <script setup>
 import { ref } from 'vue';
 
-    fetch("http://127.0.0.1:3333/orders", {
-            method: 'GET',
-            headers: {
-                'Content-type': 'application/json'
-            }
-        }).then((res) => {
-            res.json().then((orders) => {
-                orders.map((order) => {
-                    document.querySelector('.rows').innerHTML += `<div class='row'> 
-                        <p class="col-2">${order.customer.name}</p>
-                        <p class="col-1">${order.quantity}</p>
-                        <p class="col-1">${order.type}</p>
-                        <p class="col-2">${order.color}</p>
-                        <p class="col-1">${order.width}</p>
-                        <p class="col-1">${order.height}</p>
-                        <p class="col-1">${order.command_height}</p>
-                        <p class="col-1">${order.model}</p>
-                        <p class="col-2">${order.status}</p>
-                        </div>`
-                })
-            })
-        })
-
     const selected = ref()
 
     async function changeFilter() {
-        await fetch(`http://127.0.0.1:3333/orders/status/${selected.value}`, {
+        if(selected.value) {
+            await fetch(`http://127.0.0.1:3333/orders/status/${selected.value}`, {
             method: 'GET',
             headers: {
                 'Content-type': 'application/json'
@@ -83,20 +61,27 @@ import { ref } from 'vue';
             res.json().then((orders) => {
                 document.querySelector('.rows').innerHTML = ''
                 orders.map((order) => {
-                    document.querySelector('.rows').innerHTML += `<div class='row' id='row'> 
+                    order.blind.map(blind => {
+                        document.querySelector('.rows').innerHTML += `<div class='row' id='row'> 
                         <p class="col-2">${order.customer.name}</p>
-                        <p class="col-1">${order.quantity}</p>
-                        <p class="col-1">${order.type}</p>
-                        <p class="col-2">${order.color}</p>
-                        <p class="col-1">${order.width}</p>
-                        <p class="col-1">${order.height}</p>
-                        <p class="col-1">${order.command_height}</p>
-                        <p class="col-1">${order.model}</p>
+                        <p class="col-1">${blind.quantity}</p>
+                        <p class="col-1">${blind.type.type}</p>
+                        <p class="col-2">${blind.type.collection + " " + blind.type.color}</p>
+                        <p class="col-1">${blind.width}</p>
+                        <p class="col-1">${blind.height}</p>
+                        <p class="col-1">${blind.command_height}</p>
+                        <p class="col-1">${blind.model}</p>
                         <p class="col-2">${order.status}</p>
                         </div>`
+                    })
+                    
                 })
             })
         })
+        }
+
+        
+        
     }
 
 </script>

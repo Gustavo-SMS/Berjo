@@ -80,7 +80,20 @@ const getOrdersByStatus = async (req, res) => {
                     select: {
                         name: true
                     }
-                }
+                },
+                blind: {
+                    include: {
+                        type: {
+                            select: {
+                                type: true,
+                                collection: true,
+                                color: true
+                            }
+                        }
+                    }
+                    
+                },
+                
             }
         })
 
