@@ -80,4 +80,9 @@ div.box {
 
     overflow: scroll;
 }
+
+label {
+    font-family: "Roboto", sans-serif;
+    font-weight: 700;
+}
 </style>

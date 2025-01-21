@@ -7,7 +7,7 @@
             <input type="text" class="form-control" id="type" name="type">
         </div>
         <div class="col-4">
-            <SelectBlindType @selectedOption="selectedBlindTypeId"/>
+            <SelectBlindType @selectedOption="selectedBlindTypeId" @change="$emit('selectedBlindTypeId', blindTypeId)"/>
         </div>
         <div class="col-1">
             <input type="number" class="form-control" id="width" name="width">
@@ -32,6 +32,8 @@
 <script setup>
 import SelectBlindType from './SelectBlindType.vue';
 import { ref } from 'vue';
+
+    defineEmits('selectedBlindTypeId')
 
     let blindTypeId = ref('')
 

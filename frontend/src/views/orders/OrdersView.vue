@@ -50,6 +50,33 @@ import { ref } from 'vue';
 
     const selected = ref()
 
+    fetch(`http://127.0.0.1:3333/orders/status/Em espera`, {
+            method: 'GET',
+            headers: {
+                'Content-type': 'application/json'
+            }
+        }).then((res) => {
+            res.json().then((orders) => {
+                document.querySelector('.rows').innerHTML = ''
+                orders.map((order) => {
+                    order.blind.map(blind => {
+                        document.querySelector('.rows').innerHTML += `<div class='row' id='row'> 
+                        <p class="col-2">${order.customer.name}</p>
+                        <p class="col-1">${blind.quantity}</p>
+                        <p class="col-1">${blind.type.type}</p>
+                        <p class="col-2">${blind.type.collection + " " + blind.type.color}</p>
+                        <p class="col-1">${blind.width}</p>
+                        <p class="col-1">${blind.height}</p>
+                        <p class="col-1">${blind.command_height}</p>
+                        <p class="col-1">${blind.model}</p>
+                        <p class="col-2">${order.status}</p>
+                        </div>`
+                    })
+                    
+                })
+            })
+        })
+
     async function changeFilter() {
         if(selected.value) {
             await fetch(`http://127.0.0.1:3333/orders/status/${selected.value}`, {

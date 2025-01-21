@@ -29,7 +29,8 @@
                     </div>
                 </div>
                 
-                    <OrderRow />
+                    <OrderRow @selectedBlindTypeId="selectedBlindTypeId"/>
+                    <OrderRow @selectedBlindTypeId="selectedBlindTypeId"/>
                 
                 <button @click="submitForm" type="submit" class="btn btn-primary w-100 py-1">Enviar</button>
             </form>
@@ -44,6 +45,12 @@ import { ref } from 'vue';
 
     let customerId = ref('')
 
+    let blindTypeId = ref('')
+
+    function selectedBlindTypeId(typeId) {
+        blindTypeId = typeId
+    }
+
     function selectedCustomerId(event, arrayNomes) {
         customerId = arrayNomes[event.target.selectedIndex].id
     }
@@ -53,18 +60,22 @@ import { ref } from 'vue';
 
         const form = document.querySelector('form')
         const formData = new FormData(form)
+        console.log(formData.forEach((key, value) => {
+            console.log(key + " " + value)
+        })) 
         const data = Object.fromEntries(formData)
         data.customer = customerId
-
-        fetch('http://127.0.0.1:3333/orders', {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify(data)
-            })
-            .then(res => res.json())
-            .then(data => console.log(data))
+        data.type = {id: blindTypeId}
+        console.log(data)
+        // fetch('http://127.0.0.1:3333/orders', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-type': 'application/json'
+        //     },
+        //     body: JSON.stringify(data)
+        //     })
+        //     .then(res => res.json())
+        //     .then(data => console.log(data))
     }
 </script>
 
