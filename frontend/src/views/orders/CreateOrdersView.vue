@@ -30,10 +30,10 @@
                 </div>
                 
                     <OrderRow @selectedBlindTypeId="selectedBlindTypeId"/>
-                    <OrderRow @selectedBlindTypeId="selectedBlindTypeId"/>
                 
-                <button @click="submitForm" type="submit" class="btn btn-primary w-100 py-1">Enviar</button>
-            </form>
+                    <button @click="submitForm" type="submit" class="btn btn-primary w-100 py-1">Enviar</button>
+                </form>
+                <button @click="addRow" class="btn btn-primary w-100 py-1">Add linha</button>
         </div>
     </div>
 </template>
@@ -41,10 +41,19 @@
 <script setup>
 import SelectCustomers from '../../components/formCreateOrder/SelectCustomers.vue';
 import OrderRow from '../../components/formCreateOrder/OrderRow.vue'
-import { ref } from 'vue';
+import { createVNode, render, ref } from 'vue';
+
+    function addRow() {
+        const container = document.querySelector('form')
+        const wrapper = document.createElement('div');
+        container.appendChild(wrapper)
+
+        const vNode = createVNode(OrderRow)
+
+        render(vNode, wrapper)
+    }
 
     let customerId = ref('')
-
     let blindTypeId = ref('')
 
     function selectedBlindTypeId(typeId) {

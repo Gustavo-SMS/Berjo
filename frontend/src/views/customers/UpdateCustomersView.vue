@@ -41,18 +41,18 @@
 function submitForm(event) {
     event.preventDefault()
 
-    const form = document.querySelector('form')
-    const formData = new FormData(form)
-    const data = Object.fromEntries(formData)
-    fetch('http://127.0.0.1:3333/customers', {
-        method: 'POST',
-        headers: {
-            'Content-type': 'application/json'
-        },
-        body: JSON.stringify(data)
-        })
-        .then(res => res.json())
-        .then(data => console.log(data))
+    // const form = document.querySelector('form')
+    //     const formData = new FormData(form)
+    //     const data = Object.fromEntries(formData)
+    //     fetch('http://127.0.0.1:3333/customers', {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-type': 'application/json'
+    //         },
+    //         body: JSON.stringify(data)
+    //         })
+    //         .then(res => res.json())
+    //         .then(data => console.log(data))
 }
 
 </script>

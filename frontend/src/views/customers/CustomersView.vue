@@ -26,13 +26,38 @@
                     <div class="col-1">
                         <label for="" class="form-label">CEP</label>
                     </div>
-
             </div>
+            
+
         </div>
     </div>
 </template>
 
 <script setup>
+import { createVNode, render } from 'vue';
+import CustomerRow from '@/components/customer/CustomerRow.vue';
+
+function addRow(customer) {
+        const container = document.querySelector('div.box')
+        const wrapper = document.createElement('div');
+        container.appendChild(wrapper)
+
+        const vNode = createVNode(CustomerRow, 
+        {   
+            id: customer.id,
+            name: customer.name,
+            email: customer.email,
+            phone: customer.phone,
+            street: customer.address.street,
+            house_number: customer.address.house_number,
+            city: customer.address.city,
+            district: customer.address.district,
+            zip: customer.address.zip
+        })
+
+        render(vNode, wrapper)
+    }
+
     fetch("http://127.0.0.1:3333/customers", {
                 method: 'GET',
                 headers: {
@@ -41,20 +66,10 @@
             }).then((res) => {
                 res.json().then((customers) => {
                     customers.map((customer) => {
-                        document.querySelector('.box').innerHTML += `<div class='row'> 
-                            <p class="col-2">${customer.name}</p>
-                            <p class="col-2">${customer.email}</p>
-                            <p class="col-1">${customer.phone}</p>
-                            <p class="col-2">${customer.address.street}</p>
-                            <p class="col-1">${customer.address.house_number}</p>
-                            <p class="col-2">${customer.address.city}</p>
-                            <p class="col-1">${customer.address.district}</p>
-                            <p class="col-1">${customer.address.zip}</p>
-                            </div>`
+                        addRow(customer)
                     })
                 })
             })
-
 </script>
 
 <style scoped>
