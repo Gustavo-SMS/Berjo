@@ -23,11 +23,11 @@ router.post('/register', userMiddleware.validateUserData, userController.registe
 router.post('/login', userMiddleware.validateLogin, userController.validateLogin)
 
 router.get('/customers', customerController.getAll)
-router.get('/customers/:id', checkToken.checkToken, customerController.getOne)
+router.get('/customers/:id', customerController.getOne)
 router.get('/customers/name/:name', customerController.getCustomerByName)
 router.post('/customers', customerMiddleware.validateCustomerData, customerController.createCustomer)
 router.put('/customers', customerController.updateCustomer)
-router.delete('/customers/:id', customerController.deleteCustomer)
+router.delete('/customers', customerController.deleteCustomer)
 
 router.get('/orders', orderController.getAll)
 router.get('/orders/:id', orderMiddleware.validateId, orderController.getOne)

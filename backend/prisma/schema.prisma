@@ -24,6 +24,7 @@ model Customer {
   phone       Float
   address     Address?
   created_at  DateTime  @default(now())
+  isActive    Boolean   @default(true)
 
   orders      Order[]
 

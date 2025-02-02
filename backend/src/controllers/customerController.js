@@ -3,6 +3,9 @@ const { prismaClient } = require('../database/prismaClient')
 const getAll = async (req, res) => {
     try {
         const customers = await prismaClient.customer.findMany({
+            where: {
+                isActive: true
+            },
             include: {
                 address: true
             }
@@ -24,7 +27,8 @@ const getOne = async (req, res) => {
     try {
         const customer = await prismaClient.customer.findUnique({
             where: {
-                id
+                id,
+                isActive: true
             }
         })
 
@@ -44,7 +48,8 @@ const getCustomerByName = async (req, res) => {
     try {
         const customers = await prismaClient.customer.findMany({
             where: {
-                name
+                name,
+                isActive: true
             }
         })
 
@@ -78,10 +83,6 @@ const createCustomer = async (req, res) => {
                 }
             }
         })
-
-        if(!customer) {
-            return res.status(404).json({ error: 'Não foi possível cadastrar o cliente' })
-        }
 
         return res.status(201).json(customer)
     } catch (error) {
@@ -118,10 +119,6 @@ const updateCustomer = async (req, res) => {
         })
     
         const transaction = await prismaClient.$transaction([customer, address])
-
-        if(!transaction) {
-            return res.status(404).json({ error: 'Não foi possível atualizar o cliente' })
-        }
     
         return res.status(201).json(transaction)
     } catch (error) {
@@ -130,34 +127,37 @@ const updateCustomer = async (req, res) => {
 }
 
 const deleteCustomer = async (req, res) => {
-    const id = req.params.id
-
+    const { id } = req.body
     try {
-        const deleteAdress = prismaClient.address.delete({
-            where: {
-              customer_id: id
-            },
-          })
-    
-        const deleteOrders = prismaClient.order.deleteMany({
-            where: {
-              customer_id: id
-            },
-          })
-    
-        const deleteCustomer = prismaClient.customer.delete({
+        const customer = await prismaClient.customer.update({
             where: {
                 id
+            },
+            data: {
+                isActive: false
             }
         })
-    
-        const transaction = await prismaClient.$transaction([deleteAdress, deleteOrders, deleteCustomer])
 
-        if(!transaction) {
-            return res.status(404).json({ error: 'Não foi possível deletar o cliente' })
-        }
+        return res.status(200).json(customer)
+    } catch (error) {
+        return res.status(500).json({ error: error.message })
+    }
+}
 
-        return res.status(200).json(transaction)
+const restoreCustomer = async (req, res) => {
+    const { id } = req.body
+
+    try {
+        const customer = await prismaClient.customer.update({
+            where: {
+                id
+            },
+            data: {
+                isActive: true
+            }
+        })
+
+        return res.status(200).json(customer)
     } catch (error) {
         return res.status(500).json({ error: error.message })
     }
@@ -170,4 +170,5 @@ module.exports = {
     createCustomer,
     updateCustomer,
     deleteCustomer,
+    restoreCustomer
 }

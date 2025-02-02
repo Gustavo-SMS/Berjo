@@ -36,6 +36,8 @@
         <button @click="changeToInput" type="button" class="btn btn-danger col-1 row justify-content-center">Editar</button>
 
         <button @click="submitUpdate" type="submit" class="btn col-1 row justify-content-center" :disabled>Enviar</button>
+
+        <button @click="deleteCustomer" type="submit" class="btn col-1 row justify-content-center">Excluir</button>
     </form>
 </template>
                         
@@ -57,7 +59,7 @@ const isEditing = ref(false)
 
 let disabled = ref(true)
 
-function changeToInput(event) {
+const changeToInput = () => {
     isEditing.value = !isEditing.value
 
     disabled = !disabled
@@ -93,11 +95,36 @@ const submitUpdate = async (event) => {
 
         const result = await response.json()
         console.log('Dados atualizados:', result)
-
+        disabled = !disabled
       } catch (err) {
         console.error('Erro ao enviar os dados:', err.message)
       }
     }
+
+const deleteCustomer = async (event) => {
+  event.preventDefault()
+
+  const payload = { id: props.id }
+
+  try {
+        const response = await fetch(`http://127.0.0.1:3333/customers`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload)
+        })
+
+        if (!response.ok) {
+          throw new Error('Falha ao excluir cliente')
+        }
+
+        const result = await response.json()
+        console.log('Cliente excluido:', result)
+      } catch (err) {
+        console.error('Erro ao excluir cliente:', err.message)
+      }
+}
 
 </script>
 
