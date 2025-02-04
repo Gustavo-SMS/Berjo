@@ -1,6 +1,8 @@
 <template>
     <div class="wrapper">
         <div class="box">
+                <input type="text" id="searchByName">
+                <button @click="getByName">Buscar</button>
             <div class="row">
                     <div class="col-2">
                         <label for="" class="form-label">Nome</label>
@@ -27,17 +29,15 @@
                         <label for="" class="form-label">CEP</label>
                     </div>
             </div>
-            
-
         </div>
     </div>
 </template>
 
 <script setup>
-import { createVNode, render } from 'vue';
+import { createVNode, render, ref } from 'vue';
 import CustomerRow from '@/components/customer/CustomerRow.vue';
 
-function addRow(customer) {
+    const addRow = (customer) => {
         const container = document.querySelector('div.box')
         const wrapper = document.createElement('div');
         container.appendChild(wrapper)
@@ -58,6 +58,16 @@ function addRow(customer) {
         render(vNode, wrapper)
     }
 
+    const clearScreen = () => {
+        const container = document.querySelector('div.box');
+
+        const totalChildren = container.children.length;
+
+        for (let i = totalChildren - 1; i >= 3; i--) {
+            container.removeChild(container.children[i]);
+        }
+    }
+
     fetch("http://127.0.0.1:3333/customers", {
                 method: 'GET',
                 headers: {
@@ -70,6 +80,26 @@ function addRow(customer) {
                     })
                 })
             })
+
+    const getByName = async (event) => {
+        event.preventDefault()
+
+        const input = document.querySelector('#searchByName')
+
+        await fetch(`http://127.0.0.1:3333/customers/name/${input.value}`, {
+                method: 'GET',
+                headers: {
+                    'Content-type': 'application/json'
+                }
+            }).then((res) => {
+                res.json().then((customers) => {
+                    clearScreen()
+                    customers.map((customer) => {
+                        addRow(customer)
+                    })
+                })
+            })
+    }
 </script>
 
 <style scoped>

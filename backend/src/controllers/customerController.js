@@ -29,6 +29,9 @@ const getOne = async (req, res) => {
             where: {
                 id,
                 isActive: true
+            },
+            include: {
+                address: true
             }
         })
 
@@ -50,6 +53,9 @@ const getCustomerByName = async (req, res) => {
             where: {
                 name,
                 isActive: true
+            },
+            include: {
+                address: true
             }
         })
 
