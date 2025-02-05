@@ -133,7 +133,7 @@ const updateCustomer = async (req, res) => {
 }
 
 const deleteCustomer = async (req, res) => {
-    const { id } = req.body
+    const id = req.params.id
     try {
         const customer = await prismaClient.customer.update({
             where: {

@@ -35,16 +35,40 @@
 
         <button @click="changeToInput" type="button" class="btn btn-danger col-1 row justify-content-center">Editar</button>
 
-        <button @click="submitUpdate" type="submit" class="btn col-1 row justify-content-center" :disabled>Enviar</button>
+        <button @click="submitUpdate" type="submit" class="btn col-1 row justify-content-center" :disabled="disabled">Enviar</button>
 
-        <button @click="deleteCustomer" type="submit" class="btn col-1 row justify-content-center">Excluir</button>
-    </form>
+        <button @click="openDeleteModal" type="button" class="btn col-1 row justify-content-center">Excluir</button>
+      </form>
+      <Teleport to="body">
+        <ConfirmationModal
+          v-if="showModal"
+          :show="showModal"
+          message="Tem certeza que deseja excluir este cliente?"
+          :onConfirm="deleteCustomer"
+          @close="showModal = false"
+        />
+      </Teleport>
 </template>
                         
 <script setup>
 import { ref } from 'vue'
+import ConfirmationModal from '@/components/ConfirmationModal.vue'
 
-const props = defineProps(['id', 'name', 'email', 'phone', 'street', 'house_number', 'city', 'district', 'zip'])
+const props = defineProps(['id', 'name', 'email', 'phone', 'street', 'house_number', 'city', 'district', 'zip', 'getCustomers'])
+
+const showModal = ref(false)
+
+const openDeleteModal = () => {
+  showModal.value = true
+}
+
+const isEditing = ref(false)
+let disabled = ref(true)
+
+const changeToInput = () => {
+    isEditing.value = !isEditing.value
+    disabled.value = !disabled.value
+}
 
 const editableName = ref(props.name);
 const editableEmail = ref(props.email);
@@ -54,16 +78,6 @@ const editableHouseNumber = ref(props.house_number);
 const editableCity = ref(props.city);
 const editableDistrict = ref(props.district);
 const editableZip = ref(props.zip);
-
-const isEditing = ref(false)
-
-let disabled = ref(true)
-
-const changeToInput = () => {
-    isEditing.value = !isEditing.value
-
-    disabled = !disabled
-}
 
 const submitUpdate = async (event) => {
       event.preventDefault();
@@ -95,24 +109,19 @@ const submitUpdate = async (event) => {
 
         const result = await response.json()
         console.log('Dados atualizados:', result)
-        disabled = !disabled
+        props.getCustomers()
       } catch (err) {
         console.error('Erro ao enviar os dados:', err.message)
       }
     }
 
-const deleteCustomer = async (event) => {
-  event.preventDefault()
-
-  const payload = { id: props.id }
-
+const deleteCustomer = async () => {
   try {
-        const response = await fetch(`http://127.0.0.1:3333/customers`, {
+        const response = await fetch(`http://127.0.0.1:3333/customers/${props.id}`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(payload)
+          }
         })
 
         if (!response.ok) {
@@ -121,6 +130,7 @@ const deleteCustomer = async (event) => {
 
         const result = await response.json()
         console.log('Cliente excluido:', result)
+        props.getCustomers()
       } catch (err) {
         console.error('Erro ao excluir cliente:', err.message)
       }

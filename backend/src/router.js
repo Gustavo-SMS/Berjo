@@ -27,7 +27,7 @@ router.get('/customers/:id', customerController.getOne)
 router.get('/customers/name/:name', customerController.getCustomerByName)
 router.post('/customers', customerMiddleware.validateCustomerData, customerController.createCustomer)
 router.put('/customers', customerController.updateCustomer)
-router.delete('/customers', customerController.deleteCustomer)
+router.delete('/customers/:id', customerController.deleteCustomer)
 
 router.get('/orders', orderController.getAll)
 router.get('/orders/:id', orderMiddleware.validateId, orderController.getOne)

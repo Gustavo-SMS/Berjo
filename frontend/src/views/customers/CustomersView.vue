@@ -34,7 +34,7 @@
 </template>
 
 <script setup>
-import { createVNode, render, ref } from 'vue';
+import { createVNode, onMounted, render } from 'vue';
 import CustomerRow from '@/components/customer/CustomerRow.vue';
 
     const addRow = (customer) => {
@@ -52,7 +52,8 @@ import CustomerRow from '@/components/customer/CustomerRow.vue';
             house_number: customer.address.house_number,
             city: customer.address.city,
             district: customer.address.district,
-            zip: customer.address.zip
+            zip: customer.address.zip,
+            getCustomers
         })
 
         render(vNode, wrapper)
@@ -68,18 +69,23 @@ import CustomerRow from '@/components/customer/CustomerRow.vue';
         }
     }
 
-    fetch("http://127.0.0.1:3333/customers", {
+    const getCustomers = () => {
+            fetch("http://127.0.0.1:3333/customers", {
                 method: 'GET',
                 headers: {
                     'Content-type': 'application/json'
                 }
             }).then((res) => {
                 res.json().then((customers) => {
+                    clearScreen()
                     customers.map((customer) => {
                         addRow(customer)
                     })
                 })
             })
+        }
+
+    onMounted(getCustomers)
 
     const getByName = async (event) => {
         event.preventDefault()
