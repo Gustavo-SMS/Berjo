@@ -17,7 +17,6 @@ const registerUser = async (req, res) => {
         return res.status(422).json({ msg : 'As senhas não conferem!'})
     }
 
-    //Checar usuário
     const userExists = await prismaClient.user.findUnique({ 
         where: {
             login
@@ -28,11 +27,9 @@ const registerUser = async (req, res) => {
         return res.status(422).json({ msg : 'Por favor, utilize outro e-mail!'})
     }
 
-    //Criar senha
     const salt = await bcrypt.genSalt(12)
     const passwordHash = await bcrypt.hash(password, salt)
 
-    //Criar usuário
     const user = await prismaClient.user.create({
         data: {
             login,
@@ -54,7 +51,6 @@ const validateLogin = async (req, res) => {
         return res.status(422).json({ msg : 'A senha é obrigatória!'})
     }
 
-    //Checar usuário
     const userExists = await prismaClient.user.findUnique({ 
         where: {
             login
@@ -65,8 +61,7 @@ const validateLogin = async (req, res) => {
         return res.status(404).json({ msg : 'Usuário não encontrado!'})
     }
 
-    //Checar senha
-    const checkPassword = bcrypt.compareSync(password, userExists.password, (err, result) => {})
+    const checkPassword = bcrypt.compareSync(password, userExists.password)
     
     if(!checkPassword) {
         return res.status(422).json({ msg : 'Senha incorreta!'})
@@ -80,10 +75,17 @@ const validateLogin = async (req, res) => {
             {
                 id: userExists.id
             },
-            secret
+            secret,
+            { expiresIn: '1h' }
             )
-        res.cookie('token', token )
-        res.status(200).json({ msg: 'Autenticação realizada com sucesso', token })
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: false,
+            sameSite: 'lax',
+            maxAge: 3600000  // Tempo em milissegundos (1 hora)
+        })
+
+        res.status(200).json({ msg: 'Autenticação realizada com sucesso' })
     } catch (err) {
         console.log(err)
 

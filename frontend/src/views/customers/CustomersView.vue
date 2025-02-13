@@ -70,11 +70,13 @@ import CustomerRow from '@/components/customer/CustomerRow.vue';
     }
 
     const getCustomers = () => {
+        try {
             fetch("http://127.0.0.1:3333/customers", {
                 method: 'GET',
                 headers: {
                     'Content-type': 'application/json'
-                }
+                },
+                credentials: 'include'
             }).then((res) => {
                 res.json().then((customers) => {
                     clearScreen()
@@ -83,7 +85,10 @@ import CustomerRow from '@/components/customer/CustomerRow.vue';
                     })
                 })
             })
+        } catch (error) {
+            console.log(error.message)
         }
+    }
 
     onMounted(getCustomers)
 
@@ -92,7 +97,8 @@ import CustomerRow from '@/components/customer/CustomerRow.vue';
 
         const input = document.querySelector('#searchByName')
 
-        await fetch(`http://127.0.0.1:3333/customers/name/${input.value}`, {
+        try {
+            await fetch(`http://127.0.0.1:3333/customers/name/${input.value}`, {
                 method: 'GET',
                 headers: {
                     'Content-type': 'application/json'
@@ -105,6 +111,10 @@ import CustomerRow from '@/components/customer/CustomerRow.vue';
                     })
                 })
             })
+        } catch (error) {
+            console.log(error.message)
+        }
+        
     }
 </script>
 
