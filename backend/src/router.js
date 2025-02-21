@@ -22,7 +22,7 @@ router.get('/', (req, res) => {
 router.post('/register', userMiddleware.validateUserData, userController.registerUser)
 router.post('/login', userMiddleware.validateLogin, userController.validateLogin)
 
-router.get('/customers', validateToken.checkToken, customerController.getAll)
+router.get('/customers', customerController.getAll)
 router.get('/customers/:id', customerController.getOne)
 router.get('/customers/name/:name', customerController.getCustomerByName)
 router.post('/customers', customerMiddleware.validateCustomerData, customerController.createCustomer)
@@ -44,6 +44,7 @@ router.put('/blinds', blindController.updateBlind)
 router.delete('/blinds/:id', blindController.deleteBlind)
 
 router.get('/blind_types', blindTypeController.getAll)
+router.get('/blind_types/type', blindTypeController.getTypes)
 router.get('/blind_types/type/:type', blindTypeController.getByType)
 router.get('/blind_types/collection/:collection', blindTypeController.getByCollection)
 router.post('/blind_types', blindTypeMiddleware.validateBlindTypeData, blindTypeController.createBlindType)

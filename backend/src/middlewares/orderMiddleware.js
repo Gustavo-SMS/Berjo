@@ -28,7 +28,6 @@ const validateId = async (req, res, next) => {
 
 const totalPrice = async (req, res, next) => {
     const { blinds } = req.body
-
     let totalPrice = 0
     try {
         for (const blind of blinds) {
@@ -37,7 +36,7 @@ const totalPrice = async (req, res, next) => {
 
             const blindPrice = await prismaClient.blind_Type.findUnique({
                 where: {
-                    id: blind.type.connect.id
+                    id: blind.blindTypeId
                 },
                 select: {
                     price: true

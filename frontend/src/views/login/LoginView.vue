@@ -25,7 +25,8 @@ function submitForm(event) {
     const form = document.querySelector('form')
     const formData = new FormData(form)
     const data = Object.fromEntries(formData)
-    fetch('http://127.0.0.1:3333/login', {
+    try {
+      fetch('http://127.0.0.1:3333/login', {
         method: 'POST',
         headers: {
             'Content-type': 'application/json'
@@ -34,7 +35,17 @@ function submitForm(event) {
         body: JSON.stringify(data)
         })
         .then(res => res.json())
-        .then(data => console.log(data))
+        .then(data =>  {
+          if (data.msg === 'Autenticação realizada com sucesso') {
+            window.location.href = '/'
+          } else {
+              console.error('Erro no login:', data.msg)
+          }
+        })
+    } catch (error) {
+      console.log(error.message)
+    }
+    
 }
 
 </script>

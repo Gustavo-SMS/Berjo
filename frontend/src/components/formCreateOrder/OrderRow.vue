@@ -1,44 +1,55 @@
 <template>
-    <div class="row mb-2">
+    <div class="row">
         <div class="col-1">
-            <input type="number" class="form-control" id="quantity" name="quantity">
+            <input type="number" class="form-control" v-model="row.quantity" @input="$emit('updateRow', { field: 'quantity', value: row.quantity })">
         </div>
         <div class="col-2">
-            <input type="text" class="form-control" id="type" name="type">
+             <SelectType @selectedOption="selectedType"/>
         </div>
-        <div class="col-4">
-            <SelectBlindType @selectedOption="selectedBlindTypeId" @change="$emit('selectedBlindTypeId', blindTypeId)"/>
-        </div>
-        <div class="col-1">
-            <input type="number" class="form-control" id="width" name="width">
-        </div>
-        <div class="col-1">
-            <input type="number" class="form-control" id="height" name="height">
-        </div>
-        <div class="col-1">
-            <input type="number" class="form-control" id="command_height" name="command_height">
+        <div class="col-4" id="selectBlindType">
+            <SelectBlindType 
+                v-if="type" 
+                :key="type"
+                @selectedOption="selectedBlindTypeId" 
+                :type="type"
+                @change="$emit('updateRow', { field: 'blindTypeId', value: blindTypeId })"
+            />
         </div>
         <div class="col-1">
-            <input type="text" class="form-control" id="model" name="model">
+            <input type="text" class="form-control" v-model="row.width" @input="$emit('updateRow', { field: 'width', value: row.width })">
         </div>
-
-        <div class="col-1 row justify-content-center">
-            <button type="reset" class="btn btn-danger col-6">X</button>
+        <div class="col-1">
+            <input type="text" class="form-control" v-model="row.height" @input="$emit('updateRow', { field: 'height', value: row.height })">
+        </div>
+        <div class="col-1">
+            <input type="text" class="form-control" v-model="row.command_height" @input="$emit('updateRow', { field: 'command_height', value: row.command_height })">
+        </div>
+        <div class="col-1">
+            <input type="text" class="form-control" v-model="row.model" @input="$emit('updateRow', { field: 'model', value: row.model })">
         </div>
     </div>
-    
 </template>
 
 <script setup>
-import SelectBlindType from './SelectBlindType.vue';
-import { ref } from 'vue';
+import { watch, defineProps, defineEmits, ref } from 'vue'
+import SelectBlindType from './SelectBlindType.vue'
+import SelectType from './SelectType.vue'
 
-    defineEmits('selectedBlindTypeId')
+defineProps(['row'])
+defineEmits(['updateRow', 'selectedBlindTypeId'])
 
-    let blindTypeId = ref('')
+const blindTypeId = ref('')
+const type = ref(null)
 
-    function selectedBlindTypeId(event, arrayBlindTypes) {
-        blindTypeId = arrayBlindTypes[event.target.selectedIndex].id
-    }
+const selectedType = (event, arrayBlindTypes) => {
+    type.value = arrayBlindTypes[event.target.selectedIndex] || null
+}
+
+const selectedBlindTypeId = (event, arrayBlindTypes) => {
+    blindTypeId.value = arrayBlindTypes[event.target.selectedIndex].id || ''
+}
+
+watch(type, () => {
+    blindTypeId.value = ''
+})
 </script>
-

@@ -15,6 +15,24 @@ const getAll = async (req, res) => {
     }
 }
 
+const getTypes = async (req, res) => {
+    try {
+        const blindType = await prismaClient.blind_Type.findMany({
+            select: {
+                type: true
+              }
+        })
+        
+        if(blindType.length === 0) {
+            return res.status(404).json({ error: 'Nenhum tipo foi encontrado' })
+        }
+        
+        return res.status(200).json(blindType)
+    } catch (error) {
+        return res.status(500).json({ error: error.message })
+    }
+}
+
 const getByType = async (req, res) => {
     const type = req.params.type
 
@@ -128,6 +146,7 @@ const deleteBlindType = async (req, res) => {
 
 module.exports = {
     getAll,
+    getTypes,
     getByType,
     getByCollection,
     createBlindType,

@@ -29,7 +29,8 @@ function submitForm(event) {
     const form = document.querySelector('form')
     const formData = new FormData(form)
     const data = Object.fromEntries(formData)
-    fetch('http://127.0.0.1:3333/register', {
+    try {
+        fetch('http://127.0.0.1:3333/register', {
         method: 'POST',
         headers: {
             'Content-type': 'application/json'
@@ -38,6 +39,10 @@ function submitForm(event) {
         })
         .then(res => res.json())
         .then(data => console.log(data))
+    } catch (error) {
+        console.log(error.message)
+    }
+    
 }
 
 </script>

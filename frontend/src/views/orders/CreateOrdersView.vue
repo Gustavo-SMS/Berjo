@@ -28,8 +28,14 @@
                         <label for="" class="form-label">Modelo</label>
                     </div>
                 </div>
-                
-                    <OrderRow @selectedBlindTypeId="selectedBlindTypeId"/>
+
+                <OrderRow 
+                    v-for="(row, index) in orderRows" 
+                    :key="index" 
+                    :row="row"
+                    @updateRow="updateRow(index, $event.field, $event.value)"
+                    @selectedBlindTypeId="selectedBlindTypeId(index, $event.field, $event.value)"
+                />
                 
                     <button @click="submitForm" type="submit" class="btn btn-primary w-100 py-1">Enviar</button>
                 </form>
@@ -41,51 +47,53 @@
 <script setup>
 import SelectCustomers from '../../components/formCreateOrder/SelectCustomers.vue';
 import OrderRow from '../../components/formCreateOrder/OrderRow.vue'
-import { createVNode, render, ref } from 'vue';
+import { ref } from 'vue';
 
-    function addRow() {
-        const container = document.querySelector('form')
-        const wrapper = document.createElement('div');
-        container.appendChild(wrapper)
+const customerId = ref('')
+const orderRows = ref([])
 
-        const vNode = createVNode(OrderRow)
+function addRow() {
+    orderRows.value.push({
+        quantity: '',
+        type: '',
+        blindTypeId: '',
+        width: '',
+        height: '',
+        command_height: '',
+        model: ''
+    })
+}
 
-        render(vNode, wrapper)
+function updateRow(index, field, value) {
+    orderRows.value[index][field] = value
+}
+
+function selectedCustomerId(event, arrayNomes) {
+    customerId.value = arrayNomes[event.target.selectedIndex].id
+}
+
+function submitForm(event) {
+    event.preventDefault()
+
+    const data = {
+        customer: customerId.value,
+        blinds: orderRows.value
     }
-
-    let customerId = ref('')
-    let blindTypeId = ref('')
-
-    function selectedBlindTypeId(typeId) {
-        blindTypeId = typeId
+    try {
+        fetch('http://127.0.0.1:3333/orders', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(res => res.json())
+        .then(data => console.log(data))
+    } catch (error) {
+        console.log(error.message)
     }
-
-    function selectedCustomerId(event, arrayNomes) {
-        customerId = arrayNomes[event.target.selectedIndex].id
-    }
-
-    function submitForm(event) {
-        event.preventDefault()
-
-        const form = document.querySelector('form')
-        const formData = new FormData(form)
-        console.log(formData.forEach((key, value) => {
-            console.log(key + " " + value)
-        })) 
-        const data = Object.fromEntries(formData)
-        data.customer = customerId
-        data.type = {id: blindTypeId}
-        console.log(data)
-        // fetch('http://127.0.0.1:3333/orders', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-type': 'application/json'
-        //     },
-        //     body: JSON.stringify(data)
-        //     })
-        //     .then(res => res.json())
-        //     .then(data => console.log(data))
-    }
+    
+}
 </script>
 
 <style scoped>

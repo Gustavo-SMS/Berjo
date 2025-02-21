@@ -13,11 +13,13 @@ import { reactive } from 'vue';
 
     const customerNames = reactive([])
 
-    fetch("http://127.0.0.1:3333/customers", {
+    try {
+        fetch("http://127.0.0.1:3333/customers", {
             method: 'GET',
             headers: {
                 'Content-type': 'application/json'
-            }
+            },
+            credentials: 'include'
         }).then((res) => {
             res.json().then((customers) => {
                 customerNames.push('')
@@ -26,5 +28,9 @@ import { reactive } from 'vue';
                 })
             })
         })
+    } catch (error) {
+        console.log(error.message)
+    }
+    
         
 </script>
