@@ -12,17 +12,17 @@
                 :key="type"
                 @selectedOption="selectedBlindTypeId" 
                 :type="type"
-                @change="$emit('updateRow', { field: 'blindTypeId', value: blindTypeId })"
+                @change="$emit('updateRow', { field: 'type', value: blindTypeId })"
             />
         </div>
         <div class="col-1">
-            <input type="text" class="form-control" v-model="row.width" @input="$emit('updateRow', { field: 'width', value: row.width })">
+            <input type="number" class="form-control" v-model="row.width" @input="$emit('updateRow', { field: 'width', value: row.width })">
         </div>
         <div class="col-1">
-            <input type="text" class="form-control" v-model="row.height" @input="$emit('updateRow', { field: 'height', value: row.height })">
+            <input type="number" class="form-control" v-model="row.height" @input="$emit('updateRow', { field: 'height', value: row.height })">
         </div>
         <div class="col-1">
-            <input type="text" class="form-control" v-model="row.command_height" @input="$emit('updateRow', { field: 'command_height', value: row.command_height })">
+            <input type="number" class="form-control" v-model="row.command_height" @input="$emit('updateRow', { field: 'command_height', value: row.command_height })">
         </div>
         <div class="col-1">
             <input type="text" class="form-control" v-model="row.model" @input="$emit('updateRow', { field: 'model', value: row.model })">
@@ -52,4 +52,8 @@ const selectedBlindTypeId = (event, arrayBlindTypes) => {
 watch(type, () => {
     blindTypeId.value = ''
 })
+
+// vertical = ['Lateral', 'Central', 'Invertida']
+// horizontal = ['Dir', 'Esq']
+// rolo/romana/dv = ['Dir', 'Esq', 'Duplex']
 </script>

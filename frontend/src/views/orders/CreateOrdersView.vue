@@ -56,7 +56,6 @@ function addRow() {
     orderRows.value.push({
         quantity: '',
         type: '',
-        blindTypeId: '',
         width: '',
         height: '',
         command_height: '',

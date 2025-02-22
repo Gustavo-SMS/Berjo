@@ -9,7 +9,7 @@
 <script setup>
 import { reactive } from 'vue';
 
-    defineEmits('selectedOption') 
+    defineEmits(['selectedOption']) 
 
     let arrayBlindTypes = reactive([])
 
