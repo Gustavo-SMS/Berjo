@@ -25,21 +25,30 @@
             <input type="number" class="form-control" v-model="row.command_height" @input="$emit('updateRow', { field: 'command_height', value: row.command_height })">
         </div>
         <div class="col-1">
-            <input type="text" class="form-control" v-model="row.model" @input="$emit('updateRow', { field: 'model', value: row.model })">
+            <select v-if="modelOptions.length" class="form-control" v-model="row.model" @change="$emit('updateRow', { field: 'model', value: row.model })">
+                <option value="" disabled selected></option>
+                <option v-for="option in modelOptions" :key="option" :value="option">
+                    {{ option }}
+                </option>
+            </select>
+        </div>
+        <div >
+            <input type="text" class="form-control" placeholder="Observações" v-model="row.observation" @input="$emit('updateRow', { field: 'observation', value: row.observation })">
         </div>
     </div>
 </template>
 
 <script setup>
-import { watch, defineProps, defineEmits, ref } from 'vue'
+import { computed, watch, defineProps, defineEmits, ref } from 'vue'
 import SelectBlindType from './SelectBlindType.vue'
 import SelectType from './SelectType.vue'
 
 defineProps(['row'])
 defineEmits(['updateRow', 'selectedBlindTypeId'])
 
-const blindTypeId = ref('')
 const type = ref(null)
+const blindTypeId = ref('')
+const model = ref('')
 
 const selectedType = (event, arrayBlindTypes) => {
     type.value = arrayBlindTypes[event.target.selectedIndex] || null
@@ -49,11 +58,20 @@ const selectedBlindTypeId = (event, arrayBlindTypes) => {
     blindTypeId.value = arrayBlindTypes[event.target.selectedIndex].id || ''
 }
 
-watch(type, () => {
-    blindTypeId.value = ''
+const modelOptions = computed(() => {
+    if (!type.value) return []
+    const typeMap = {
+        'Vertical': ['Lateral', 'Central', 'Invertida'],
+        'Horizontal': ['Dir', 'Esq'],
+        'Rolo': ['Dir', 'Esq', 'Duplex'],
+        'Romana': ['Dir', 'Esq', 'Duplex'],
+        'Double Vision': ['Dir', 'Esq', 'Duplex'],
+    }
+    return typeMap[type.value] || []
 })
 
-// vertical = ['Lateral', 'Central', 'Invertida']
-// horizontal = ['Dir', 'Esq']
-// rolo/romana/dv = ['Dir', 'Esq', 'Duplex']
+watch(type, () => {
+    blindTypeId.value = ''
+    model.value = ''
+})
 </script>

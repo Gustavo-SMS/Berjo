@@ -59,7 +59,8 @@ function addRow() {
         width: '',
         height: '',
         command_height: '',
-        model: ''
+        model: '',
+        observation: ''
     })
 }
 
