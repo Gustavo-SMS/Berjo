@@ -39,7 +39,7 @@
 </template>
 
 <script setup>
-import { computed, watch, defineProps, defineEmits, ref } from 'vue'
+import { computed, watch, ref } from 'vue'
 import SelectBlindType from './SelectBlindType.vue'
 import SelectType from './SelectType.vue'
 

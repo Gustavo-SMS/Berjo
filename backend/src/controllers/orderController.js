@@ -10,7 +10,18 @@ const getAll = async (req, res) => {
                         name: true
                     }
                 },
-                blind: true
+                blind: {
+                    include: {
+                        type: {
+                            select: {
+                                type: true,
+                                collection: true,
+                                color: true
+                            }
+                        }
+                    }
+                    
+                },
             }
         })
 
@@ -33,7 +44,23 @@ const getOne = async (req, res) => {
                 id
             },
             include: {
-                blind: true
+                customer: {
+                    select: {
+                        name: true
+                    }
+                },
+                blind: {
+                    include: {
+                        type: {
+                            select: {
+                                type: true,
+                                collection: true,
+                                color: true
+                            }
+                        }
+                    }
+                    
+                },
             }
         })
 
@@ -54,6 +81,25 @@ const getOrdersByCustomer = async (req, res) => {
         const orders = await prismaClient.order.findMany({
             where: {
                 customer_id: id
+            },
+            include: {
+                customer: {
+                    select: {
+                        name: true
+                    }
+                },
+                blind: {
+                    include: {
+                        type: {
+                            select: {
+                                type: true,
+                                collection: true,
+                                color: true
+                            }
+                        }
+                    }
+                    
+                },
             }
         })
 
@@ -93,7 +139,6 @@ const getOrdersByStatus = async (req, res) => {
                     }
                     
                 },
-                
             }
         })
 

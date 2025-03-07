@@ -7,7 +7,7 @@
                 <option value="Em produção">Em produção</option>
                 <option value="Concluido">Concluido</option>
             </select>
-            <button @click="changeFilter">Filtrar</button>
+            <button @click="getByStatus">Filtrar</button>
             
             <div class="row">
                     <div class="col-2">
@@ -38,79 +38,104 @@
                         <label for="" class="form-label">Status</label>
                     </div>
             </div>
-
-            <div class="rows">
-            </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import OrderRow from '@/components/order/OrderRow.vue';
+import { ref, onMounted, createVNode, render } from 'vue';
 
     const selected = ref()
 
-    fetch(`http://127.0.0.1:3333/orders/status/Em espera`, {
-            method: 'GET',
-            headers: {
-                'Content-type': 'application/json'
-            }
-        }).then((res) => {
-            res.json().then((orders) => {
-                document.querySelector('.rows').innerHTML = ''
-                orders.map((order) => {
-                    order.blind.map(blind => {
-                        document.querySelector('.rows').innerHTML += `<div class='row' id='row'> 
-                        <p class="col-2">${order.customer.name}</p>
-                        <p class="col-1">${blind.quantity}</p>
-                        <p class="col-1">${blind.type.type}</p>
-                        <p class="col-2">${blind.type.collection + " " + blind.type.color}</p>
-                        <p class="col-1">${blind.width}</p>
-                        <p class="col-1">${blind.height}</p>
-                        <p class="col-1">${blind.command_height}</p>
-                        <p class="col-1">${blind.model}</p>
-                        <p class="col-2">${order.status}</p>
-                        </div>`
-                    })
-                    
-                })
-            })
+    const addRow = (blind, status, name) => {
+        const container = document.querySelector('div.box')
+        const wrapper = document.createElement('div');
+        container.appendChild(wrapper)
+        
+        const vNode = createVNode(OrderRow, 
+        {   
+            id: blind.id,
+            name: name,
+            quantity: blind.quantity,
+            type: blind.type.type,
+            collection: blind.type.collection,
+            color: blind.type.color,
+            width: blind.width,
+            height: blind.height,
+            command_height: blind.command_height,
+            model: blind.model,
+            status: status,
+            getByStatus
         })
 
-    async function changeFilter() {
-        if(selected.value) {
-            await fetch(`http://127.0.0.1:3333/orders/status/${selected.value}`, {
-            method: 'GET',
-            headers: {
-                'Content-type': 'application/json'
-            }
-        }).then((res) => {
-            res.json().then((orders) => {
-                document.querySelector('.rows').innerHTML = ''
-                orders.map((order) => {
-                    order.blind.map(blind => {
-                        document.querySelector('.rows').innerHTML += `<div class='row' id='row'> 
-                        <p class="col-2">${order.customer.name}</p>
-                        <p class="col-1">${blind.quantity}</p>
-                        <p class="col-1">${blind.type.type}</p>
-                        <p class="col-2">${blind.type.collection + " " + blind.type.color}</p>
-                        <p class="col-1">${blind.width}</p>
-                        <p class="col-1">${blind.height}</p>
-                        <p class="col-1">${blind.command_height}</p>
-                        <p class="col-1">${blind.model}</p>
-                        <p class="col-2">${order.status}</p>
-                        </div>`
-                    })
-                    
-                })
-            })
-        })
-        }
-
-        
-        
+        render(vNode, wrapper)
     }
 
+    const clearScreen = () => {
+        const container = document.querySelector('div.box');
+
+        const totalChildren = container.children.length;
+
+        for (let i = totalChildren - 1; i >= 3; i--) {
+            container.removeChild(container.children[i]);
+        }
+    }
+
+    const getPendingOrders = () => {
+        try {
+            fetch(`http://127.0.0.1:3333/orders/status/Em espera`, {
+                method: 'GET',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                credentials: 'include'
+            }).then((res) => {
+                res.json().then((orders) => {
+                    clearScreen()
+                    orders.map((order) => {
+                        const name = order.customer.name
+                        const status = order.status
+                        order.blind.map((blind) => {
+                            addRow(blind, status, name)
+                        })
+                    })
+                })
+            })
+        } catch (error) {
+            console.log(error.message)
+        }
+    }
+
+    onMounted(getPendingOrders)
+
+    const getByStatus = async (event) => {
+        event.preventDefault()
+
+        if(selected.value) {
+            try {
+                await fetch(`http://127.0.0.1:3333/orders/status/${selected.value}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-type': 'application/json'
+                    }
+                }).then((res) => {
+                    res.json().then((orders) => {
+                    clearScreen()
+                    orders.map((order) => {
+                        const name = order.customer.name
+                        const status = order.status
+                        order.blind.map((blind) => {
+                            addRow(blind, status, name)
+                        })
+                    })
+                })
+                })
+            } catch (error) {
+                console.log(error.message)
+            }  
+        }
+    }
 </script>
 
 <style scoped>

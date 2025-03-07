@@ -46,7 +46,7 @@
 
 <script setup>
 import SelectCustomers from '../../components/formCreateOrder/SelectCustomers.vue';
-import OrderRow from '../../components/formCreateOrder/OrderRow.vue'
+import OrderRow from '../../components/formCreateOrder/CreateOrderRow.vue'
 import { ref } from 'vue';
 
 const customerId = ref('')
