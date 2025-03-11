@@ -9,34 +9,34 @@
             </select>
             <button @click="getByStatus">Filtrar</button>
             
-            <div class="row">
-                    <div class="col-2">
-                        <label for="" class="form-label">Cliente</label>
-                    </div>
-                    <div class="col-1">
-                        <label for="" class="form-label">Quantidade</label>
-                    </div>
-                    <div class="col-1">
-                        <label for="" class="form-label">Tipo</label>
-                    </div>
-                    <div class="col-2">
-                        <label for="" class="form-label">Cor</label>
-                    </div>
-                    <div class="col-1">
-                        <label for="" class="form-label">Largura</label>
-                    </div>
-                    <div class="col-1">
-                        <label for="" class="form-label">Altura</label>
-                    </div>
-                    <div class="col-1">
-                        <label for="" class="form-label">Alt.Comando</label>
-                    </div>
-                    <div class="col-1">
-                        <label for="" class="form-label">Modelo</label>
-                    </div>
-                    <div class="col-2">
-                        <label for="" class="form-label">Status</label>
-                    </div>
+            <div v-for="order in orders" :key="order.id" class="order-block">
+                <h3><!--Pedido #{{ order.id }} ---> Cliente: {{ order.customer.name }} ({{ order.status }})</h3>
+
+                <div class="row header">
+                    <div class="col-1"><strong>Qtd</strong></div>
+                    <div class="col-2"><strong>Tipo</strong></div>
+                    <div class="col-2"><strong>Cor</strong></div>
+                    <div class="col-1"><strong>Largura</strong></div>
+                    <div class="col-1"><strong>Altura</strong></div>
+                    <div class="col-1"><strong>Alt. Comando</strong></div>
+                    <div class="col-2"><strong>Modelo</strong></div>
+                </div>
+
+                <OrderRow 
+                    v-for="blind in order.blind" 
+                    :key="blind.id"
+                    :id="blind.id"
+                    :quantity="blind.quantity"
+                    :type="blind.type.type"
+                    :collection="blind.type.collection"
+                    :color="blind.type.color"
+                    :width="blind.width"
+                    :height="blind.height"
+                    :command_height="blind.command_height"
+                    :model="blind.model"
+                    :status="order.status"
+                    :getByStatus="getByStatus"
+                />
             </div>
         </div>
     </div>
@@ -44,105 +44,41 @@
 
 <script setup>
 import OrderRow from '@/components/order/OrderRow.vue';
-import { ref, onMounted, createVNode, render } from 'vue';
+import { ref, onMounted } from 'vue';
 
-    const selected = ref()
+const selected = ref('')
+const orders = ref([])
 
-    const addRow = (blind, status, name) => {
-        const container = document.querySelector('div.box')
-        const wrapper = document.createElement('div');
-        container.appendChild(wrapper)
-        
-        const vNode = createVNode(OrderRow, 
-        {   
-            id: blind.id,
-            name: name,
-            quantity: blind.quantity,
-            type: blind.type.type,
-            collection: blind.type.collection,
-            color: blind.type.color,
-            width: blind.width,
-            height: blind.height,
-            command_height: blind.command_height,
-            model: blind.model,
-            status: status,
-            getByStatus
+const getOrders = async (status) => {
+    try {
+        const response = await fetch(`http://127.0.0.1:3333/orders/status/${status}`, {
+            method: 'GET',
+            headers: { 'Content-type': 'application/json' },
+            credentials: 'include'
         })
 
-        render(vNode, wrapper)
+        if (!response.ok) throw new Error('Erro ao buscar pedidos')
+
+        const data = await response.json()
+        orders.value = data
+    } catch (error) {
+        console.error(error.message)
     }
+}
 
-    const clearScreen = () => {
-        const container = document.querySelector('div.box');
+onMounted(() => getOrders('Em espera'))
 
-        const totalChildren = container.children.length;
+const getByStatus = async (event) => {
+    event.preventDefault()
+    if (selected.value) getOrders(selected.value)
+}
 
-        for (let i = totalChildren - 1; i >= 3; i--) {
-            container.removeChild(container.children[i]);
-        }
-    }
-
-    const getPendingOrders = () => {
-        try {
-            fetch(`http://127.0.0.1:3333/orders/status/Em espera`, {
-                method: 'GET',
-                headers: {
-                    'Content-type': 'application/json'
-                },
-                credentials: 'include'
-            }).then((res) => {
-                res.json().then((orders) => {
-                    clearScreen()
-                    orders.map((order) => {
-                        const name = order.customer.name
-                        const status = order.status
-                        order.blind.map((blind) => {
-                            addRow(blind, status, name)
-                        })
-                    })
-                })
-            })
-        } catch (error) {
-            console.log(error.message)
-        }
-    }
-
-    onMounted(getPendingOrders)
-
-    const getByStatus = async (event) => {
-        event.preventDefault()
-
-        if(selected.value) {
-            try {
-                await fetch(`http://127.0.0.1:3333/orders/status/${selected.value}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-type': 'application/json'
-                    }
-                }).then((res) => {
-                    res.json().then((orders) => {
-                    clearScreen()
-                    orders.map((order) => {
-                        const name = order.customer.name
-                        const status = order.status
-                        order.blind.map((blind) => {
-                            addRow(blind, status, name)
-                        })
-                    })
-                })
-                })
-            } catch (error) {
-                console.log(error.message)
-            }  
-        }
-    }
 </script>
 
 <style scoped>
 div.wrapper {
     width: 100vw;
     height: 100vh;
-
     display: flex;
     align-items: center;
     justify-content: center;
@@ -151,13 +87,25 @@ div.wrapper {
 div.box {
     width: 70vw;
     height: 60vh;
-
     border-radius: 8px;
     box-shadow: 1px 1px 5px #333;
     background-color: #f8f9fa;
-
     padding: 30px;
-
     overflow: scroll;
+}
+
+.order-block {
+    background: white;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+}
+
+.row.header {
+    font-weight: bold;
+    border-bottom: 2px solid #ddd;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
 }
 </style>

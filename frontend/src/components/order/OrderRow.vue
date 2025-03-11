@@ -1,14 +1,10 @@
 <template>
     <form action="" class="row mb-2">
-        <div class="col-2">
-            <input v-if="isEditing" type="text" class="form-control" v-model="editableName" id="name" name="name">
-            <p v-else>{{ name }}</p>
-        </div>
         <div class="col-1">
             <input v-if="isEditing" type="text" class="form-control" v-model="editableQuantity" id="quantity" name="quantity">
             <p v-else>{{ quantity }}</p>
         </div>
-        <div class="col-1">
+        <div class="col-2">
             <input v-if="isEditing" type="text" class="form-control" v-model="editableType" id="type" name="type">
             <p v-else>{{ type }}</p>
         </div>
@@ -31,10 +27,6 @@
         <div class="col-1">
             <input v-if="isEditing" type="text" class="form-control" v-model="editableModel" id="model" name="model">
             <p v-else>{{ model }}</p>
-        </div>
-        <div class="col-1">
-            <input v-if="isEditing" type="text" class="form-control" v-model="editableStatus" id="status" name="status">
-            <p v-else>{{ status }}</p>
         </div>
 
         <!-- <button @click="changeToInput" type="button" class="btn btn-danger col-1 row justify-content-center">Editar</button>
@@ -100,7 +92,7 @@ const submitUpdate = async (event) => {
       }
 
       try {
-        const response = await fetch("http://127.0.0.1:3333/orders", {
+        const response = await fetch("http://127.0.0.1:3333/blinds", {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -130,14 +122,14 @@ const deleteOrder = async () => {
         })
 
         if (!response.ok) {
-          throw new Error('Falha ao excluir cliente')
+          throw new Error('Falha ao excluir persiana')
         }
 
         const result = await response.json()
         console.log('Cliente excluido:', result)
         props.getByStatus()
       } catch (err) {
-        console.error('Erro ao excluir cliente:', err.message)
+        console.error('Erro ao excluir persiana:', err.message)
       }
 }
 
