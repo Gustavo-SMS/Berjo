@@ -297,18 +297,17 @@ const deleteOrder = async (req, res) => {
     const id = req.params.id
 
     try {
-        const blind = await prismaClient.blind.deleteMany({
+        const blind = prismaClient.blind.deleteMany({
             where: {
                 order_id: id
             }
         })
 
-        const order = await prismaClient.order.delete({
+        const order = prismaClient.order.delete({
             where: {
                 id
             }
         })
-
 
         const transaction = await prismaClient.$transaction([blind, order])
 

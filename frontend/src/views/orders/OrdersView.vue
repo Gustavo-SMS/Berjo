@@ -10,7 +10,10 @@
             <button @click="getByStatus">Filtrar</button>
             
             <div v-for="order in orders" :key="order.id" class="order-block">
-                <h3><!--Pedido #{{ order.id }} ---> Cliente: {{ order.customer.name }} ({{ order.status }})</h3>
+                <div class="order-header">
+                    <h3>Cliente: {{ order.customer.name }} ({{ order.status }})</h3>
+                    <button @click="deleteOrder(order.id)" class="btn btn-danger">Excluir</button>
+                </div>
 
                 <div class="row header">
                     <div class="col-1"><strong>Qtd</strong></div>
@@ -73,6 +76,23 @@ const getByStatus = async (event) => {
     if (selected.value) getOrders(selected.value)
 }
 
+const deleteOrder = async (orderId) => {
+    if (!confirm('Tem certeza que deseja excluir este pedido?')) return
+
+    try {
+        const response = await fetch(`http://127.0.0.1:3333/orders/${orderId}`, {
+            method: 'DELETE',
+            headers: { 'Content-type': 'application/json' },
+            credentials: 'include'
+        })
+
+        if (!response.ok) throw new Error('Erro ao excluir pedido')
+
+        orders.value = orders.value.filter(order => order.id !== orderId)
+    } catch (error) {
+        console.error(error.message)
+    }
+}
 </script>
 
 <style scoped>
@@ -100,6 +120,13 @@ div.box {
     margin-bottom: 20px;
     border-radius: 8px;
     box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
 }
 
 .row.header {
