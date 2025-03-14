@@ -31,9 +31,9 @@
 
         <!-- <button @click="changeToInput" type="button" class="btn btn-danger col-1 row justify-content-center">Editar</button>
 
-        <button @click="submitUpdate" type="submit" class="btn col-1 row justify-content-center" :disabled="disabled">Enviar</button>
+        <button @click="submitUpdate" type="submit" class="btn col-1 row justify-content-center" :disabled="disabled">Enviar</button>-->
 
-        <button @click="openDeleteModal" type="button" class="btn col-1 row justify-content-center">Excluir</button> -->
+        <button @click="openDeleteModal" type="button" class="btn btn-danger col-1 row justify-content-center">Excluir</button> 
       </form>
       <Teleport to="body">
         <ConfirmationModal
@@ -50,7 +50,7 @@
 import { ref } from 'vue'
 import ConfirmationModal from '@/components/ConfirmationModal.vue'
 
-const props = defineProps(['id', 'name', 'quantity', 'type', 'collection', 'color', 'width', 'height', 'command_height', 'model', 'status', 'getByStatus'])
+const props = defineProps(['id', 'quantity', 'type', 'collection', 'color', 'width', 'height', 'command_height', 'model', 'getByStatus'])
 
 const showModal = ref(false)
 
@@ -66,7 +66,6 @@ const changeToInput = () => {
     disabled.value = !disabled.value
 }
 
-const editableName = ref(props.name)
 const editableQuantity = ref(props.quantity)
 const editableType = ref(props.type)
 const editableCollection = ref(props.collection)
@@ -74,7 +73,6 @@ const editableWidth = ref(props.width)
 const editableHeight = ref(props.height)
 const editableCommand_height = ref(props.command_height)
 const editableModel = ref(props.model)
-const editableStatus = ref(props.status)
 
 const submitUpdate = async (event) => {
       event.preventDefault()
@@ -114,7 +112,7 @@ const submitUpdate = async (event) => {
 
 const deleteOrder = async () => {
   try {
-        const response = await fetch(`http://127.0.0.1:3333/orders/${props.id}`, {
+        const response = await fetch(`http://127.0.0.1:3333/blinds/${props.id}`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
@@ -125,8 +123,7 @@ const deleteOrder = async () => {
           throw new Error('Falha ao excluir persiana')
         }
 
-        const result = await response.json()
-        console.log('Cliente excluido:', result)
+        console.log('Persiana excluida')
         props.getByStatus()
       } catch (err) {
         console.error('Erro ao excluir persiana:', err.message)

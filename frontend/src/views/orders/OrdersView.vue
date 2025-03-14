@@ -37,7 +37,6 @@
                     :height="blind.height"
                     :command_height="blind.command_height"
                     :model="blind.model"
-                    :status="order.status"
                     :getByStatus="getByStatus"
                 />
             </div>
@@ -72,7 +71,6 @@ const getOrders = async (status) => {
 onMounted(() => getOrders('Em espera'))
 
 const getByStatus = async (event) => {
-    event.preventDefault()
     if (selected.value) getOrders(selected.value)
 }
 
