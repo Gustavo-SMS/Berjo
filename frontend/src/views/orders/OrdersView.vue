@@ -11,7 +11,18 @@
             
             <div v-for="order in orders" :key="order.id" class="order-block">
                 <div class="order-header">
-                    <h3>Cliente: {{ order.customer.name }} ({{ order.status }})</h3>
+                    <h3>Cliente: {{ order.customer.name }}</h3>
+
+                    <select v-if="editingOrderId === order.id" v-model="statusMap[order.id]">
+                        <option value="Em espera">Em espera</option>
+                        <option value="Em produção">Em produção</option>
+                        <option value="Concluido">Concluído</option>
+                    </select>
+                    <h3 v-else>({{ order.status }})</h3>
+
+                    <button v-if="editingOrderId === order.id" @click="changeStatus(order.id)" class="btn btn-success">Confirmar</button>
+                    <button v-else @click="editStatus(order.id, order.status)" class="btn btn-primary">Mudar Status</button>
+
                     <button @click="deleteOrder(order.id)" class="btn btn-danger">Excluir</button>
                 </div>
 
@@ -45,11 +56,47 @@
 </template>
 
 <script setup>
-import OrderRow from '@/components/order/OrderRow.vue';
-import { ref, onMounted } from 'vue';
+import OrderRow from '@/components/order/OrderRow.vue'
+import { ref, onMounted } from 'vue'
 
 const selected = ref('')
 const orders = ref([])
+
+const editingOrderId = ref(null)
+const statusMap = ref({})
+
+const editStatus = (orderId, currentStatus) => {
+    editingOrderId.value = orderId
+    statusMap.value[orderId] = currentStatus
+}
+
+const changeStatus = async (orderId) => {
+    const newStatus = statusMap.value[orderId]
+
+    if (!newStatus) {
+        alert("Selecione um status válido.")
+        return;
+    }
+
+    const payload = { id: orderId, status: newStatus }
+
+    try {
+        const response = await fetch(`http://127.0.0.1:3333/orders/status/`, {
+            method: 'PUT',
+            headers: { 'Content-type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify(payload)
+        })
+
+        if (!response.ok) throw new Error('Erro ao mudar status')
+
+        await getOrders(selected.value || 'Em espera')
+
+        editingOrderId.value = null
+    } catch (error) {
+        console.error(error.message)
+    }
+}
 
 const getOrders = async (status) => {
     try {
@@ -70,7 +117,7 @@ const getOrders = async (status) => {
 
 onMounted(() => getOrders('Em espera'))
 
-const getByStatus = async (event) => {
+const getByStatus = async () => {
     if (selected.value) getOrders(selected.value)
 }
 

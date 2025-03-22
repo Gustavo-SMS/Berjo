@@ -10,8 +10,8 @@
             <SelectBlindType 
                 v-if="type" 
                 :key="type"
-                @selectedOption="selectedBlindTypeId" 
                 :type="type"
+                @selectedOption="selectedBlindTypeId" 
                 @change="$emit('updateRow', { field: 'type', value: blindTypeId })"
             />
         </div>

@@ -5,12 +5,17 @@
             <p v-else>{{ quantity }}</p>
         </div>
         <div class="col-2">
-            <input v-if="isEditing" type="text" class="form-control" v-model="editableType" id="type" name="type">
+            <SelectType v-if="isEditing" @selectedOption="selectedType" :selected="editableType"/>
             <p v-else>{{ type }}</p>
         </div>
         <div class="col-2">
-            <input v-if="isEditing" type="text" class="form-control" v-model="editableCollection" id="collection" name="collection">
-            <p v-else>{{ collection + ' ' + color }}</p>
+          <!-- <SelectBlindType 
+                v-if="type" 
+                :key="type"
+                :type="type"
+                @selectedOption="selectedBlindTypeId" 
+            /> -->
+            <p >{{ collection + ' ' + color }}</p>
         </div>
         <div class="col-1">
             <input v-if="isEditing" type="number" class="form-control" v-model="editableWidth" id="width" name="width">
@@ -25,32 +30,37 @@
             <p v-else>{{ command_height }}</p>
         </div>
         <div class="col-1">
-            <input v-if="isEditing" type="text" class="form-control" v-model="editableModel" id="model" name="model">
+            <select v-if="isEditing" class="form-control" v-model="editableModel">
+               <option v-for="option in modelOptions" :key="option" :value="option">{{ option }}</option>
+            </select>
             <p v-else>{{ model }}</p>
         </div>
 
-        <!-- <button @click="changeToInput" type="button" class="btn btn-danger col-1 row justify-content-center">Editar</button>
+        <button @click="changeToInput" type="button" class="btn btn-danger col-1 row justify-content-center">Editar</button>
 
-        <button @click="submitUpdate" type="submit" class="btn col-1 row justify-content-center" :disabled="disabled">Enviar</button>-->
+        <button @click="submitUpdate" type="submit" class="btn col-1 row justify-content-center" :disabled="disabled">Enviar</button>
 
         <button @click="openDeleteModal" type="button" class="btn btn-danger col-1 row justify-content-center">Excluir</button> 
       </form>
+
       <Teleport to="body">
         <ConfirmationModal
           v-if="showModal"
           :show="showModal"
           message="Tem certeza que deseja excluir?"
-          :onConfirm="deleteOrder"
+          :onConfirm="deleteBlind"
           @close="showModal = false"
         />
       </Teleport>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import ConfirmationModal from '@/components/ConfirmationModal.vue'
+import SelectType from './formCreateOrder/SelectType.vue'
+import SelectBlindType from './formCreateOrder/SelectBlindType.vue'
 
-const props = defineProps(['id', 'quantity', 'type', 'collection', 'color', 'width', 'height', 'command_height', 'model', 'getByStatus'])
+const props = defineProps(['id', 'name', 'quantity', 'type', 'collection', 'color', 'width', 'height', 'command_height', 'model', 'status', 'getByStatus'])
 
 const showModal = ref(false)
 
@@ -66,6 +76,7 @@ const changeToInput = () => {
     disabled.value = !disabled.value
 }
 
+const editableName = ref(props.name)
 const editableQuantity = ref(props.quantity)
 const editableType = ref(props.type)
 const editableCollection = ref(props.collection)
@@ -73,6 +84,26 @@ const editableWidth = ref(props.width)
 const editableHeight = ref(props.height)
 const editableCommand_height = ref(props.command_height)
 const editableModel = ref(props.model)
+const editableStatus = ref(props.status)
+
+const selectedType = (event, arrayBlindTypes) => {
+    editableType.value = arrayBlindTypes[event.target.selectedIndex] || null
+}
+
+const selectedBlindTypeId = (event, arrayBlindTypes) => {
+    editableCollection.value = arrayBlindTypes[event.target.selectedIndex].id || ''
+}
+
+const modelOptions = computed(() => {
+    const typeMap = {
+        'Vertical': ['Lateral', 'Central', 'Invertida'],
+        'Horizontal': ['Dir', 'Esq'],
+        'Rolo': ['Dir', 'Esq', 'Duplex'],
+        'Romana': ['Dir', 'Esq', 'Duplex'],
+        'Double Vision': ['Dir', 'Esq', 'Duplex'],
+    }
+    return typeMap[editableType.value] || []
+})
 
 const submitUpdate = async (event) => {
       event.preventDefault()
@@ -110,7 +141,7 @@ const submitUpdate = async (event) => {
       }
     }
 
-const deleteOrder = async () => {
+const deleteBlind = async () => {
   try {
         const response = await fetch(`http://127.0.0.1:3333/blinds/${props.id}`, {
           method: 'DELETE',

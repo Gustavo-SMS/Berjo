@@ -45,8 +45,8 @@
 </template>
 
 <script setup>
-import SelectCustomers from '../../components/formCreateOrder/SelectCustomers.vue';
-import OrderRow from '../../components/formCreateOrder/CreateOrderRow.vue'
+import SelectCustomers from '../../components/order/formCreateOrder/SelectCustomers.vue';
+import OrderRow from '../../components/order/formCreateOrder/CreateOrderRow.vue'
 import { ref } from 'vue';
 
 const customerId = ref('')
