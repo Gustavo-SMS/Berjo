@@ -60,7 +60,7 @@ import ConfirmationModal from '@/components/ConfirmationModal.vue'
 import SelectType from './formCreateOrder/SelectType.vue'
 import SelectBlindType from './formCreateOrder/SelectBlindType.vue'
 
-const props = defineProps(['id', 'name', 'quantity', 'type', 'collection', 'color', 'width', 'height', 'command_height', 'model', 'status', 'getByStatus'])
+const props = defineProps(['id', 'name', 'quantity', 'type', 'collection', 'color', 'width', 'height', 'command_height', 'model', 'status', 'getWithFilter'])
 
 const showModal = ref(false)
 
@@ -155,7 +155,7 @@ const deleteBlind = async () => {
         }
 
         console.log('Persiana excluida')
-        props.getByStatus()
+        props.getWithFilter()
       } catch (err) {
         console.error('Erro ao excluir persiana:', err.message)
       }

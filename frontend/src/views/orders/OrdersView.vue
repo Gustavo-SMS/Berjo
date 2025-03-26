@@ -1,13 +1,13 @@
 <template>
     <div class="wrapper">
         <div class="box">
-            <select v-model="selected" name="selectStatus" id="selectStatus">
-                <option value=""></option>
+            <select v-model="selectedStatus" name="selectStatus" id="selectStatus">
                 <option value="Em espera">Em espera</option>
                 <option value="Em produção">Em produção</option>
                 <option value="Concluido">Concluido</option>
             </select>
-            <button @click="getByStatus">Filtrar</button>
+            <SelectCustomers @selectedOption="selectedCustomerId" />
+            <button @click="getWithFilter">Filtrar</button>
             
             <div v-for="order in orders" :key="order.id" class="order-block">
                 <div class="order-header">
@@ -48,7 +48,7 @@
                     :height="blind.height"
                     :command_height="blind.command_height"
                     :model="blind.model"
-                    :getByStatus="getByStatus"
+                    :getWithFilter="getWithFilter"
                 />
             </div>
         </div>
@@ -57,13 +57,53 @@
 
 <script setup>
 import OrderRow from '@/components/order/OrderRow.vue'
+import SelectCustomers from '@/components/order/formCreateOrder/SelectCustomers.vue'
 import { ref, onMounted } from 'vue'
 
-const selected = ref('')
+const selectedStatus = ref('')
 const orders = ref([])
 
 const editingOrderId = ref(null)
 const statusMap = ref({})
+
+const customerId = ref('')
+
+const getWithFilter = async () => {
+    await getOrders(selectedStatus.value, customerId.value)
+}
+
+function selectedCustomerId(event, arrayNomes) {
+    customerId.value = arrayNomes[event.target.selectedIndex].id
+}
+
+const getOrders = async (status, customerId) => {
+    let url = 'http://127.0.0.1:3333/orders/filter/'
+
+    const params = new URLSearchParams()
+    if (status) params.append('status', status)
+    if (customerId) params.append('customerId', customerId)
+
+    if (params.toString()) {
+        url += `?${params.toString()}`
+    }
+
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: { 'Content-type': 'application/json' },
+            credentials: 'include'
+        })
+
+        if (!response.ok) throw new Error('Erro ao buscar pedidos')
+
+        const data = await response.json()
+        orders.value = data
+    } catch (error) {
+        console.error(error.message)
+    }
+}
+
+onMounted(() => getOrders('Em espera'))
 
 const editStatus = (orderId, currentStatus) => {
     editingOrderId.value = orderId
@@ -90,35 +130,12 @@ const changeStatus = async (orderId) => {
 
         if (!response.ok) throw new Error('Erro ao mudar status')
 
-        await getOrders(selected.value || 'Em espera')
+        await getOrders(selectedStatus.value || 'Em espera')
 
         editingOrderId.value = null
     } catch (error) {
         console.error(error.message)
     }
-}
-
-const getOrders = async (status) => {
-    try {
-        const response = await fetch(`http://127.0.0.1:3333/orders/status/${status}`, {
-            method: 'GET',
-            headers: { 'Content-type': 'application/json' },
-            credentials: 'include'
-        })
-
-        if (!response.ok) throw new Error('Erro ao buscar pedidos')
-
-        const data = await response.json()
-        orders.value = data
-    } catch (error) {
-        console.error(error.message)
-    }
-}
-
-onMounted(() => getOrders('Em espera'))
-
-const getByStatus = async () => {
-    if (selected.value) getOrders(selected.value)
 }
 
 const deleteOrder = async (orderId) => {

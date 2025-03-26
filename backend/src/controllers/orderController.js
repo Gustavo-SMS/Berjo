@@ -152,6 +152,48 @@ const getOrdersByStatus = async (req, res) => {
     }
 }
 
+const getOrdersByFilter = async (req, res) => {
+    const { status, customerId } = req.query
+
+    try {
+        const orders = await prismaClient.order.findMany({
+            where: {
+                AND: [
+                    { customer_id: customerId },
+                    { status: status }
+                ]
+            },
+            include: {
+                customer: {
+                    select: {
+                        name: true
+                    }
+                },
+                blind: {
+                    include: {
+                        type: {
+                            select: {
+                                type: true,
+                                collection: true,
+                                color: true
+                            }
+                        }
+                    }
+                    
+                },
+            }
+        })
+
+        if(orders.length === 0) {
+            return res.status(404).json({ error: 'Nenhum pedido foi encontrado' })
+        }
+
+        return res.status(200).json(orders)
+    } catch (error) {
+        return res.status(500).json({ error: error.message })
+    }
+}
+
 const createOrder = async (req, res) => {
     const { customer, blinds } = req.body
     
@@ -331,4 +373,5 @@ module.exports = {
     changeStatus,
     updateOrder,
     deleteOrder,
+    getOrdersByFilter
 }
