@@ -1,5 +1,5 @@
 <template>
-    <select  @change="$emit('selectedOption', $event, arrayBlindTypes)" class="form-select" aria-label="Selecione uma coleção">
+    <select v-model="selectedType"  @change="$emit('selectedOption', $event, arrayBlindTypes)" class="form-select" aria-label="Selecione uma coleção">
         <option v-for="(type, index) in arrayBlindTypes" :key="index">
             {{ type }}
         </option>
@@ -7,11 +7,14 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue';
+import { reactive, ref } from 'vue';
 
-defineEmits(['selectedOption']) 
+defineEmits(['selectedOption'])
+const props = defineProps(['typeValue'])
 
 let arrayBlindTypes = reactive([])
+
+const selectedType = ref(props.typeValue || '')
 
 try {
     fetch("http://127.0.0.1:3333/blind_types/type", {
@@ -23,6 +26,10 @@ try {
             res.json().then((types) => {
                 arrayBlindTypes.splice(0, arrayBlindTypes.length, ...[...new Set(types.map(item => item.type))])
                 arrayBlindTypes.unshift('')
+
+                if (props.typeValue && arrayBlindTypes.includes(props.typeValue)) {
+                    selectedType.value = props.typeValue
+                }
             })
         })
 } catch (error) {

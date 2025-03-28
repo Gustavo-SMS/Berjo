@@ -23,7 +23,7 @@
                     <button v-if="editingOrderId === order.id" @click="changeStatus(order.id)" class="btn btn-success">Confirmar</button>
                     <button v-else @click="editStatus(order.id, order.status)" class="btn btn-primary">Mudar Status</button>
 
-                    <button @click="deleteOrder(order.id)" class="btn btn-danger">Excluir</button>
+                    <button :disabled="order.status === 'Concluido'" @click="deleteOrder(order.id)" class="btn btn-danger">Excluir</button>
                 </div>
 
                 <div class="row header">
@@ -48,7 +48,8 @@
                     :height="blind.height"
                     :command_height="blind.command_height"
                     :model="blind.model"
-                    :getWithFilter="getWithFilter"
+                    :status="selectedStatus"
+                    :getOrders="getOrders"
                 />
             </div>
         </div>
@@ -60,7 +61,7 @@ import OrderRow from '@/components/order/OrderRow.vue'
 import SelectCustomers from '@/components/order/formCreateOrder/SelectCustomers.vue'
 import { ref, onMounted } from 'vue'
 
-const selectedStatus = ref('')
+const selectedStatus = ref('Em espera')
 const orders = ref([])
 
 const editingOrderId = ref(null)

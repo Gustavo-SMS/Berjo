@@ -5,17 +5,18 @@
             <p v-else>{{ quantity }}</p>
         </div>
         <div class="col-2">
-            <SelectType v-if="isEditing" @selectedOption="selectedType" :selected="editableType"/>
+            <SelectType v-if="isEditing" @selectedOption="selectedType" :typeValue="editableType"/>
             <p v-else>{{ type }}</p>
         </div>
         <div class="col-2">
-          <!-- <SelectBlindType 
-                v-if="type" 
-                :key="type"
-                :type="type"
+          <SelectBlindType 
+                v-if="isEditing" 
+                :key="editableType"
+                :typeValue="editableType"
+                :collection="editableCollection"
                 @selectedOption="selectedBlindTypeId" 
-            /> -->
-            <p >{{ collection + ' ' + color }}</p>
+            />
+            <p v-else>{{ collection + ' ' + color }}</p>
         </div>
         <div class="col-1">
             <input v-if="isEditing" type="number" class="form-control" v-model="editableWidth" id="width" name="width">
@@ -31,7 +32,7 @@
         </div>
         <div class="col-1">
             <select v-if="isEditing" class="form-control" v-model="editableModel">
-               <option v-for="option in modelOptions" :key="option" :value="option">{{ option }}</option>
+               <option v-for="option in modelOptions" :key="option" >{{ option }}</option>
             </select>
             <p v-else>{{ model }}</p>
         </div>
@@ -60,7 +61,7 @@ import ConfirmationModal from '@/components/ConfirmationModal.vue'
 import SelectType from './formCreateOrder/SelectType.vue'
 import SelectBlindType from './formCreateOrder/SelectBlindType.vue'
 
-const props = defineProps(['id', 'name', 'quantity', 'type', 'collection', 'color', 'width', 'height', 'command_height', 'model', 'status', 'getWithFilter'])
+const props = defineProps(['id', 'quantity', 'type', 'collection', 'color', 'width', 'height', 'command_height', 'model', 'status', 'getOrders'])
 
 const showModal = ref(false)
 
@@ -76,7 +77,6 @@ const changeToInput = () => {
     disabled.value = !disabled.value
 }
 
-const editableName = ref(props.name)
 const editableQuantity = ref(props.quantity)
 const editableType = ref(props.type)
 const editableCollection = ref(props.collection)
@@ -84,7 +84,6 @@ const editableWidth = ref(props.width)
 const editableHeight = ref(props.height)
 const editableCommand_height = ref(props.command_height)
 const editableModel = ref(props.model)
-const editableStatus = ref(props.status)
 
 const selectedType = (event, arrayBlindTypes) => {
     editableType.value = arrayBlindTypes[event.target.selectedIndex] || null
@@ -110,14 +109,11 @@ const submitUpdate = async (event) => {
 
       const payload = {
         id: props.id,
-        name: editableName.value,
-        type: editableType.value,
-        collection: editableCollection.value,
+        blindTypeId: editableCollection.value,
         width: editableWidth.value,
         height: editableHeight.value,
         command_height: editableCommand_height.value,
-        model: editableModel.value,
-        status: editableStatus.value,
+        model: editableModel.value
       }
 
       try {
@@ -132,10 +128,11 @@ const submitUpdate = async (event) => {
         if (!response.ok) {
           throw new Error('Falha ao enviar os dados')
         }
-
+        
         const result = await response.json()
         console.log('Dados atualizados:', result)
-        props.getByStatus()
+        props.getOrders(props.status)
+        changeToInput()
       } catch (err) {
         console.error('Erro ao enviar os dados:', err.message)
       }
@@ -155,7 +152,7 @@ const deleteBlind = async () => {
         }
 
         console.log('Persiana excluida')
-        props.getWithFilter()
+        props.getOrders(props.status)
       } catch (err) {
         console.error('Erro ao excluir persiana:', err.message)
       }
