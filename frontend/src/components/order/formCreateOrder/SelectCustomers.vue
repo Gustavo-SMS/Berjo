@@ -9,28 +9,28 @@
 <script setup>
 import { reactive } from 'vue';
 
-    defineEmits(['selectedOption']) 
+defineEmits(['selectedOption']) 
 
-    const customerNames = reactive([])
+const customerNames = reactive([])
 
-    try {
-        fetch("http://127.0.0.1:3333/customers", {
-            method: 'GET',
-            headers: {
-                'Content-type': 'application/json'
-            },
-            credentials: 'include'
-        }).then((res) => {
-            res.json().then((customers) => {
-                customerNames.push('')
-                customers.map((customer) => {
-                    customerNames.push({id: customer.id, name: customer.name}) 
-                })
+try {
+    fetch("http://127.0.0.1:3333/customers", {
+        method: 'GET',
+        headers: {
+            'Content-type': 'application/json'
+        },
+        credentials: 'include'
+    }).then((res) => {
+        res.json().then((customers) => {
+            customerNames.push('')
+            customers.map((customer) => {
+                customerNames.push({id: customer.id, name: customer.name}) 
             })
         })
-    } catch (error) {
-        console.log(error.message)
-    }
+    })
+} catch (error) {
+    console.log(error.message)
+}
     
         
 </script>

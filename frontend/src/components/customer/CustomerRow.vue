@@ -108,7 +108,7 @@ const submitUpdate = async (event) => {
         }
 
         const result = await response.json()
-        console.log('Dados atualizados:', result)
+        console.log('Dados atualizados com sucesso!')
         props.getCustomers()
       } catch (err) {
         console.error('Erro ao enviar os dados:', err.message)
@@ -129,7 +129,7 @@ const deleteCustomer = async () => {
         }
 
         const result = await response.json()
-        console.log('Cliente excluido:', result)
+        console.log('Cliente excluido com sucesso!')
         props.getCustomers()
       } catch (err) {
         console.error('Erro ao excluir cliente:', err.message)

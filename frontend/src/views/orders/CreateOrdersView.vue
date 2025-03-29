@@ -72,7 +72,7 @@ function selectedCustomerId(event, arrayNomes) {
     customerId.value = arrayNomes[event.target.selectedIndex].id
 }
 
-function submitForm(event) {
+const submitForm = (event) => {
     event.preventDefault()
 
     const data = {

@@ -19,7 +19,7 @@
 
 <script setup>
 
-function submitForm(event) {
+const submitForm = (event) => {
     event.preventDefault()
 
     const form = document.querySelector('form')

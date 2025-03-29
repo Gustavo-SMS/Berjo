@@ -37,25 +37,33 @@
 </template>
 
 <script setup>
+import { useNotificationStore } from '@/stores/notificationStore'
+const notificationStore = useNotificationStore()
 
-function submitForm(event) {
+const submitForm = async (event) => {
     event.preventDefault()
 
     const form = document.querySelector('form')
     const formData = new FormData(form)
     const data = Object.fromEntries(formData)
     try {
-        fetch('http://127.0.0.1:3333/customers', {
+        const response = fetch('http://127.0.0.1:3333/customers', {
         method: 'POST',
         headers: {
             'Content-type': 'application/json'
         },
         body: JSON.stringify(data)
         })
-        .then(res => res.json())
-        .then(data => console.log(data))
+
+        if (!response.ok) {
+            const errorData = await response.json()
+            throw new Error(errorData.message || 'Erro ao criar pedido')
+        }
+
+        notificationStore.addNotification('Pedido criado com sucesso!', 'success')
     } catch (error) {
         console.log(error.message)
+        notificationStore.addNotification(error.message, 'error')
     }
     
 }

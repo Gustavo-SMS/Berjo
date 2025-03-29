@@ -37,7 +37,7 @@ const registerUser = async (req, res) => {
         }
     })
 
-    return res.status(200).json(`Usuário criado com sucesso! ${user.login} - ${user.password}`)
+    return res.status(200).json(`Usuário criado com sucesso! ${user.login}`)
 }
 
 const validateLogin = async (req, res) => {
@@ -82,7 +82,7 @@ const validateLogin = async (req, res) => {
             httpOnly: true,
             secure: false,
             sameSite: 'lax',
-            maxAge: 3600000  // Tempo em milissegundos (1 hora)
+            maxAge: 3600000
         })
 
         res.status(200).json({ msg: 'Autenticação realizada com sucesso' })
