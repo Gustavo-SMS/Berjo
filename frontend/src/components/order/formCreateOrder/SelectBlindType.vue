@@ -7,7 +7,10 @@
 </template>
 
 <script setup>
-import { reactive, ref, watch, nextTick } from 'vue';
+import { reactive, ref, watch, nextTick } from 'vue'
+import { useNotificationStore } from '@/stores/notificationStore'
+
+const notificationStore = useNotificationStore()
 
 defineEmits(['selectedOption']) 
 const props = defineProps(['typeValue', 'collection'])
@@ -27,7 +30,10 @@ const fetchBlindCollections = async (type) => {
                 }
             })
 
-        if (!response.ok) throw new Error("Erro ao buscar coleções")
+        if (!response.ok) {
+            const errorData = await response.json()
+            throw new Error(errorData.error || 'Erro ao buscar coleções')
+        }
 
         const blindTypes = await response.json()
 
@@ -45,6 +51,7 @@ const fetchBlindCollections = async (type) => {
         }
     } catch (error) {
         console.log(error.message)
+        notificationStore.addNotification(error.message, 'error')
     }
 }
 

@@ -4,30 +4,30 @@
             <form action="" class="form">
                 <div class="person">
                     <label for="name">Nome</label>
-                    <input type="text" name="name" id="name">
+                    <input type="text" name="name" id="name" required>
                     
                     <label for="email">Email</label>
-                    <input type="text" name="email" id="email">
+                    <input type="text" name="email" id="email" required>
             
                     <label for="phone">Telefone</label>
-                    <input type="number" name="phone" id="phone">
+                    <input type="number" name="phone" id="phone" maxlength="11" required>
                 </div>
         
                 <div class="adress">
                     <label for="street">Rua</label>
-                    <input type="text" name="street" id="street">
+                    <input type="text" name="street" id="street" required>
             
                     <label for="house_number">Número</label>
-                    <input type="number" name="house_number" id="house_number">
+                    <input type="number" name="house_number" id="house_number" required>
             
                     <label for="city">Cidade</label>
-                    <input type="text" name="city" id="city">
+                    <input type="text" name="city" id="city" required>
             
                     <label for="district">Bairro</label>
-                    <input type="text" name="district" id="district">
+                    <input type="text" name="district" id="district" required>
             
                     <label for="zip">CEP</label>
-                    <input type="number" name="zip" id="zip">
+                    <input type="number" name="zip" id="zip" required>
                 </div>
         
                 <button @click="submitForm" type="submit" class="btn btn-primary">Cadastrar</button>
@@ -38,6 +38,7 @@
 
 <script setup>
 import { useNotificationStore } from '@/stores/notificationStore'
+
 const notificationStore = useNotificationStore()
 
 const submitForm = async (event) => {
@@ -47,20 +48,20 @@ const submitForm = async (event) => {
     const formData = new FormData(form)
     const data = Object.fromEntries(formData)
     try {
-        const response = fetch('http://127.0.0.1:3333/customers', {
+        const response = await fetch('http://127.0.0.1:3333/customers', {
         method: 'POST',
         headers: {
             'Content-type': 'application/json'
         },
         body: JSON.stringify(data)
         })
-
+        
         if (!response.ok) {
             const errorData = await response.json()
-            throw new Error(errorData.message || 'Erro ao criar pedido')
+            throw new Error(errorData.error || 'Erro ao cadastrar cliente')
         }
 
-        notificationStore.addNotification('Pedido criado com sucesso!', 'success')
+        notificationStore.addNotification('Cliente cadastrado com sucesso!', 'success')
     } catch (error) {
         console.log(error.message)
         notificationStore.addNotification(error.message, 'error')

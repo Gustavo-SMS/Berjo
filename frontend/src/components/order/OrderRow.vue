@@ -60,6 +60,9 @@ import { ref, computed } from 'vue'
 import ConfirmationModal from '@/components/ConfirmationModal.vue'
 import SelectType from './formCreateOrder/SelectType.vue'
 import SelectBlindType from './formCreateOrder/SelectBlindType.vue'
+import { useNotificationStore } from '@/stores/notificationStore'
+
+const notificationStore = useNotificationStore()
 
 const props = defineProps(['id', 'quantity', 'type', 'collection', 'color', 'width', 'height', 'command_height', 'model', 'status', 'getOrders'])
 
@@ -126,15 +129,16 @@ const submitUpdate = async (event) => {
         })
 
         if (!response.ok) {
-          throw new Error('Falha ao enviar os dados')
+            const errorData = await response.json()
+            throw new Error(errorData.error || 'Erro ao atualizar persiana')
         }
         
-        const result = await response.json()
-        console.log('Dados atualizados:', result)
+        notificationStore.addNotification('Persiana atualizada', 'success')
         props.getOrders(props.status)
         changeToInput()
-      } catch (err) {
-        console.error('Erro ao enviar os dados:', err.message)
+      } catch (error) {
+        console.error('Erro ao atualizar persiana: ', error.message)
+        notificationStore.addNotification(error.message, 'error')
       }
     }
 
@@ -148,13 +152,15 @@ const deleteBlind = async () => {
         })
 
         if (!response.ok) {
-          throw new Error('Falha ao excluir persiana')
+            const errorData = await response.json()
+            throw new Error(errorData.error || 'Erro ao excluir persiana')
         }
 
-        console.log('Persiana excluida')
+        notificationStore.addNotification('Persiana excluida', 'success')
         props.getOrders(props.status)
-      } catch (err) {
-        console.error('Erro ao excluir persiana:', err.message)
+      } catch (error) {
+        console.error('Erro ao excluir persiana:', error.message)
+        notificationStore.addNotification(error.message, 'error')
       }
 }
 

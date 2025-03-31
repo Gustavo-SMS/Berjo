@@ -7,7 +7,10 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue';
+import { reactive, ref } from 'vue'
+import { useNotificationStore } from '@/stores/notificationStore'
+
+const notificationStore = useNotificationStore()
 
 defineEmits(['selectedOption'])
 const props = defineProps(['typeValue'])
@@ -34,5 +37,6 @@ try {
         })
 } catch (error) {
     console.log(error.message)
+    notificationStore.addNotification(error.message, 'error')
 }
 </script>

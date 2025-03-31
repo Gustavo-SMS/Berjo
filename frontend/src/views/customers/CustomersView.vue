@@ -35,7 +35,10 @@
 
 <script setup>
 import { createVNode, onMounted, render } from 'vue';
-import CustomerRow from '@/components/customer/CustomerRow.vue';
+import CustomerRow from '@/components/customer/CustomerRow.vue'
+import { useNotificationStore } from '@/stores/notificationStore'
+
+const notificationStore = useNotificationStore()
 
     const addRow = (customer) => {
         const container = document.querySelector('div.box')
@@ -87,6 +90,7 @@ import CustomerRow from '@/components/customer/CustomerRow.vue';
             })
         } catch (error) {
             console.log(error.message)
+            notificationStore.addNotification(error.message, 'error')
         }
     }
 
@@ -113,6 +117,7 @@ import CustomerRow from '@/components/customer/CustomerRow.vue';
             })
         } catch (error) {
             console.log(error.message)
+            notificationStore.addNotification(error.message, 'error')
         }
         
     }

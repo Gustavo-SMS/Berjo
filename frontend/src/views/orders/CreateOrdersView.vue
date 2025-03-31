@@ -45,9 +45,12 @@
 </template>
 
 <script setup>
+import { useNotificationStore } from '@/stores/notificationStore'
 import SelectCustomers from '../../components/order/formCreateOrder/SelectCustomers.vue';
 import OrderRow from '../../components/order/formCreateOrder/CreateOrderRow.vue'
 import { ref } from 'vue';
+
+const notificationStore = useNotificationStore()
 
 const customerId = ref('')
 const orderRows = ref([])
@@ -72,7 +75,7 @@ function selectedCustomerId(event, arrayNomes) {
     customerId.value = arrayNomes[event.target.selectedIndex].id
 }
 
-const submitForm = (event) => {
+const submitForm = async (event) => {
     event.preventDefault()
 
     const data = {
@@ -80,17 +83,23 @@ const submitForm = (event) => {
         blinds: orderRows.value
     }
     try {
-        fetch('http://127.0.0.1:3333/orders', {
+        const response = await fetch('http://127.0.0.1:3333/orders', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)
         })
-        .then(res => res.json())
-        .then(data => console.log(data))
+        
+        if (!response.ok) {
+            const errorData = await response.json()
+            throw new Error(errorData.error || 'Erro ao criar pedido')
+        }
+
+        notificationStore.addNotification('Pedido criado com sucesso!', 'success')
     } catch (error) {
         console.log(error.message)
+        notificationStore.addNotification(error.message, 'error')
     }
     
 }

@@ -53,6 +53,9 @@
 <script setup>
 import { ref } from 'vue'
 import ConfirmationModal from '@/components/ConfirmationModal.vue'
+import { useNotificationStore } from '@/stores/notificationStore'
+
+const notificationStore = useNotificationStore()
 
 const props = defineProps(['id', 'name', 'email', 'phone', 'street', 'house_number', 'city', 'district', 'zip', 'getCustomers'])
 
@@ -104,14 +107,16 @@ const submitUpdate = async (event) => {
         })
 
         if (!response.ok) {
-          throw new Error('Falha ao enviar os dados')
+            const errorData = await response.json()
+            throw new Error(errorData.error || 'Erro ao atualizar cliente')
         }
 
-        const result = await response.json()
-        console.log('Dados atualizados com sucesso!')
+        notificationStore.addNotification('Cliente atualizado com sucesso!', 'success')
+
         props.getCustomers()
-      } catch (err) {
-        console.error('Erro ao enviar os dados:', err.message)
+      } catch (error) {
+        console.error('Erro ao enviar os dados:', error.message)
+        notificationStore.addNotification(error.message, 'error')
       }
     }
 
@@ -125,14 +130,16 @@ const deleteCustomer = async () => {
         })
 
         if (!response.ok) {
-          throw new Error('Falha ao excluir cliente')
+            const errorData = await response.json()
+            throw new Error(errorData.error || 'Erro ao excluir cliente')
         }
 
-        const result = await response.json()
-        console.log('Cliente excluido com sucesso!')
+        notificationStore.addNotification('Cliente excluído com sucesso', 'success')
+        
         props.getCustomers()
-      } catch (err) {
-        console.error('Erro ao excluir cliente:', err.message)
+      } catch (error) {
+        console.error('Erro ao excluir cliente:', error.message)
+        notificationStore.addNotification(error.message, 'error')
       }
 }
 

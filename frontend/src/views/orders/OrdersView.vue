@@ -59,7 +59,10 @@
 <script setup>
 import OrderRow from '@/components/order/OrderRow.vue'
 import SelectCustomers from '@/components/order/formCreateOrder/SelectCustomers.vue'
+import { useNotificationStore } from '@/stores/notificationStore'
 import { ref, onMounted } from 'vue'
+
+const notificationStore = useNotificationStore()
 
 const selectedStatus = ref('Em espera')
 const orders = ref([])
@@ -129,13 +132,17 @@ const changeStatus = async (orderId) => {
             body: JSON.stringify(payload)
         })
 
-        if (!response.ok) throw new Error('Erro ao mudar status')
+        if (!response.ok) {
+            const errorData = await response.json()
+            throw new Error(errorData.error || 'Erro ao mudar status')
+        }
 
         await getOrders(selectedStatus.value || 'Em espera')
 
         editingOrderId.value = null
     } catch (error) {
         console.error(error.message)
+        notificationStore.addNotification(error.message, 'error')
     }
 }
 
@@ -149,11 +156,17 @@ const deleteOrder = async (orderId) => {
             credentials: 'include'
         })
 
-        if (!response.ok) throw new Error('Erro ao excluir pedido')
+        if (!response.ok) {
+            const errorData = await response.json()
+            throw new Error(errorData.error || 'Erro ao excluir pedido')
+        }
+
+        notificationStore.addNotification('Pedido excluido', 'success')
 
         orders.value = orders.value.filter(order => order.id !== orderId)
     } catch (error) {
         console.error(error.message)
+        notificationStore.addNotification(error.message, 'error')
     }
 }
 </script>
