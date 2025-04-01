@@ -64,7 +64,7 @@ import { useNotificationStore } from '@/stores/notificationStore'
 
 const notificationStore = useNotificationStore()
 
-const props = defineProps(['id', 'quantity', 'type', 'collection', 'color', 'width', 'height', 'command_height', 'model', 'status', 'getOrders'])
+const props = defineProps(['id', 'quantity', 'type', 'collection', 'blindTypeId', 'color', 'width', 'height', 'command_height', 'model', 'status', 'getOrders'])
 
 const showModal = ref(false)
 
@@ -87,13 +87,14 @@ const editableWidth = ref(props.width)
 const editableHeight = ref(props.height)
 const editableCommand_height = ref(props.command_height)
 const editableModel = ref(props.model)
+const editableBlindTypeId = ref(props.blindTypeId)
 
 const selectedType = (event, arrayBlindTypes) => {
     editableType.value = arrayBlindTypes[event.target.selectedIndex] || null
 }
 
 const selectedBlindTypeId = (event, arrayBlindTypes) => {
-    editableCollection.value = arrayBlindTypes[event.target.selectedIndex].id || ''
+    editableBlindTypeId.value = arrayBlindTypes[event.target.selectedIndex].id || props.blindTypeId
 }
 
 const modelOptions = computed(() => {
@@ -112,13 +113,12 @@ const submitUpdate = async (event) => {
 
       const payload = {
         id: props.id,
-        blindTypeId: editableCollection.value,
+        blindTypeId: editableBlindTypeId.value,
         width: editableWidth.value,
         height: editableHeight.value,
         command_height: editableCommand_height.value,
         model: editableModel.value
       }
-
       try {
         const response = await fetch("http://127.0.0.1:3333/blinds", {
           method: 'PUT',

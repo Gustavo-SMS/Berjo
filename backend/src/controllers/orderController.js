@@ -14,6 +14,7 @@ const getAll = async (req, res) => {
                     include: {
                         type: {
                             select: {
+                                id: true,
                                 type: true,
                                 collection: true,
                                 color: true
@@ -53,6 +54,7 @@ const getOne = async (req, res) => {
                     include: {
                         type: {
                             select: {
+                                id: true,
                                 type: true,
                                 collection: true,
                                 color: true
@@ -92,6 +94,7 @@ const getOrdersByCustomer = async (req, res) => {
                     include: {
                         type: {
                             select: {
+                                id: true,
                                 type: true,
                                 collection: true,
                                 color: true
@@ -131,6 +134,7 @@ const getOrdersByStatus = async (req, res) => {
                     include: {
                         type: {
                             select: {
+                                id: true,
                                 type: true,
                                 collection: true,
                                 color: true
@@ -173,6 +177,7 @@ const getOrdersByFilter = async (req, res) => {
                     include: {
                         type: {
                             select: {
+                                id: true,
                                 type: true,
                                 collection: true,
                                 color: true

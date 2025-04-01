@@ -23,6 +23,8 @@
                     <button v-if="editingOrderId === order.id" @click="changeStatus(order.id)" class="btn btn-success">Confirmar</button>
                     <button v-else @click="editStatus(order.id, order.status)" class="btn btn-primary">Mudar Status</button>
 
+                    <h3>Total: {{ order.total_price }}</h3>
+
                     <button :disabled="order.status === 'Concluido'" @click="deleteOrder(order.id)" class="btn btn-danger">Excluir</button>
                 </div>
 
@@ -43,6 +45,7 @@
                     :quantity="blind.quantity"
                     :type="blind.type.type"
                     :collection="blind.type.collection"
+                    :blindTypeId="blind.type.id"
                     :color="blind.type.color"
                     :width="blind.width"
                     :height="blind.height"
@@ -99,7 +102,6 @@ const getOrders = async (status, customerId) => {
         })
 
         if (!response.ok) throw new Error('Erro ao buscar pedidos')
-
         const data = await response.json()
         orders.value = data
     } catch (error) {
