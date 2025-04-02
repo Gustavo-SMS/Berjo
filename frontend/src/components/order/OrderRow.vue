@@ -41,7 +41,13 @@
 
         <button @click="submitUpdate" type="submit" class="btn col-1 row justify-content-center" :disabled="disabled">Enviar</button>
 
-        <button @click="openDeleteModal" type="button" class="btn btn-danger col-1 row justify-content-center">Excluir</button> 
+        <button @click="openDeleteModal" type="button" class="btn btn-danger col-1 row justify-content-center">Excluir</button>
+        
+        <div>
+            <label for="observation">Observações: </label>
+            <input v-if="isEditing" type="text" class="form-control" v-model="editableObservation" id="observation" name="observation">
+            <p v-else>{{ observation }}</p>
+        </div>
       </form>
 
       <Teleport to="body">
@@ -64,7 +70,7 @@ import { useNotificationStore } from '@/stores/notificationStore'
 
 const notificationStore = useNotificationStore()
 
-const props = defineProps(['id', 'quantity', 'type', 'collection', 'blindTypeId', 'color', 'width', 'height', 'command_height', 'model', 'status', 'getOrders'])
+const props = defineProps(['id', 'quantity', 'type', 'collection', 'blindTypeId', 'color', 'width', 'height', 'command_height', 'model', 'observation', 'status', 'getOrders'])
 
 const showModal = ref(false)
 
@@ -87,6 +93,7 @@ const editableWidth = ref(props.width)
 const editableHeight = ref(props.height)
 const editableCommand_height = ref(props.command_height)
 const editableModel = ref(props.model)
+const editableObservation = ref(props.observation)
 const editableBlindTypeId = ref(props.blindTypeId)
 
 const selectedType = (event, arrayBlindTypes) => {
@@ -113,11 +120,13 @@ const submitUpdate = async (event) => {
 
       const payload = {
         id: props.id,
+        quantity: editableQuantity.value,
         blindTypeId: editableBlindTypeId.value,
         width: editableWidth.value,
         height: editableHeight.value,
         command_height: editableCommand_height.value,
-        model: editableModel.value
+        model: editableModel.value,
+        observation: editableObservation.value
       }
       try {
         const response = await fetch("http://127.0.0.1:3333/blinds", {

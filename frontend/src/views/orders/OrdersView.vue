@@ -51,6 +51,7 @@
                     :height="blind.height"
                     :command_height="blind.command_height"
                     :model="blind.model"
+                    :observation="blind.observation"
                     :status="selectedStatus"
                     :getOrders="getOrders"
                 />

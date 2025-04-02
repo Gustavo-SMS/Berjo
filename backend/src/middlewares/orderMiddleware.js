@@ -1,6 +1,7 @@
 const { validate: isUuid } = require('uuid')
 const { blindSchema } = require('../schema/validationSchema')
 const { prismaClient } = require('../database/prismaClient')
+const { calculateTotalPrice } = require("../utils/priceCalculator")
 
 const validateId = async (req, res, next) => {
     const { id } = req.params
@@ -46,27 +47,16 @@ const validateBlindData = async (res, blind) => {
 }
 
 const totalPrice = async (req, res, next) => {
-    const { blinds } = req.body
-    let totalPrice = 0
     try {
+        const { blinds } = req.body
+
         for (const blind of blinds) {
             validateBlindData(res, blind)
-            const squareMetre = blind.width * blind.height
-            blind.square_metre = squareMetre * blind.quantity
-            
-            const blindPrice = await prismaClient.blind_Type.findUnique({
-                where: {
-                    id: blind.type
-                },
-                select: {
-                    price: true
-                }
-            })
-            totalPrice += blind.square_metre * blindPrice.price
             
             blind.type = { connect: { id: blind.type } }
         }
-        req.total_price = totalPrice
+
+        req.total_price = await calculateTotalPrice(blinds)
         
         next()
     } catch (error) {
