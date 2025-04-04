@@ -22,25 +22,33 @@
 </template>
 
 <script setup>
+import { useNotificationStore } from '@/stores/notificationStore'
 
-const submitForm = (event) => {
+const notificationStore = useNotificationStore()
+
+const submitForm = async (event) => {
     event.preventDefault()
 
     const form = document.querySelector('form')
     const formData = new FormData(form)
     const data = Object.fromEntries(formData)
     try {
-        fetch('http://127.0.0.1:3333/register', {
+        const response = await fetch('http://127.0.0.1:3333/register', {
         method: 'POST',
         headers: {
             'Content-type': 'application/json'
         },
         body: JSON.stringify(data)
         })
-        .then(res => res.json())
-        .then(data => console.log(data))
+
+        if (!response.ok) {
+            const errorData = await response.json()
+            throw new Error(errorData.error || 'Erro ao cadastrar usuário')
+        }
+        window.location.href = '/login'
     } catch (error) {
         console.log(error.message)
+        notificationStore.addNotification(error.message, 'error')
     }
     
 }

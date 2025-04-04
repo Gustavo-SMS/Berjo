@@ -19,14 +19,14 @@
 
 <script setup>
 
-const submitForm = (event) => {
+const submitForm = async (event) => {
     event.preventDefault()
 
     const form = document.querySelector('form')
     const formData = new FormData(form)
     const data = Object.fromEntries(formData)
     try {
-      fetch('http://127.0.0.1:3333/login', {
+      const response = await fetch('http://127.0.0.1:3333/login', {
         method: 'POST',
         headers: {
             'Content-type': 'application/json'
@@ -34,16 +34,16 @@ const submitForm = (event) => {
         credentials: 'include',
         body: JSON.stringify(data)
         })
-        .then(res => res.json())
-        .then(data =>  {
-          if (data.msg === 'Autenticação realizada com sucesso') {
-            window.location.href = '/'
-          } else {
-              console.error('Erro no login:', data.msg)
-          }
-        })
+        
+        if (!response.ok) {
+            const errorData = await response.json()
+            throw new Error(errorData.error || 'Erro ao logar')
+        }
+        
+        window.location.href = '/'    
     } catch (error) {
       console.log(error.message)
+      notificationStore.addNotification(error.message, 'error')
     }
     
 }

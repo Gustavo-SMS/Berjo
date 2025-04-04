@@ -25,6 +25,7 @@
           </ul>
           <div class="d-lg-flex col-lg-3 justify-content-lg-end">
             <RouterLink to="/login" class="btn btn-primary">Login</RouterLink>
+            <RouterLink to="/register" class="btn btn-secondary">Registrar</RouterLink>
           </div>
         </div>
       </div>
