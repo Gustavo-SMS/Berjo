@@ -1,32 +1,23 @@
 <template>
     <div class="wrapper">
         <div class="box">
-                <input type="text" id="searchByName">
-                <button @click="getByName">Buscar</button>
+                <input type="text" id="searchByType">
+                <button @click="getByType">Buscar tipo</button>
             <div class="row">
                     <div class="col-2">
-                        <label for="" class="form-label">Nome</label>
+                        <label for="" class="form-label">Tipo</label>
                     </div>
                     <div class="col-2">
-                        <label for="" class="form-label">Email</label>
+                        <label for="" class="form-label">Coleção</label>
                     </div>
                     <div class="col-1">
-                        <label for="" class="form-label">Telefone</label>
+                        <label for="" class="form-label">Cor</label>
                     </div>
                     <div class="col-2">
-                        <label for="" class="form-label">Rua</label>
+                        <label for="" class="form-label">Largura máx.</label>
                     </div>
                     <div class="col-1">
-                        <label for="" class="form-label">Número</label>
-                    </div>
-                    <div class="col-2">
-                        <label for="" class="form-label">Cidade</label>
-                    </div>
-                    <div class="col-1">
-                        <label for="" class="form-label">Bairro</label>
-                    </div>
-                    <div class="col-1">
-                        <label for="" class="form-label">CEP</label>
+                        <label for="" class="form-label">Preço</label>
                     </div>
             </div>
         </div>
@@ -34,29 +25,26 @@
 </template>
 
 <script setup>
-import { createVNode, onMounted, render } from 'vue';
-import CustomerRow from '@/components/customer/CustomerRow.vue'
+import { createVNode, onMounted, render } from 'vue'
+import BlindTypeRow from '@/components/blindType/BlindTypeRow.vue'
 import { useNotificationStore } from '@/stores/notificationStore'
 
 const notificationStore = useNotificationStore()
 
-    const addRow = (customer) => {
+    const addRow = (blindType) => {
         const container = document.querySelector('div.box')
         const wrapper = document.createElement('div');
         container.appendChild(wrapper)
 
-        const vNode = createVNode(CustomerRow, 
+        const vNode = createVNode(BlindTypeRow, 
         {   
-            id: customer.id,
-            name: customer.name,
-            email: customer.email,
-            phone: customer.phone,
-            street: customer.address.street,
-            house_number: customer.address.house_number,
-            city: customer.address.city,
-            district: customer.address.district,
-            zip: customer.address.zip,
-            getCustomers
+            id: blindType.id,
+            type: blindType.type,
+            collection: blindType.collection,
+            color: blindType.color,
+            max_width: blindType.max_width,
+            price: blindType.price,
+            getBlindTypes
         })
 
         render(vNode, wrapper)
@@ -72,9 +60,9 @@ const notificationStore = useNotificationStore()
         }
     }
 
-    const getCustomers = async () => {
+    const getBlindTypes = async () => {
         try {
-            const response = await fetch("http://127.0.0.1:3333/customers", {
+            const response = await fetch("http://127.0.0.1:3333/blind_types", {
                 method: 'GET',
                 headers: {
                     'Content-type': 'application/json'
@@ -89,8 +77,8 @@ const notificationStore = useNotificationStore()
 
             const data = await response.json()
             clearScreen()
-            data.map(customer => {
-                addRow(customer)
+            data.map(blindType => {
+                addRow(blindType)
             })
         } catch (error) {
             console.log(error.message)
@@ -98,19 +86,19 @@ const notificationStore = useNotificationStore()
         }
     }
 
-    onMounted(getCustomers)
+    onMounted(getBlindTypes)
 
-    const getByName = async (event) => {
+    const getByType = async (event) => {
         event.preventDefault()
 
-        const input = document.querySelector('#searchByName')
+        const input = document.querySelector('#searchByType')
 
         if(!input.value) {
-            return getCustomers()
+            return getBlindTypes()
         }
 
         try {
-            const response = await fetch(`http://127.0.0.1:3333/customers/name/${input.value}`, {
+            const response = await fetch(`http://127.0.0.1:3333/blind_types/type/${input.value}`, {
                 method: 'GET',
                 headers: {
                     'Content-type': 'application/json'
@@ -119,13 +107,13 @@ const notificationStore = useNotificationStore()
 
             if (!response.ok) {
                 const errorData = await response.json()
-                throw new Error(errorData.error || 'Erro ao buscar cliente')
+                throw new Error(errorData.error || 'Erro ao buscar tipo')
             }   
 
             const data = await response.json()
             clearScreen()
-            data.map(customer => {
-                addRow(customer)
+            data.map(blindType => {
+                addRow(blindType)
             })
         } catch (error) {
             console.log(error.message)

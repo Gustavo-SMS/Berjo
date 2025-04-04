@@ -38,6 +38,16 @@ const router = createRouter({
       path: '/orders',
       name: 'orders',
       component: () => import('../views/orders/OrdersView.vue')
+    },
+    {
+      path: '/blindTypes',
+      name: 'blindTypes',
+      component: () => import('../views/blindTypes/BlindTypeView.vue')
+    },
+    {
+      path: '/createBlindTypes',
+      name: 'createBlindTypes',
+      component: () => import('../views/blindTypes/CreateBlindTypeView.vue')
     }
   ]
 })

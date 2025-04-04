@@ -102,11 +102,15 @@ const getOrders = async (status, customerId) => {
             credentials: 'include'
         })
 
-        if (!response.ok) throw new Error('Erro ao buscar pedidos')
+        if (!response.ok) {
+            const errorData = await response.json()
+            throw new Error(errorData.error || 'Erro ao buscar pedidos')
+        }
         const data = await response.json()
         orders.value = data
     } catch (error) {
         console.error(error.message)
+        notificationStore.addNotification(error.message, 'error')
     }
 }
 
@@ -122,7 +126,7 @@ const changeStatus = async (orderId) => {
 
     if (!newStatus) {
         alert("Selecione um status válido.")
-        return;
+        return
     }
 
     const payload = { id: orderId, status: newStatus }
