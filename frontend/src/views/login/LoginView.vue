@@ -18,6 +18,9 @@
 </template>
 
 <script setup>
+import { useNotificationStore } from '@/stores/notificationStore'
+
+const notificationStore = useNotificationStore()
 
 const submitForm = async (event) => {
     event.preventDefault()

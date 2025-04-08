@@ -7,22 +7,36 @@
 
         <div class="collapse navbar-collapse d-lg-flex" id="navbarsExample11">
           <RouterLink to="/" class="navbar-brand col-lg-3 me-0" href="#">Berjo</RouterLink>
+
           <ul class="navbar-nav col-lg-6 justify-content-lg-center">
-            <li class="nav-item">
-              <RouterLink to="/customers" class="nav-link">Clientes</RouterLink>
-            </li>
-            <li class="nav-item">
-              <RouterLink to="/orders" class="nav-link">Pedidos</RouterLink>
-            </li>
-            <!-- <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Dropdown</a>
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Clientes</a>
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Action</a></li>
-                <li><a class="dropdown-item" href="#">Another action</a></li>
-                <li><a class="dropdown-item" href="#">Something else here</a></li>
+                <li><RouterLink class="dropdown-item" to="/customers">Ver clientes</RouterLink></li>
+                <li><RouterLink class="dropdown-item" to="/createCustomer">Cadastrar cliente</RouterLink></li>
               </ul>
-            </li> -->
+            </li>
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Pedidos</a>
+
+              <ul class="dropdown-menu">
+                <li><RouterLink class="dropdown-item" to="/orders">Ver pedidos</RouterLink></li>
+                <li><RouterLink class="dropdown-item" to="/createOrder">Cadastrar pedido</RouterLink></li>
+              </ul>
+            </li>
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Tipos de persiana</a>
+              
+              <ul class="dropdown-menu">
+                <li><RouterLink class="dropdown-item" to="/blindTypes">Ver tipos</RouterLink></li>
+                <li><RouterLink class="dropdown-item" to="/createBlindTypes">Cadastrar tipo</RouterLink></li>
+              </ul>
+          </li>
           </ul>
+
           <div class="d-lg-flex col-lg-3 justify-content-lg-end">
             <RouterLink to="/login" class="btn btn-primary">Login</RouterLink>
             <RouterLink to="/register" class="btn btn-secondary">Registrar</RouterLink>
