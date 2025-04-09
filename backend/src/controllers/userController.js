@@ -2,6 +2,29 @@ const { prismaClient } = require('../database/prismaClient')
 const bcrypt = require("bcrypt")
 const jwt = require('jsonwebtoken')
 
+const getUnlinkedUsers = async (req, res) => {
+  try {
+    const users = await prismaClient.user.findMany({
+      where: {
+        role: 'CUSTOMER',
+        customer: null,
+      },
+      select: {
+        id: true,
+        login: true
+      }
+    })
+    
+    if(users.length === 0) {
+        return res.status(404).json({ error: 'Nenhum usuário foi encontrado' })
+    }
+    
+    return res.status(200).json(users)
+  } catch (error) {
+    return res.status(500).json({ error: 'Erro ao buscar usuários não vinculados' })
+  }
+}
+
 const registerUser = async (req, res) => {
     const { login, password, confirmPassword } = req.body
 
@@ -24,7 +47,7 @@ const registerUser = async (req, res) => {
      })
 
     if(userExists) {
-        return res.status(422).json({ msg : 'Por favor, utilize outro e-mail!'})
+        return res.status(422).json({ msg : 'Por favor, utilize outro login!'})
     }
 
     const salt = await bcrypt.genSalt(12)
@@ -94,6 +117,7 @@ const validateLogin = async (req, res) => {
 }
 
 module.exports = {
+    getUnlinkedUsers,
     registerUser,
     validateLogin
 }

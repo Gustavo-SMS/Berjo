@@ -18,9 +18,11 @@
 </template>
 
 <script setup>
+import { useRouter } from 'vue-router'
 import { useNotificationStore } from '@/stores/notificationStore'
 
 const notificationStore = useNotificationStore()
+const router = useRouter()
 
 const submitForm = async (event) => {
     event.preventDefault()
@@ -43,7 +45,7 @@ const submitForm = async (event) => {
             throw new Error(errorData.error || 'Erro ao logar')
         }
         
-        window.location.href = '/'    
+        router.push('/')   
     } catch (error) {
       console.log(error.message)
       notificationStore.addNotification(error.message, 'error')

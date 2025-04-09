@@ -21,6 +21,7 @@ router.get('/', (req, res) => {
 
 router.post('/register', userMiddleware.validateUserData, userController.registerUser)
 router.post('/login', userMiddleware.validateLogin, userController.validateLogin)
+router.get('/users/unlinked', userController.getUnlinkedUsers)
 
 router.get('/customers', customerController.getAll)
 router.get('/customers/:id', customerController.getOne)

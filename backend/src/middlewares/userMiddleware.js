@@ -31,6 +31,16 @@ const validateLogin = async (req, res, next) => {
     const data = req.body
 
     try {
+        const user = await prisma.user.findUnique({
+            where: { login },
+            include: { customer: true }
+          })
+          
+        if (user.role === 'USER' && !user.customer) {
+            return res.status(403).json({ error: 'Usuário ainda não vinculado a um cliente.' })
+        }
+
+
         const value = await loginSchema.validateAsync(data);
    
         if(value) {

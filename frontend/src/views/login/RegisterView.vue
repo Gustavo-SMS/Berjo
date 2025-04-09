@@ -4,8 +4,8 @@
             <h1 class="h3 mb-3 fw-normal">Faça Login</h1>
 
             <div class="form-floating">
-            <input id="login" name="login" type="email" class="form-control" placeholder="name@example.com">
-            <label for="login">Email</label>
+            <input id="login" name="login" type="text" class="form-control" placeholder="Login">
+            <label for="login">Login</label>
             </div>
             <div class="form-floating">
             <input id="password" name="password" type="password" class="form-control" placeholder="Senha">
@@ -22,9 +22,11 @@
 </template>
 
 <script setup>
+import { useRouter } from 'vue-router'
 import { useNotificationStore } from '@/stores/notificationStore'
 
 const notificationStore = useNotificationStore()
+const router = useRouter()
 
 const submitForm = async (event) => {
     event.preventDefault()
@@ -41,16 +43,16 @@ const submitForm = async (event) => {
         body: JSON.stringify(data)
         })
 
-        if (!response.ok) {
+        if (response.ok) {
+            router.push(`/createCustomer`)
+        } else {
             const errorData = await response.json()
             throw new Error(errorData.error || 'Erro ao cadastrar usuário')
         }
-        window.location.href = '/login'
     } catch (error) {
         console.log(error.message)
         notificationStore.addNotification(error.message, 'error')
     }
-    
 }
 
 </script>

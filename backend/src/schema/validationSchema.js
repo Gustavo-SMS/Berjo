@@ -1,13 +1,13 @@
 const Joi = require('joi')
 
 const userSchema = Joi.object({
-    login: Joi.string().email().required(), 
+    login: Joi.string().required(), 
     password: Joi.string().min(6).pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).required(),
     confirmPassword: Joi.ref("password")
 })
 
 const loginSchema = Joi.object({
-    login: Joi.string().email().required(), 
+    login: Joi.string().required(), 
     password: Joi.string().min(6).pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).required(),
 })
 
@@ -19,7 +19,8 @@ const customerSchema = Joi.object({
     house_number: Joi.number().integer(), 
     city: Joi.string().required(), 
     district: Joi.string().required(), 
-    zip: Joi.number().integer().required()
+    zip: Joi.number().integer().required(),
+    userId: Joi.string().required()
 })
 
 const blindSchema = Joi.object({

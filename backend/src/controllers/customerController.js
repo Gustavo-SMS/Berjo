@@ -70,9 +70,17 @@ const getCustomerByName = async (req, res) => {
 }
 
 const createCustomer = async (req, res) => {
-    const { name, email, phone, street, house_number, city, district, zip  } = req.body
+    const { name, email, phone, street, house_number, city, district, zip, userId  } = req.body
     
     try {
+        const user = await prismaClient.user.findUnique({
+            where: { id: userId }
+          })
+      
+        if (!user) {
+            return res.status(400).json({ error: 'Usuário não encontrado.' });
+        }
+
         const customer = await prismaClient.customer.create({
             data: {
                 name,
@@ -86,7 +94,12 @@ const createCustomer = async (req, res) => {
                         district,
                         zip: parseInt(zip)
                     }
-                }
+                },
+                user: {
+                    connect: {
+                      id: userId
+                    }
+                  }
             }
         })
 
@@ -127,6 +140,25 @@ const updateCustomer = async (req, res) => {
         const transaction = await prismaClient.$transaction([customer, address])
     
         return res.status(201).json(transaction)
+    } catch (error) {
+        return res.status(500).json({ error: error.message })
+    }
+}
+
+const updateDebt = async (req, res) => {
+    const { id, debt } = req.body
+    
+    try {
+        const updatedDebt = await prismaClient.customer.update({
+            where: {
+                id
+            },
+            data: {
+                debt
+            }
+        })
+    
+        return res.status(201).json(updatedDebt)
     } catch (error) {
         return res.status(500).json({ error: error.message })
     }
@@ -175,6 +207,7 @@ module.exports = {
     getCustomerByName,
     createCustomer,
     updateCustomer,
+    updateDebt,
     deleteCustomer,
     restoreCustomer
 }
