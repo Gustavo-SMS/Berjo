@@ -42,7 +42,7 @@ router.delete('/orders/:id', orderController.deleteOrder)
 
 router.get('/blinds', blindController.getAll)
 router.post('/blinds', blindMiddleware.validateBlindData, blindController.createBlind)
-router.put('/blinds', blindController.updateBlind)
+router.put('/blinds', blindMiddleware.calculateBlindPrice, blindController.updateBlind)
 router.delete('/blinds/:id', blindController.deleteBlind)
 
 router.get('/blind_types', blindTypeController.getAll)

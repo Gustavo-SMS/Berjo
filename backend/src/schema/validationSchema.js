@@ -29,7 +29,7 @@ const blindSchema = Joi.object({
     height: Joi.number().required(), 
     command_height: Joi.number().required(), 
     model: Joi.string().min(1).max(3).required(), 
-    type: Joi.string().required(),
+    type_id: Joi.string().required(),
     observation: Joi.string().min(0).max(250),
 })
 

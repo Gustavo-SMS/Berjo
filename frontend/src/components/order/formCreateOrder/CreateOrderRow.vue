@@ -12,7 +12,7 @@
                 :key="type"
                 :typeValue="type"
                 @selectedOption="selectedBlindTypeId" 
-                @change="$emit('updateRow', { field: 'type', value: blindTypeId })"
+                @change="$emit('updateRow', { field: 'type_id', value: type_id })"
             />
         </div>
         <div class="col-1">
@@ -47,7 +47,7 @@ defineProps(['row'])
 defineEmits(['updateRow', 'selectedBlindTypeId'])
 
 const type = ref(null)
-const blindTypeId = ref('')
+const type_id = ref('')
 const model = ref('')
 
 const selectedType = (event, arrayBlindTypes) => {
@@ -55,7 +55,7 @@ const selectedType = (event, arrayBlindTypes) => {
 }
 
 const selectedBlindTypeId = (event, arrayBlindTypes) => {
-    blindTypeId.value = arrayBlindTypes[event.target.selectedIndex].id || ''
+    type_id.value = arrayBlindTypes[event.target.selectedIndex].id || ''
 }
 
 const modelOptions = computed(() => {
@@ -71,7 +71,7 @@ const modelOptions = computed(() => {
 })
 
 watch(type, () => {
-    blindTypeId.value = ''
+    type_id.value = ''
     model.value = ''
 })
 </script>

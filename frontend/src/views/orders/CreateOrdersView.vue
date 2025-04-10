@@ -29,7 +29,7 @@
                     </div>
                 </div>
 
-                <OrderRow 
+                <CreateOrderRow 
                     v-for="(row, index) in orderRows" 
                     :key="index" 
                     :row="row"
@@ -47,7 +47,7 @@
 <script setup>
 import { useNotificationStore } from '@/stores/notificationStore'
 import SelectCustomers from '../../components/order/formCreateOrder/SelectCustomers.vue';
-import OrderRow from '../../components/order/formCreateOrder/CreateOrderRow.vue'
+import CreateOrderRow from '../../components/order/formCreateOrder/CreateOrderRow.vue'
 import { ref } from 'vue';
 
 const notificationStore = useNotificationStore()
@@ -58,7 +58,7 @@ const orderRows = ref([])
 function addRow() {
     orderRows.value.push({
         quantity: '',
-        type: '',
+        type_id: '',
         width: '',
         height: '',
         command_height: '',

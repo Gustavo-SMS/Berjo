@@ -32,6 +32,10 @@
             <input v-if="isEditing" type="number" class="form-control" v-model="editableZip" id="zip" name="zip">
             <p v-else>{{ zip }}</p>
         </div>
+        <div class="col-1">
+            <input v-if="isEditing" type="number" class="form-control" v-model="editableDebt" id="debt" name="debt">
+            <p v-else>{{ debt }}</p>
+        </div>
 
         <button @click="changeToInput" type="button" class="btn btn-danger col-1 row justify-content-center">Editar</button>
 
@@ -57,7 +61,7 @@ import { useNotificationStore } from '@/stores/notificationStore'
 
 const notificationStore = useNotificationStore()
 
-const props = defineProps(['id', 'name', 'email', 'phone', 'street', 'house_number', 'city', 'district', 'zip', 'getCustomers'])
+const props = defineProps(['id', 'name', 'email', 'phone', 'street', 'house_number', 'city', 'district', 'zip', 'debt', 'getCustomers'])
 
 const showModal = ref(false)
 
@@ -81,6 +85,7 @@ const editableHouseNumber = ref(props.house_number);
 const editableCity = ref(props.city);
 const editableDistrict = ref(props.district);
 const editableZip = ref(props.zip);
+const editableDebt = ref(props.debt);
 
 const submitUpdate = async (event) => {
       event.preventDefault();
@@ -95,6 +100,7 @@ const submitUpdate = async (event) => {
         city: editableCity.value,
         district: editableDistrict.value,
         zip: editableZip.value,
+        debt: editableDebt.value,
       }
 
       try {

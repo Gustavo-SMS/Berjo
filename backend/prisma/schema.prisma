@@ -79,6 +79,7 @@ model Blind {
   model           String
   observation     String?
   square_metre    Float
+  blind_price     Float
 
   order           Order @relation(fields: [order_id], references: [id])
   order_id        String

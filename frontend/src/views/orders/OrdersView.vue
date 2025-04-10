@@ -35,7 +35,8 @@
                     <div class="col-1"><strong>Largura</strong></div>
                     <div class="col-1"><strong>Altura</strong></div>
                     <div class="col-1"><strong>Alt. Comando</strong></div>
-                    <div class="col-2"><strong>Modelo</strong></div>
+                    <div class="col-1"><strong>Modelo</strong></div>
+                    <div class="col-1"><strong>Preço</strong></div>
                 </div>
 
                 <OrderRow 
@@ -51,6 +52,7 @@
                     :height="blind.height"
                     :command_height="blind.command_height"
                     :model="blind.model"
+                    :blind_price="blind.blind_price"
                     :observation="blind.observation"
                     :status="selectedStatus"
                     :getOrders="getOrders"

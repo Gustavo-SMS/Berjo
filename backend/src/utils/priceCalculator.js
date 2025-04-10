@@ -14,6 +14,8 @@ const calculateTotalPrice = async (blinds) => {
 
         if (!blindPrice) throw new Error("Tipo de persiana não encontrado")
 
+        blind.blind_price = blind.square_metre * blindPrice.price
+
         totalPrice += blind.square_metre * blindPrice.price
     }
 

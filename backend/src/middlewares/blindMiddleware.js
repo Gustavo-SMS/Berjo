@@ -6,7 +6,7 @@ const validateBlindData = async (req, res, next) => {
     const data = req.body
 
     try {
-        const value = await blindSchema.validateAsync(data);
+        const value = await blindSchema.validateAsync(data)
 
         const order = await checkOrderId(res, data.orderId)
         const blindType = await checkBlindTypeId(res, data.blindTypeId)
@@ -18,7 +18,6 @@ const validateBlindData = async (req, res, next) => {
         } else if (value) {
             next()
         }
-
     }
     catch (e) {
         return res.status(500).json({ error: e.message })
@@ -60,6 +59,30 @@ const checkBlindTypeId = async (res, id) => {
     }
 }
 
+const calculateBlindPrice = async (req, res, next) => {
+    const blind = req.body
+    
+    try {
+        const squareMetre = blind.width * blind.height
+        blind.square_metre = squareMetre * blind.quantity
+
+        const blindPrice = await prismaClient.blind_Type.findUnique({
+            where: { id: blind.type_id },
+            select: { price: true }
+        })
+
+        if (!blindPrice) throw new Error("Tipo de persiana não encontrado")
+
+        blind.blind_price = blind.square_metre * blindPrice.price
+
+        next()
+    } catch (error) {
+        console.log(error.message)
+        return res.status(500).json({ error: error.message })
+    }
+}
+
 module.exports = {
-    validateBlindData
+    validateBlindData,
+    calculateBlindPrice
 }

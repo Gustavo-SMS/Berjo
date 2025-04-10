@@ -28,6 +28,9 @@
                     <div class="col-1">
                         <label for="" class="form-label">CEP</label>
                     </div>
+                    <div class="col-1">
+                        <label for="" class="form-label">Dívida</label>
+                    </div>
             </div>
         </div>
     </div>
@@ -56,6 +59,7 @@ const notificationStore = useNotificationStore()
             city: customer.address.city,
             district: customer.address.district,
             zip: customer.address.zip,
+            debt: customer.debt,
             getCustomers
         })
 

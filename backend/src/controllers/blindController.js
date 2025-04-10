@@ -16,7 +16,7 @@ const getAll = async (req, res) => {
 }
 
 const createBlind = async (req, res) => {
-    const { quantity, width, height, command_height, model, observation, square_metre, blindTypeId, orderId } = req.body
+    const { quantity, width, height, command_height, model, observation, square_metre, blind_price, blindTypeId, orderId } = req.body
 
     try {
         const blind = await prismaClient.blind.create({
@@ -28,6 +28,7 @@ const createBlind = async (req, res) => {
                 model,
                 observation,
                 square_metre,
+                blind_price,
                 type: {
                     connect: { id: blindTypeId }
                 },
@@ -48,7 +49,7 @@ const createBlind = async (req, res) => {
 }
 
 const updateBlind = async (req, res) => {
-    const { id, quantity, width, height, command_height, model, observation, blindTypeId, square_metre } = req.body
+    const { id, quantity, width, height, command_height, model, observation, square_metre, blind_price, type_id } = req.body
 
     try {
         const blind = await prismaClient.blind.update({
@@ -63,7 +64,8 @@ const updateBlind = async (req, res) => {
                 model: model || undefined,
                 observation: observation || undefined,
                 square_metre: parseFloat(square_metre) || undefined,
-                type_id: blindTypeId || undefined
+                blind_price: blind_price || undefined,
+                type_id: type_id || undefined
             }
         })
 
@@ -75,11 +77,10 @@ const updateBlind = async (req, res) => {
             where: { id: blind.order_id },
             include: { blind: true }
         })
-
         if (!order) return res.status(404).json({ error: "Pedido não encontrado" })
-
+            
         const newTotalPrice = await calculateTotalPrice(order.blind)
-        
+            
         await prismaClient.order.update({
             where: { 
                 id: order.id 
@@ -105,12 +106,20 @@ const deleteBlind = async (req, res) => {
             }
           })
 
-        if(!blind) {
-            return res.status(404).json({ error: 'Não foi possível excluir a persiana' })
-        }
+        await prismaClient.order.update({
+            where: {
+                id: blind.order_id
+            },
+            data: {
+                total_price: {
+                    decrement: blind.blind_price
+                }
+            }
+        })
 
         return res.status(200).json(blind)
     } catch (error) {
+        console.log(error)
         return res.status(500).json({ error: error.message })
     }
 }

@@ -35,11 +35,9 @@ const validateBlindData = async (res, blind) => {
         blind.height = parseFloat(blind.height)
         blind.command_height = parseFloat(blind.command_height)
 
-        const value = await blindSchema.validateAsync(blind);
+        const value = await blindSchema.validateAsync(blind)
    
-        if(value) {
-            return value
-        }
+        return value
     }
     catch (e) {
         return res.status(500).json({ error: e.message })
@@ -51,9 +49,7 @@ const totalPrice = async (req, res, next) => {
         const { blinds } = req.body
 
         for (const blind of blinds) {
-            validateBlindData(res, blind)
-            
-            blind.type = { connect: { id: blind.type } }
+            await validateBlindData(res, blind)
         }
 
         req.total_price = await calculateTotalPrice(blinds)

@@ -36,6 +36,9 @@
             </select>
             <p v-else>{{ model }}</p>
         </div>
+        <div class="col-1">
+            <p>{{ editableBlind_price }}</p>
+        </div>
 
         <button @click="changeToInput" type="button" class="btn btn-danger col-1 row justify-content-center">Editar</button>
 
@@ -62,7 +65,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import ConfirmationModal from '@/components/ConfirmationModal.vue'
 import SelectType from './formCreateOrder/SelectType.vue'
 import SelectBlindType from './formCreateOrder/SelectBlindType.vue'
@@ -70,7 +73,8 @@ import { useNotificationStore } from '@/stores/notificationStore'
 
 const notificationStore = useNotificationStore()
 
-const props = defineProps(['id', 'quantity', 'type', 'collection', 'blindTypeId', 'color', 'width', 'height', 'command_height', 'model', 'observation', 'status', 'getOrders'])
+const props = defineProps(['id', 'quantity', 'type', 'collection', 'blindTypeId', 'color', 
+'width', 'height', 'command_height', 'model', 'observation', 'status', 'blind_price', 'getOrders'])
 
 const showModal = ref(false)
 
@@ -95,6 +99,7 @@ const editableCommand_height = ref(props.command_height)
 const editableModel = ref(props.model)
 const editableObservation = ref(props.observation)
 const editableBlindTypeId = ref(props.blindTypeId)
+const editableBlind_price = ref(props.blind_price)
 
 const selectedType = (event, arrayBlindTypes) => {
     editableType.value = arrayBlindTypes[event.target.selectedIndex] || null
@@ -121,7 +126,7 @@ const submitUpdate = async (event) => {
       const payload = {
         id: props.id,
         quantity: editableQuantity.value,
-        blindTypeId: editableBlindTypeId.value,
+        type_id: editableBlindTypeId.value,
         width: editableWidth.value,
         height: editableHeight.value,
         command_height: editableCommand_height.value,
@@ -173,6 +178,9 @@ const deleteBlind = async () => {
       }
 }
 
+watch(() => props.blind_price, (newVal) => {
+  editableBlind_price.value = newVal
+})
 </script>
 
 <style>
