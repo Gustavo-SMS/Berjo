@@ -1,5 +1,7 @@
 const { prismaClient } = require('../database/prismaClient')
 const { sendEmail } = require('../services/nodemailer')
+const { calculateTotalPrice } = require("../utils/priceCalculator")
+const customerController = require('./customerController')
 
 const getAll = async (req, res) => {
     try {
@@ -201,14 +203,15 @@ const getOrdersByFilter = async (req, res) => {
 
 const createOrder = async (req, res) => {
     const { customer, blinds } = req.body
-    
+    const total_price = req.total_price
+
     try {
         const order = await prismaClient.order.create({
             data: {
                 customer: {
                     connect: { id: customer }
                 },
-                total_price: req.total_price,
+                total_price,
                 blind: {
                     create: 
                         blinds
@@ -219,6 +222,22 @@ const createOrder = async (req, res) => {
         if(!order) {
             return res.status(404).json({ error: 'Não foi possível criar o pedido' })
         }
+
+        const getCustomer = await prismaClient.customer.findUnique({
+            where: {
+                id: order.customer_id
+            }
+        })
+        
+        const newDebt = getCustomer.debt + total_price
+        await prismaClient.customer.update({
+            where: {
+                id: getCustomer.id
+            }, 
+            data: {
+                debt: newDebt
+            }
+        })
 
         return res.status(201).json(order)
     } catch (error) {
@@ -340,6 +359,38 @@ const updateOrder = async (req, res) => {
     }
 }
 
+const updateTotalPrice = async (orderId) => {
+    try {
+        const order = await prismaClient.order.findUnique({
+            where: { 
+                id: orderId 
+            },
+            include: { 
+                blind: true 
+            }
+        })
+
+        if (!order) return res.status(404).json({ error: "Pedido não encontrado" })
+            
+        const newTotalPrice = await calculateTotalPrice(order.blind)
+ 
+        const response = await prismaClient.order.update({
+            where: { 
+                id: order.id 
+            },
+            data: { 
+                total_price: newTotalPrice 
+            }
+        })
+
+        customerController.updateDebt(order.customer_id, order.total_price, newTotalPrice)
+
+        return response
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+
 const deleteOrder = async (req, res) => {
     const id = req.params.id
 
@@ -378,5 +429,6 @@ module.exports = {
     changeStatus,
     updateOrder,
     deleteOrder,
-    getOrdersByFilter
+    getOrdersByFilter,
+    updateTotalPrice
 }

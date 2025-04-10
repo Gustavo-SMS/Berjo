@@ -1,5 +1,5 @@
 const { prismaClient } = require('../database/prismaClient')
-const { calculateTotalPrice } = require("../utils/priceCalculator")
+const orderController = require('./orderController')
 
 const getAll = async (req, res) => {
     try {
@@ -73,22 +73,7 @@ const updateBlind = async (req, res) => {
             return res.status(404).json({ error: 'Não foi possível atualizar a persiana' })
         }
 
-        const order = await prismaClient.order.findUnique({
-            where: { id: blind.order_id },
-            include: { blind: true }
-        })
-        if (!order) return res.status(404).json({ error: "Pedido não encontrado" })
-            
-        const newTotalPrice = await calculateTotalPrice(order.blind)
-            
-        await prismaClient.order.update({
-            where: { 
-                id: order.id 
-            },
-            data: { 
-                total_price: newTotalPrice 
-            }
-        })
+        orderController.updateTotalPrice(blind.order_id)
 
         return res.status(200).json(blind)
     } catch (error) {

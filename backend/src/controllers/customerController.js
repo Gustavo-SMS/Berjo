@@ -110,8 +110,8 @@ const createCustomer = async (req, res) => {
 }
 
 const updateCustomer = async (req, res) => {
-    const { id, name, email, phone, street, house_number, city, district, zip  } = req.body
-    
+    const { id, name, email, phone, street, house_number, city, district, zip, debt } = req.body
+
     try {
         const customer = prismaClient.customer.update({
             where: {
@@ -120,7 +120,8 @@ const updateCustomer = async (req, res) => {
             data: {
                 name: name || undefined,
                 email: email || undefined,
-                phone: phone || undefined
+                phone: phone || undefined,
+                debt: debt !== undefined ? debt : undefined
             }
         })
     
@@ -145,22 +146,29 @@ const updateCustomer = async (req, res) => {
     }
 }
 
-const updateDebt = async (req, res) => {
-    const { id, debt } = req.body
+const updateDebt = async (customerId, totalPrice, newTotalPrice) => {
     
     try {
-        const updatedDebt = await prismaClient.customer.update({
+        const customer = await prismaClient.customer.findUnique({
             where: {
-                id
-            },
-            data: {
-                debt
+                id: customerId
             }
         })
-    
-        return res.status(201).json(updatedDebt)
+        
+        const newDebt = (customer.debt - totalPrice) + newTotalPrice
+
+        const response = await prismaClient.customer.update({
+            where: {
+                id: customer.id
+            },
+            data: {
+                debt: newDebt
+            }
+        })
+
+        return response
     } catch (error) {
-        return res.status(500).json({ error: error.message })
+        console.log(error.message)
     }
 }
 
