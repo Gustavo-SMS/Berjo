@@ -40,11 +40,11 @@
             <p>{{ editableBlind_price }}</p>
         </div>
 
-        <button @click="changeToInput" type="button" class="btn btn-danger col-1 row justify-content-center">Editar</button>
-
-        <button @click="submitUpdate" type="submit" class="btn col-1 row justify-content-center" :disabled="disabled">Enviar</button>
-
-        <button @click="openDeleteModal" type="button" class="btn btn-danger col-1 row justify-content-center">Excluir</button>
+        <template v-if="props.status === 'Em espera'">
+          <button @click="changeToInput" type="button" class="btn btn-danger col-1 row justify-content-center">Editar</button>
+          <button @click="submitUpdate" type="submit" class="btn col-1 row justify-content-center" :disabled="disabled">Enviar</button>
+          <button @click="openDeleteModal" type="button" class="btn btn-danger col-1 row justify-content-center">Excluir</button>
+        </template>
         
         <div>
             <label for="observation">Observações: </label>
@@ -71,11 +71,10 @@ import SelectType from './formCreateOrder/SelectType.vue'
 import SelectBlindType from './formCreateOrder/SelectBlindType.vue'
 import { useNotificationStore } from '@/stores/notificationStore'
 
-const notificationStore = useNotificationStore()
-
 const props = defineProps(['id', 'quantity', 'type', 'collection', 'blindTypeId', 'color', 
 'width', 'height', 'command_height', 'model', 'observation', 'status', 'blind_price', 'getOrders'])
 
+const notificationStore = useNotificationStore()
 const showModal = ref(false)
 
 const openDeleteModal = () => {

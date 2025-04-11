@@ -54,7 +54,7 @@
                     :model="blind.model"
                     :blind_price="blind.blind_price"
                     :observation="blind.observation"
-                    :status="selectedStatus"
+                    :status="order.status"
                     :getOrders="getOrders"
                 />
             </div>
