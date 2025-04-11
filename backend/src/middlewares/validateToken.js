@@ -1,20 +1,24 @@
 const jwt = require('jsonwebtoken')
 
 function checkToken(req, res, next) {
-    const cookies = req.cookies
-    const token = cookies.token
+    const token = req.cookies.token
+
     if(!token) {
-        return res.status(404).json({ msg: 'Acesso negado!' })
+        return res.status(404).json({ msg: 'Token não fornecido' })
     }
 
     try {
-        const secret = process.env.JWT_SECRET
+        const decoded = jwt.verify(token, process.env.JWT_SECRET)
 
-        jwt.verify(token, secret)
+        req.user = {
+            id: decoded.id,
+            role: decoded.role,
+            customerId: decoded.customerId
+          }
 
         next()
     } catch (err) {
-        res.status(400).json({ msg: 'Token inválido!' })
+        res.status(400).json({ msg: 'Token inválido ou expirado' })
     }
 }
 

@@ -13,7 +13,7 @@ const validateUserData = async (req, res, next) => {
         })
 
         if(userExist) {
-            return res.status(500).json({ error: 'Este email já está cadastrado' })
+            return res.status(500).json({ error: 'Este login já está cadastrado' })
         }
 
         const value = await userSchema.validateAsync(data)
@@ -28,24 +28,27 @@ const validateUserData = async (req, res, next) => {
 }
 
 const validateLogin = async (req, res, next) => {
-    const data = req.body
-
     try {
-        const user = await prisma.user.findUnique({
+        const { login } = await loginSchema.validateAsync(req.body)
+
+        const user = await prismaClient.user.findUnique({
             where: { login },
             include: { customer: true }
           })
-          
-        if (user.role === 'USER' && !user.customer) {
+
+        if (!user) {
+            return res.status(404).json({ error: 'Usuário não encontrado.' })
+        }
+
+        if (user.role === 'CUSTOMER' && !user.customer) {
             return res.status(403).json({ error: 'Usuário ainda não vinculado a um cliente.' })
         }
 
-
-        const value = await loginSchema.validateAsync(data);
-   
-        if(value) {
-            next()
+        if (user.customer && user.customer.isActive === false) {
+            return res.status(403).json({ error: 'Usuário está desativado.' })
         }
+   
+        next()
     }
     catch (e) {
         return res.status(500).json({ error: e.message })

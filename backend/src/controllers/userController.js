@@ -26,7 +26,7 @@ const getUnlinkedUsers = async (req, res) => {
 }
 
 const registerUser = async (req, res) => {
-    const { login, password, confirmPassword } = req.body
+    const { login, password, confirmPassword, role } = req.body
 
     if(!login) {
         return res.status(422).json({ msg : 'O login é obrigatório!'})
@@ -56,7 +56,8 @@ const registerUser = async (req, res) => {
     const user = await prismaClient.user.create({
         data: {
             login,
-            password: passwordHash
+            password: passwordHash,
+            role
         }
     })
 
@@ -66,18 +67,11 @@ const registerUser = async (req, res) => {
 const validateLogin = async (req, res) => {
     const { login, password } = req.body
 
-    if(!login) {
-        return res.status(422).json({ msg : 'O login é obrigatório!'})
-    }
-
-    if(!password) {
-        return res.status(422).json({ msg : 'A senha é obrigatória!'})
-    }
-
     const userExists = await prismaClient.user.findUnique({ 
         where: {
             login
-        }
+        },
+        include: { customer: true}
      })
 
     if(!userExists) {
@@ -89,14 +83,15 @@ const validateLogin = async (req, res) => {
     if(!checkPassword) {
         return res.status(422).json({ msg : 'Senha incorreta!'})
     }
-
-
+    
     try {
         const secret = process.env.JWT_SECRET
 
         const token = jwt.sign(
             {
-                id: userExists.id
+                id: userExists.id,
+                role: userExists.role,
+                customerId: userExists.customer?.id || null
             },
             secret,
             { expiresIn: '1h' }
@@ -107,8 +102,8 @@ const validateLogin = async (req, res) => {
             sameSite: 'lax',
             maxAge: 3600000
         })
-
-        res.status(200).json({ msg: 'Autenticação realizada com sucesso' })
+        
+        res.status(200).json({ msg: 'Autenticação realizada com sucesso', token })
     } catch (err) {
         console.log(err)
 

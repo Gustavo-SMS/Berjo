@@ -6,7 +6,7 @@
                 <option value="Em produção">Em produção</option>
                 <option value="Concluido">Concluido</option>
             </select>
-            <SelectCustomers @selectedOption="selectedCustomerId" />
+            <SelectCustomers v-if="authStore.userRole === 'ADMIN'" @selectedOption="selectedCustomerId" />
             <button @click="getWithFilter">Filtrar</button>
             
             <div v-for="order in orders" :key="order.id" class="order-block">
@@ -21,11 +21,12 @@
                     <h3 v-else>({{ order.status }})</h3>
 
                     <button v-if="editingOrderId === order.id" @click="changeStatus(order.id)" class="btn btn-success">Confirmar</button>
-                    <button v-else @click="editStatus(order.id, order.status)" class="btn btn-primary">Mudar Status</button>
+                    <button v-else v-if="authStore.userRole === 'ADMIN'" @click="editStatus(order.id, order.status)" class="btn btn-primary">Mudar Status</button>
 
                     <h3>Total: {{ order.total_price }}</h3>
 
-                    <button :disabled="order.status === 'Concluido'" @click="deleteOrder(order.id)" class="btn btn-danger">Excluir</button>
+                    <button v-if="authStore.userRole === 'ADMIN' || (authStore.userRole === 'CUSTOMER' && order.status === 'Em espera')"
+                    @click="deleteOrder(order.id)" class="btn btn-danger">Excluir</button>
                 </div>
 
                 <div class="row header">
@@ -65,9 +66,11 @@
 <script setup>
 import OrderRow from '@/components/order/OrderRow.vue'
 import SelectCustomers from '@/components/order/formCreateOrder/SelectCustomers.vue'
-import { useNotificationStore } from '@/stores/notificationStore'
 import { ref, onMounted } from 'vue'
+import { useAuthStore } from '@/stores/authStore'
+import { useNotificationStore } from '@/stores/notificationStore'
 
+const authStore = useAuthStore()
 const notificationStore = useNotificationStore()
 
 const selectedStatus = ref('Em espera')
@@ -88,6 +91,10 @@ function selectedCustomerId(event, arrayNomes) {
 
 const getOrders = async (status, customerId) => {
     let url = 'http://127.0.0.1:3333/orders/filter/'
+    
+    if (authStore.userRole === 'CUSTOMER') {
+        customerId = authStore.customerId
+    }
 
     const params = new URLSearchParams()
     if (status) params.append('status', status)

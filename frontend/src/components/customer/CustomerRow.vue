@@ -41,7 +41,7 @@
 
         <button @click="submitUpdate" type="submit" class="btn col-1 row justify-content-center" :disabled="disabled">Enviar</button>
 
-        <button @click="openDeleteModal" type="button" class="btn col-1 row justify-content-center">Excluir</button>
+        <button v-if="authStore.userRole === 'ADMIN'" @click="openDeleteModal" type="button" class="btn col-1 row justify-content-center">Excluir</button>
       </form>
       <Teleport to="body">
         <ConfirmationModal
@@ -58,7 +58,9 @@
 import { ref } from 'vue'
 import ConfirmationModal from '@/components/ConfirmationModal.vue'
 import { useNotificationStore } from '@/stores/notificationStore'
+import { useAuthStore } from '@/stores/authStore'
 
+const authStore = useAuthStore()
 const notificationStore = useNotificationStore()
 
 const props = defineProps(['id', 'name', 'email', 'phone', 'street', 'house_number', 'city', 'district', 'zip', 'debt', 'getCustomers'])

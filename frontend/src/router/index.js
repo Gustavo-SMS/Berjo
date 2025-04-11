@@ -22,7 +22,8 @@ const router = createRouter({
     {
       path: '/createCustomer',
       name: 'createCustomer',
-      component: () => import('../views/customers/CreateCustomersView.vue')
+      component: () => import('../views/customers/CreateCustomersView.vue'),
+      meta: { requiresAuth: true, requiresAdmin: true }
     },
     {
       path: '/customers',
@@ -47,9 +48,25 @@ const router = createRouter({
     {
       path: '/createBlindTypes',
       name: 'createBlindTypes',
-      component: () => import('../views/blindTypes/CreateBlindTypeView.vue')
+      component: () => import('../views/blindTypes/CreateBlindTypeView.vue'),
+      meta: { requiresAuth: true, requiresAdmin: true }
     }
   ]
+})
+
+router.beforeEach((to, from, next) => {
+  const isAuthenticated = !!localStorage.getItem('userRole')
+  const userRole = localStorage.getItem('userRole')
+
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    return next('/')
+  }
+
+  if (to.meta.requiresAdmin && userRole !== 'ADMIN') {
+    return next('/')
+  }
+
+  next()
 })
 
 export default router

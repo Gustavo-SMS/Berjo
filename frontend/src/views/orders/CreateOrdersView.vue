@@ -2,8 +2,10 @@
     <div class="wrapper">
         <div class="box">
             <form>
-                <label for="" class="form-label">Cliente</label>
-                <SelectCustomers @selectedOption="selectedCustomerId" />
+                <div v-if="authStore.userRole === 'ADMIN'">
+                    <label for="" class="form-label">Cliente</label>
+                    <SelectCustomers @selectedOption="selectedCustomerId" />
+                </div>
 
                 <div class="row">
                     <div class="col-1">
@@ -45,11 +47,13 @@
 </template>
 
 <script setup>
-import { useNotificationStore } from '@/stores/notificationStore'
-import SelectCustomers from '../../components/order/formCreateOrder/SelectCustomers.vue';
+import SelectCustomers from '../../components/order/formCreateOrder/SelectCustomers.vue'
 import CreateOrderRow from '../../components/order/formCreateOrder/CreateOrderRow.vue'
-import { ref } from 'vue';
+import { ref } from 'vue'
+import { useAuthStore } from '@/stores/authStore'
+import { useNotificationStore } from '@/stores/notificationStore'
 
+const authStore = useAuthStore()
 const notificationStore = useNotificationStore()
 
 const customerId = ref('')

@@ -14,7 +14,7 @@
               <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Clientes</a>
               <ul class="dropdown-menu">
                 <li><RouterLink class="dropdown-item" to="/customers">Ver clientes</RouterLink></li>
-                <li><RouterLink class="dropdown-item" to="/createCustomer">Cadastrar cliente</RouterLink></li>
+                <li v-if="authStore.userRole === 'ADMIN'"><RouterLink class="dropdown-item" to="/createCustomer">Cadastrar cliente</RouterLink></li>
               </ul>
             </li>
 
@@ -32,14 +32,14 @@
               
               <ul class="dropdown-menu">
                 <li><RouterLink class="dropdown-item" to="/blindTypes">Ver tipos</RouterLink></li>
-                <li><RouterLink class="dropdown-item" to="/createBlindTypes">Cadastrar tipo</RouterLink></li>
+                <li v-if="authStore.userRole === 'ADMIN'"><RouterLink class="dropdown-item" to="/createBlindTypes">Cadastrar tipo</RouterLink></li>
               </ul>
           </li>
           </ul>
 
           <div class="d-lg-flex col-lg-3 justify-content-lg-end">
             <RouterLink to="/login" class="btn btn-primary">Login</RouterLink>
-            <RouterLink to="/register" class="btn btn-secondary">Registrar</RouterLink>
+            <RouterLink v-if="authStore.userRole === 'ADMIN'" to="/register" class="btn btn-secondary">Registrar</RouterLink>
           </div>
         </div>
       </div>
@@ -47,8 +47,10 @@
 </template>
 
 <script setup>
-import { RouterLink } from 'vue-router';
+import { RouterLink } from 'vue-router'
+import { useAuthStore } from '@/stores/authStore'
 
+const authStore = useAuthStore()
 
 </script>
 

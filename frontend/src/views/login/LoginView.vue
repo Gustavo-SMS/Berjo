@@ -4,8 +4,8 @@
         <h1 class="h3 mb-3 fw-normal">Faça Login</h1>
         
         <div class="form-floating">
-          <input id="login" name="login" type="email" class="form-control" placeholder="name@example.com">
-          <label for="login">Email</label>
+          <input id="login" name="login" type="text" class="form-control" placeholder="Login">
+          <label for="login">Login</label>
         </div>
         <div class="form-floating">
           <input id="password" name="password" type="password" class="form-control" placeholder="Password">
@@ -18,9 +18,12 @@
 </template>
 
 <script setup>
+import { jwtDecode } from 'jwt-decode'
 import { useRouter } from 'vue-router'
 import { useNotificationStore } from '@/stores/notificationStore'
+import { useAuthStore } from '@/stores/authStore'
 
+const authStore = useAuthStore()
 const notificationStore = useNotificationStore()
 const router = useRouter()
 
@@ -39,18 +42,21 @@ const submitForm = async (event) => {
         credentials: 'include',
         body: JSON.stringify(data)
         })
+
+        const result = await response.json()
+        const decoded = jwtDecode(result.token)
         
         if (!response.ok) {
-            const errorData = await response.json()
-            throw new Error(errorData.error || 'Erro ao logar')
+          const errorData = await response.json()
+          throw new Error(errorData.error || 'Erro ao logar')
         }
         
+        authStore.setUser(decoded.role, decoded.customerId)
         router.push('/')   
     } catch (error) {
       console.log(error.message)
       notificationStore.addNotification(error.message, 'error')
-    }
-    
+    } 
 }
 
 </script>

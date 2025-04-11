@@ -21,11 +21,9 @@
             <p v-else>{{ price }}</p>
         </div>
 
-        <button @click="changeToInput" type="button" class="btn btn-danger col-1 row justify-content-center">Editar</button>
-
-        <button @click="submitUpdate" type="submit" class="btn col-1 row justify-content-center" :disabled="disabled">Enviar</button>
-
-        <button @click="openDeleteModal" type="button" class="btn col-1 row justify-content-center">Excluir</button>
+        <button v-if="authStore.userRole === 'ADMIN'" @click="changeToInput" type="button" class="btn btn-danger col-1 row justify-content-center">Editar</button>
+        <button v-if="authStore.userRole === 'ADMIN'" @click="submitUpdate" type="submit" class="btn col-1 row justify-content-center" :disabled="disabled">Enviar</button>
+        <button v-if="authStore.userRole === 'ADMIN'" @click="openDeleteModal" type="button" class="btn col-1 row justify-content-center">Excluir</button>
       </form>
 
       <Teleport to="body">
@@ -43,7 +41,9 @@
 import { ref } from 'vue'
 import ConfirmationModal from '@/components/ConfirmationModal.vue'
 import { useNotificationStore } from '@/stores/notificationStore'
+import { useAuthStore } from '@/stores/authStore'
 
+const authStore = useAuthStore()
 const notificationStore = useNotificationStore()
 
 const props = defineProps(['id', 'type', 'collection', 'color', 'max_width', 'price', 'getBlindTypes'])

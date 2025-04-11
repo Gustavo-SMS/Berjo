@@ -1,8 +1,8 @@
 <template>
     <div class="wrapper">
         <div class="box">
-                <input type="text" id="searchByName">
-                <button @click="getByName">Buscar</button>
+                <input v-if="authStore.userRole === 'ADMIN'" type="text" id="searchByName">
+                <button v-if="authStore.userRole === 'ADMIN'" @click="getByName">Buscar</button>
             <div class="row">
                     <div class="col-2">
                         <label for="" class="form-label">Nome</label>
@@ -31,54 +31,47 @@
                     <div class="col-1">
                         <label for="" class="form-label">Dívida</label>
                     </div>
-            </div>
+                </div>
+
+                <CustomerRow
+                    v-for="customer in customers"
+                    :key="customer.id"
+                    :id="customer.id"
+                    :name="customer.name"
+                    :email="customer.email"
+                    :phone="customer.phone"
+                    :street="customer.address.street"
+                    :house_number="customer.address.house_number"
+                    :city="customer.address.city"
+                    :district="customer.address.district"
+                    :zip="customer.address.zip"
+                    :debt="customer.debt"
+                    :getCustomers="getCustomers"
+                />
         </div>
     </div>
 </template>
 
 <script setup>
-import { createVNode, onMounted, render } from 'vue';
+import { onMounted, ref } from 'vue'
 import CustomerRow from '@/components/customer/CustomerRow.vue'
 import { useNotificationStore } from '@/stores/notificationStore'
+import { useAuthStore } from '@/stores/authStore'
 
+const authStore = useAuthStore()
 const notificationStore = useNotificationStore()
 
-    const addRow = (customer) => {
-        const container = document.querySelector('div.box')
-        const wrapper = document.createElement('div');
-        container.appendChild(wrapper)
-
-        const vNode = createVNode(CustomerRow, 
-        {   
-            id: customer.id,
-            name: customer.name,
-            email: customer.email,
-            phone: customer.phone,
-            street: customer.address.street,
-            house_number: customer.address.house_number,
-            city: customer.address.city,
-            district: customer.address.district,
-            zip: customer.address.zip,
-            debt: customer.debt,
-            getCustomers
-        })
-
-        render(vNode, wrapper)
-    }
-
-    const clearScreen = () => {
-        const container = document.querySelector('div.box');
-
-        const totalChildren = container.children.length;
-
-        for (let i = totalChildren - 1; i >= 3; i--) {
-            container.removeChild(container.children[i]);
-        }
-    }
+const customers = ref([])
 
     const getCustomers = async () => {
         try {
-            const response = await fetch("http://127.0.0.1:3333/customers", {
+            let url = 'http://127.0.0.1:3333/customers'
+
+            if (authStore.userRole === 'CUSTOMER') {
+                url += `/${authStore.customerId}`
+            }
+
+            const response = await fetch(url, {
                 method: 'GET',
                 headers: {
                     'Content-type': 'application/json'
@@ -92,10 +85,7 @@ const notificationStore = useNotificationStore()
             }   
 
             const data = await response.json()
-            clearScreen()
-            data.map(customer => {
-                addRow(customer)
-            })
+            customers.value = Array.isArray(data) ? data : [data]
         } catch (error) {
             console.log(error.message)
             notificationStore.addNotification(error.message, 'error')
@@ -127,10 +117,7 @@ const notificationStore = useNotificationStore()
             }   
 
             const data = await response.json()
-            clearScreen()
-            data.map(customer => {
-                addRow(customer)
-            })
+            customers.value = Array.isArray(data) ? data : [data]
         } catch (error) {
             console.log(error.message)
             notificationStore.addNotification(error.message, 'error')
