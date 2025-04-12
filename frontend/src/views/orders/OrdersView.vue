@@ -69,6 +69,7 @@ import SelectCustomers from '@/components/order/formCreateOrder/SelectCustomers.
 import { ref, onMounted } from 'vue'
 import { useAuthStore } from '@/stores/authStore'
 import { useNotificationStore } from '@/stores/notificationStore'
+import { fetchWithAuth } from '@/utils/api'
 
 const authStore = useAuthStore()
 const notificationStore = useNotificationStore()
@@ -105,7 +106,7 @@ const getOrders = async (status, customerId) => {
     }
 
     try {
-        const response = await fetch(url, {
+        const response = await fetchWithAuth(url, {
             method: 'GET',
             headers: { 'Content-type': 'application/json' },
             credentials: 'include'
@@ -141,7 +142,7 @@ const changeStatus = async (orderId) => {
     const payload = { id: orderId, status: newStatus }
 
     try {
-        const response = await fetch(`http://127.0.0.1:3333/orders/status/`, {
+        const response = await fetchWithAuth(`http://127.0.0.1:3333/orders/status/`, {
             method: 'PUT',
             headers: { 'Content-type': 'application/json' },
             credentials: 'include',
@@ -166,7 +167,7 @@ const deleteOrder = async (orderId) => {
     if (!confirm('Tem certeza que deseja excluir este pedido?')) return
 
     try {
-        const response = await fetch(`http://127.0.0.1:3333/orders/${orderId}`, {
+        const response = await fetchWithAuth(`http://127.0.0.1:3333/orders/${orderId}`, {
             method: 'DELETE',
             headers: { 'Content-type': 'application/json' },
             credentials: 'include'

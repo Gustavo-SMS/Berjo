@@ -6,7 +6,7 @@ const orderController = require("./controllers/orderController")
 const blindController = require("./controllers/blindController")
 const blindTypeController = require("./controllers/blindTypeController")
 
-const validateToken = require("./middlewares/validateToken")
+const authenticateToken = require("./middlewares/authenticateToken")
 const userMiddleware = require("./middlewares/userMiddleware")
 const customerMiddleware = require("./middlewares/customerMiddleware")
 const orderMiddleware = require("./middlewares/orderMiddleware")
@@ -20,7 +20,15 @@ router.get('/', (req, res) => {
 })
 
 router.post('/register', userMiddleware.validateUserData, userController.registerUser)
-router.post('/login', userMiddleware.validateLogin, userController.validateLogin)
+router.post('/login', userMiddleware.validateLoginData, userController.validateLogin)
+router.post('/refresh', userController.refreshTokenHandler)
+router.post('/logout', userController.logout)
+
+router.get('/me', authenticateToken.authenticateToken, (req, res) => {
+    const { role, customerId } = req.user
+    res.json({ role, customerId })
+  })
+
 router.get('/users/unlinked', userController.getUnlinkedUsers)
 
 router.get('/customers', customerController.getAll)

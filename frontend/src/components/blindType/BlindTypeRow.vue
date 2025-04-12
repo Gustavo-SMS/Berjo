@@ -42,6 +42,7 @@ import { ref } from 'vue'
 import ConfirmationModal from '@/components/ConfirmationModal.vue'
 import { useNotificationStore } from '@/stores/notificationStore'
 import { useAuthStore } from '@/stores/authStore'
+import { fetchWithAuth } from '@/utils/api'
 
 const authStore = useAuthStore()
 const notificationStore = useNotificationStore()
@@ -81,7 +82,7 @@ const submitUpdate = async (event) => {
       }
 
       try {
-        const response = await fetch("http://127.0.0.1:3333/blind_types", {
+        const response = await fetchWithAuth("http://127.0.0.1:3333/blind_types", {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -105,7 +106,7 @@ const submitUpdate = async (event) => {
 
 const deleteCustomer = async () => {
   try {
-        const response = await fetch(`http://127.0.0.1:3333/blind_types/${props.id}`, {
+        const response = await fetchWithAuth(`http://127.0.0.1:3333/blind_types/${props.id}`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',

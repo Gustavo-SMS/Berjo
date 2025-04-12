@@ -9,6 +9,7 @@
 <script setup>
 import { reactive, ref, watch, nextTick } from 'vue'
 import { useNotificationStore } from '@/stores/notificationStore'
+import { fetchWithAuth } from '@/utils/api'
 
 const notificationStore = useNotificationStore()
 
@@ -23,7 +24,7 @@ const fetchBlindCollections = async (type) => {
     if (!type) return
 
     try {
-        const response = await fetch(`http://127.0.0.1:3333/blind_types/type/${type}`, {
+        const response = await fetchWithAuth(`http://127.0.0.1:3333/blind_types/type/${type}`, {
                 method: 'GET',
                 headers: {
                     'Content-type': 'application/json'

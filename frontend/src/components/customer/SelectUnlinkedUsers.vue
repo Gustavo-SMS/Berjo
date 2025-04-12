@@ -10,6 +10,7 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue'
 import { useNotificationStore } from '@/stores/notificationStore'
+import { fetchWithAuth } from '@/utils/api'
 
 defineEmits(['selectedOption'])
 const props = defineProps(['refreshKey'])
@@ -21,7 +22,7 @@ const unlinkedUsers = ref([])
   
 const fetchUnlinkedUsers = async () => {
     try {
-      const response = await fetch('http://127.0.0.1:3333/users/unlinked', {
+      const response = await fetchWithAuth('http://127.0.0.1:3333/users/unlinked', {
               method: 'GET',
               headers: {
                   'Content-type': 'application/json'

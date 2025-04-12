@@ -41,6 +41,7 @@
 import { ref } from 'vue'
 import SelectUnlinkedUsers from '@/components/customer/SelectUnlinkedUsers.vue'
 import { useNotificationStore } from '@/stores/notificationStore'
+import { fetchWithAuth } from '@/utils/api'
 
 const notificationStore = useNotificationStore()
 
@@ -59,7 +60,7 @@ const submitForm = async (event) => {
     const data = Object.fromEntries(formData)
     data.userId = unlinkedUserId.value
     try {
-        const response = await fetch('http://127.0.0.1:3333/customers', {
+        const response = await fetchWithAuth('http://127.0.0.1:3333/customers', {
         method: 'POST',
         headers: {
             'Content-type': 'application/json'

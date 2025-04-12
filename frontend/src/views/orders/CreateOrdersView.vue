@@ -52,6 +52,7 @@ import CreateOrderRow from '../../components/order/formCreateOrder/CreateOrderRo
 import { ref } from 'vue'
 import { useAuthStore } from '@/stores/authStore'
 import { useNotificationStore } from '@/stores/notificationStore'
+import { fetchWithAuth } from '@/utils/api'
 
 const authStore = useAuthStore()
 const notificationStore = useNotificationStore()
@@ -87,7 +88,7 @@ const submitForm = async (event) => {
         blinds: orderRows.value
     }
     try {
-        const response = await fetch('http://127.0.0.1:3333/orders', {
+        const response = await fetchWithAuth('http://127.0.0.1:3333/orders', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -105,7 +106,6 @@ const submitForm = async (event) => {
         console.log(error.message)
         notificationStore.addNotification(error.message, 'error')
     }
-    
 }
 </script>
 

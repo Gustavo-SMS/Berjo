@@ -43,16 +43,24 @@ const submitForm = async (event) => {
         body: JSON.stringify(data)
         })
 
-        const result = await response.json()
-        const decoded = jwtDecode(result.token)
+      const result = await response.json()
         
-        if (!response.ok) {
-          const errorData = await response.json()
-          throw new Error(errorData.error || 'Erro ao logar')
-        }
+      if (!response.ok) {
+        throw new Error(result.error || result.message || 'Erro ao logar')
+      }
+
+      const meRes = await fetch('http://127.0.0.1:3333/me', {
+        credentials: 'include'
+      })
+
+      const meData = await meRes.json()
+
+      if (!meRes.ok) {
+        throw new Error(meData.error || 'Erro ao obter dados do usuário')
+      }
         
-        authStore.setUser(decoded.role, decoded.customerId)
-        router.push('/')   
+      authStore.setUser(meData.role, meData.customerId)
+      router.push('/')   
     } catch (error) {
       console.log(error.message)
       notificationStore.addNotification(error.message, 'error')

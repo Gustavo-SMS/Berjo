@@ -27,27 +27,9 @@ const validateUserData = async (req, res, next) => {
     }
 }
 
-const validateLogin = async (req, res, next) => {
+const validateLoginData = async (req, res, next) => {
     try {
-        const { login } = await loginSchema.validateAsync(req.body)
-
-        const user = await prismaClient.user.findUnique({
-            where: { login },
-            include: { customer: true }
-          })
-
-        if (!user) {
-            return res.status(404).json({ error: 'Usuário não encontrado.' })
-        }
-
-        if (user.role === 'CUSTOMER' && !user.customer) {
-            return res.status(403).json({ error: 'Usuário ainda não vinculado a um cliente.' })
-        }
-
-        if (user.customer && user.customer.isActive === false) {
-            return res.status(403).json({ error: 'Usuário está desativado.' })
-        }
-   
+        await loginSchema.validateAsync(req.body)
         next()
     }
     catch (e) {
@@ -57,5 +39,5 @@ const validateLogin = async (req, res, next) => {
 
 module.exports = {
     validateUserData,
-    validateLogin
+    validateLoginData
 }

@@ -28,6 +28,7 @@
 import { createVNode, onMounted, render } from 'vue'
 import BlindTypeRow from '@/components/blindType/BlindTypeRow.vue'
 import { useNotificationStore } from '@/stores/notificationStore'
+import { fetchWithAuth } from '@/utils/api'
 
 const notificationStore = useNotificationStore()
 
@@ -62,7 +63,7 @@ const notificationStore = useNotificationStore()
 
     const getBlindTypes = async () => {
         try {
-            const response = await fetch("http://127.0.0.1:3333/blind_types", {
+            const response = await fetchWithAuth("http://127.0.0.1:3333/blind_types", {
                 method: 'GET',
                 headers: {
                     'Content-type': 'application/json'
@@ -98,7 +99,7 @@ const notificationStore = useNotificationStore()
         }
 
         try {
-            const response = await fetch(`http://127.0.0.1:3333/blind_types/type/${input.value}`, {
+            const response = await fetchWithAuth(`http://127.0.0.1:3333/blind_types/type/${input.value}`, {
                 method: 'GET',
                 headers: {
                     'Content-type': 'application/json'

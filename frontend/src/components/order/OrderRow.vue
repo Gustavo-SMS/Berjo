@@ -70,6 +70,7 @@ import ConfirmationModal from '@/components/ConfirmationModal.vue'
 import SelectType from './formCreateOrder/SelectType.vue'
 import SelectBlindType from './formCreateOrder/SelectBlindType.vue'
 import { useNotificationStore } from '@/stores/notificationStore'
+import { fetchWithAuth } from '@/utils/api'
 
 const props = defineProps(['id', 'quantity', 'type', 'collection', 'blindTypeId', 'color', 
 'width', 'height', 'command_height', 'model', 'observation', 'status', 'blind_price', 'getOrders'])
@@ -133,7 +134,7 @@ const submitUpdate = async (event) => {
         observation: editableObservation.value
       }
       try {
-        const response = await fetch("http://127.0.0.1:3333/blinds", {
+        const response = await fetchWithAuth("http://127.0.0.1:3333/blinds", {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -157,7 +158,7 @@ const submitUpdate = async (event) => {
 
 const deleteBlind = async () => {
   try {
-        const response = await fetch(`http://127.0.0.1:3333/blinds/${props.id}`, {
+        const response = await fetchWithAuth(`http://127.0.0.1:3333/blinds/${props.id}`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',

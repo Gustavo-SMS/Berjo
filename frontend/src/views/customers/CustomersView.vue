@@ -57,6 +57,7 @@ import { onMounted, ref } from 'vue'
 import CustomerRow from '@/components/customer/CustomerRow.vue'
 import { useNotificationStore } from '@/stores/notificationStore'
 import { useAuthStore } from '@/stores/authStore'
+import { fetchWithAuth } from '@/utils/api'
 
 const authStore = useAuthStore()
 const notificationStore = useNotificationStore()
@@ -71,7 +72,7 @@ const customers = ref([])
                 url += `/${authStore.customerId}`
             }
 
-            const response = await fetch(url, {
+            const response = await fetchWithAuth(url, {
                 method: 'GET',
                 headers: {
                     'Content-type': 'application/json'
@@ -104,7 +105,7 @@ const customers = ref([])
         }
 
         try {
-            const response = await fetch(`http://127.0.0.1:3333/customers/name/${input.value}`, {
+            const response = await fetchWithAuth(`http://127.0.0.1:3333/customers/name/${input.value}`, {
                 method: 'GET',
                 headers: {
                     'Content-type': 'application/json'

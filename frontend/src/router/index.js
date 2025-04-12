@@ -17,7 +17,8 @@ const router = createRouter({
     {
       path: '/register',
       name: 'register',
-      component: () => import('../views/login/RegisterView.vue')
+      component: () => import('../views/login/RegisterView.vue'),
+      meta: { requiresAuth: true, requiresAdmin: true }
     },
     {
       path: '/createCustomer',

@@ -9,6 +9,7 @@
 <script setup>
 import { reactive, ref } from 'vue'
 import { useNotificationStore } from '@/stores/notificationStore'
+import { fetchWithAuth } from '@/utils/api'
 
 const notificationStore = useNotificationStore()
 
@@ -20,7 +21,7 @@ let arrayBlindTypes = reactive([])
 const selectedType = ref(props.typeValue || '')
 
 try {
-    fetch("http://127.0.0.1:3333/blind_types/type", {
+    await fetchWithAuth("http://127.0.0.1:3333/blind_types/type", {
             method: 'GET',
             headers: {
                 'Content-type': 'application/json'

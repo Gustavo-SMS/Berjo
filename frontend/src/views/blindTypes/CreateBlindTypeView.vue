@@ -27,6 +27,7 @@
 
 <script setup>
 import { useNotificationStore } from '@/stores/notificationStore'
+import { fetchWithAuth } from '@/utils/api'
 
 const notificationStore = useNotificationStore()
 
@@ -37,7 +38,7 @@ const submitForm = async (event) => {
     const formData = new FormData(form)
     const data = Object.fromEntries(formData)
     try {
-        const response = await fetch('http://127.0.0.1:3333/blind_types', {
+        const response = await fetchWithAuth('http://127.0.0.1:3333/blind_types', {
         method: 'POST',
         headers: {
             'Content-type': 'application/json'

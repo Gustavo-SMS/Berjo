@@ -9,6 +9,7 @@
 <script setup>
 import { reactive } from 'vue'
 import { useNotificationStore } from '@/stores/notificationStore'
+import { fetchWithAuth } from '@/utils/api'
 
 const notificationStore = useNotificationStore()
 
@@ -17,7 +18,7 @@ defineEmits(['selectedOption'])
 const customerNames = reactive([])
 
 try {
-    fetch("http://127.0.0.1:3333/customers", {
+    await fetchWithAuth("http://127.0.0.1:3333/customers", {
         method: 'GET',
         headers: {
             'Content-type': 'application/json'
