@@ -20,46 +20,31 @@
                         <label for="" class="form-label">Preço</label>
                     </div>
             </div>
+
+            <BlindTypeRow
+                v-for="blindType in blindTypes" 
+                :key="blindType.id"
+                :id="blindType.id"
+                :type="blindType.type"
+                :collection="blindType.collection"
+                :color="blindType.color"
+                :max_width="blindType.max_width"
+                :price="blindType.price"
+                :getBlindTypes="getBlindTypes"
+            />
         </div>
     </div>
 </template>
 
 <script setup>
-import { createVNode, onMounted, render } from 'vue'
-import BlindTypeRow from '@/components/blindType/BlindTypeRow.vue'
+import { ref, onMounted } from 'vue'
 import { useNotificationStore } from '@/stores/notificationStore'
 import { fetchWithAuth } from '@/utils/api'
+import BlindTypeRow from '@/components/blindType/BlindTypeRow.vue'
 
 const notificationStore = useNotificationStore()
 
-    const addRow = (blindType) => {
-        const container = document.querySelector('div.box')
-        const wrapper = document.createElement('div');
-        container.appendChild(wrapper)
-
-        const vNode = createVNode(BlindTypeRow, 
-        {   
-            id: blindType.id,
-            type: blindType.type,
-            collection: blindType.collection,
-            color: blindType.color,
-            max_width: blindType.max_width,
-            price: blindType.price,
-            getBlindTypes
-        })
-
-        render(vNode, wrapper)
-    }
-
-    const clearScreen = () => {
-        const container = document.querySelector('div.box');
-
-        const totalChildren = container.children.length;
-
-        for (let i = totalChildren - 1; i >= 3; i--) {
-            container.removeChild(container.children[i]);
-        }
-    }
+const blindTypes = ref([])
 
     const getBlindTypes = async () => {
         try {
@@ -77,10 +62,7 @@ const notificationStore = useNotificationStore()
             }   
 
             const data = await response.json()
-            clearScreen()
-            data.map(blindType => {
-                addRow(blindType)
-            })
+            blindTypes.value = data
         } catch (error) {
             console.log(error.message)
             notificationStore.addNotification(error.message, 'error')
@@ -112,10 +94,7 @@ const notificationStore = useNotificationStore()
             }   
 
             const data = await response.json()
-            clearScreen()
-            data.map(blindType => {
-                addRow(blindType)
-            })
+            blindTypes.value = data
         } catch (error) {
             console.log(error.message)
             notificationStore.addNotification(error.message, 'error')
