@@ -19,9 +19,9 @@ router.get('/', (req, res) => {
     res.send("Server running")
 })
 
-router.post('/register', userMiddleware.validateUserData, userController.registerUser)
+router.post('/register', authenticateToken.authenticateToken, userMiddleware.validateUserData, userController.registerUser)
 router.post('/login', userMiddleware.validateLoginData, userController.validateLogin)
-router.post('/logout', userMiddleware.validateLoginData, userController.logout)
+router.post('/logout', authenticateToken.authenticateToken, userController.logout)
 router.post('/refresh', userController.refreshTokenHandler)
 
 router.put('/users/login', authenticateToken.authenticateToken, userController.updateLogin)

@@ -1,4 +1,5 @@
 const { prismaClient } = require('../database/prismaClient')
+const { v4: uuidv4 } = require('uuid')
 const bcrypt = require("bcrypt")
 const jwt = require('jsonwebtoken')
 
@@ -166,7 +167,7 @@ async function validateUser(login) {
     console.error('Erro ao validar usuário:', err.message)
     return { error: 'Erro ao validar usuário.' }
   }
-  }
+}
   
 async function validatePassword(password, hash) {
   try {
@@ -197,7 +198,8 @@ const validateLogin = async (req, res) => {
         const payload = {
                 id: user.id,
                 role: user.role,
-                customerId: user.customer?.id || null
+                customerId: user.customer?.id || null,
+                jti: uuidv4()
             }
 
         const secret = process.env.JWT_SECRET
@@ -270,19 +272,24 @@ const refreshTokenHandler = async (req, res) => {
 }
 
 const logout = async (req, res) => {
-    const refreshToken = req.cookies.refreshToken
+  const refreshToken = req.cookies.refreshToken
+  if (refreshToken) {
+    await prismaClient.user.updateMany({
+      where: { refreshToken },
+      data: { refreshToken: null }
+    })
+  }
+    
+  const cookieOptions = {
+    httpOnly: true,
+    secure: false,
+    sameSite: 'lax'
+  }
 
-    if (refreshToken) {
-        await prismaClient.user.updateMany({
-            where: { refreshToken },
-            data: { refreshToken: null }
-        })
-    }
+  res.clearCookie('token', cookieOptions)
+  res.clearCookie('refreshToken', cookieOptions)
 
-    res.clearCookie('token')
-    res.clearCookie('refreshToken')
-
-    res.status(200).json({ msg: 'Logout realizado com sucesso' })
+  res.status(200).json({ msg: 'Logout realizado com sucesso' })
 }
 
 module.exports = {

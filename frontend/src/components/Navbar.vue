@@ -63,11 +63,17 @@ const authStore = useAuthStore()
 
 const logout = async () => {
   try {
-    await fetchWithAuth('http://127.0.0.1:3333/logout', {
+    const response = await fetchWithAuth('http://127.0.0.1:3333/logout', {
       method: 'POST',
       credentials: 'include'
     })
 
+    if (!response.ok) {
+      const error = await response.json()
+      throw new Error(error.msg)
+    }
+
+    authStore.clearUser()
     authStore.$reset()
     router.push('/')
   } catch (error) {
