@@ -18,7 +18,6 @@
 </template>
 
 <script setup>
-import { jwtDecode } from 'jwt-decode'
 import { useRouter } from 'vue-router'
 import { useNotificationStore } from '@/stores/notificationStore'
 import { useAuthStore } from '@/stores/authStore'
@@ -44,9 +43,9 @@ const submitForm = async (event) => {
         })
 
       const result = await response.json()
-        
+      
       if (!response.ok) {
-        throw new Error(result.error || result.message || 'Erro ao logar')
+        throw new Error(result.error || result.msg || 'Erro ao logar')
       }
 
       const meRes = await fetch('http://127.0.0.1:3333/me', {

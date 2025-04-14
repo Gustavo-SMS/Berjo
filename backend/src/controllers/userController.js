@@ -2,6 +2,86 @@ const { prismaClient } = require('../database/prismaClient')
 const bcrypt = require("bcrypt")
 const jwt = require('jsonwebtoken')
 
+const validateCurrentPassword = async (userId, currentPassword) => {
+    const user = await prismaClient.user.findUnique({ where: { id: userId } })
+  
+    if (!user) {
+      throw new Error('Usuário não encontrado.')
+    }
+  
+    const isPasswordValid = await bcrypt.compare(currentPassword, user.password)
+  
+    if (!isPasswordValid) {
+      throw new Error('Senha atual incorreta.')
+    }
+  
+    return user
+}
+
+const updateLogin = async (req, res) => {
+    const userId = req.user.id
+    const { newLogin, currentPassword } = req.body
+  
+    if (!newLogin || !currentPassword) {
+      return res.status(400).json({ error: 'Login e senha atual são obrigatórios.' })
+    }
+  
+    try {
+      await validateCurrentPassword(userId, currentPassword)
+  
+      const existingUser = await prismaClient.user.findUnique({
+        where: { login: newLogin }
+      })
+  
+      if (existingUser) {
+        return res.status(409).json({ error: 'Esse login já está em uso.' })
+      }
+  
+      await prismaClient.user.update({
+        where: { id: userId },
+        data: { login: newLogin }
+      })
+  
+      return res.status(200).json({ message: 'Login atualizado com sucesso.' })
+    } catch (error) {
+      return res.status(400).json({ error: error.message })
+    }
+  }
+
+const updatePassword = async (req, res) => {
+    const userId = req.user.id
+    
+    const { currentPassword, newPassword, confirmPassword } = req.body
+  
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      return res.status(400).json({ error: 'Todos os campos são obrigatórios.' })
+    }
+  
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({ error: 'As novas senhas não coincidem.' })
+    }
+  
+    if (newPassword.length < 6) {
+      return res.status(400).json({ error: 'A nova senha deve ter pelo menos 6 caracteres.' })
+    }
+  
+    try {
+      await validateCurrentPassword(userId, currentPassword)
+  
+      const salt = await bcrypt.genSalt(12)
+      const hashedNewPassword = await bcrypt.hash(newPassword, salt)
+  
+      await prismaClient.user.update({
+        where: { id: userId },
+        data: { password: hashedNewPassword }
+      })
+  
+      return res.status(200).json({ message: 'Senha atualizada com sucesso.' })
+    } catch (error) {
+      return res.status(400).json({ error: error.message })
+    }
+}
+
 const getUnlinkedUsers = async (req, res) => {
   try {
     const users = await prismaClient.user.findMany({
@@ -65,43 +145,52 @@ const registerUser = async (req, res) => {
 }
 
 async function validateUser(login) {
+  try {
     const user = await prismaClient.user.findUnique({
       where: { login },
       include: { customer: true }
     })
-  
-    if (!user) throw new Error('Usuário não encontrado')
-  
+
+    if (!user) return { error: 'Usuário não encontrado' }
+
     if (user.role === 'CUSTOMER' && !user.customer) {
-      throw new Error('Usuário ainda não vinculado a um cliente.')
+      return { error: 'Usuário ainda não vinculado a um cliente.' }
     }
-  
+
     if (user.customer && user.customer.isActive === false) {
-      throw new Error('Usuário desativado.')
+      return { error: 'Usuário desativado.' }
     }
-  
+
     return user
+  } catch (err) {
+    console.error('Erro ao validar usuário:', err.message)
+    return { error: 'Erro ao validar usuário.' }
+  }
   }
   
 async function validatePassword(password, hash) {
+  try {
     const isValid = await bcrypt.compare(password, hash)
-    if (!isValid) throw new Error('Senha incorreta.')
+    return isValid
+  } catch (error) {
+    console.error('Erro ao validar senha:', error.message)
+    return false
+}
 }
 
 const validateLogin = async (req, res) => {
     const { login, password } = req.body
 
     const user = await validateUser(login)
-    await validatePassword(password, user.password)
-
+    
     if(!user) {
         return res.status(404).json({ msg : 'Usuário não encontrado!'})
     }
-
-    const checkPassword = bcrypt.compareSync(password, user.password)
+    
+    const checkPassword = await validatePassword(password, user.password)
     
     if(!checkPassword) {
-        return res.status(422).json({ msg : 'Senha incorreta!'})
+      return res.status(422).json({ msg : 'Senha incorreta'})
     }
     
     try {
@@ -197,6 +286,8 @@ const logout = async (req, res) => {
 }
 
 module.exports = {
+    updateLogin,
+    updatePassword,
     getUnlinkedUsers,
     registerUser,
     validateLogin,

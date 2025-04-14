@@ -10,24 +10,24 @@
 
           <ul class="navbar-nav col-lg-6 justify-content-lg-center">
 
-            <li class="nav-item dropdown">
+            <li v-if="authStore.userRole && authStore.userRole === 'ADMIN'" class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Clientes</a>
               <ul class="dropdown-menu">
-                <li><RouterLink class="dropdown-item" to="/customers">Ver clientes</RouterLink></li>
-                <li v-if="authStore.userRole === 'ADMIN'"><RouterLink class="dropdown-item" to="/createCustomer">Cadastrar cliente</RouterLink></li>
+                <li><RouterLink class="dropdown-item" to="/customers">Lista clientes</RouterLink></li>
+                <li><RouterLink class="dropdown-item" to="/createCustomer">Cadastrar cliente</RouterLink></li>
               </ul>
             </li>
 
-            <li class="nav-item dropdown">
+            <li v-if="authStore.userRole" class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Pedidos</a>
 
-              <ul class="dropdown-menu">
+              <ul v-if="authStore.userRole" class="dropdown-menu">
                 <li><RouterLink class="dropdown-item" to="/orders">Ver pedidos</RouterLink></li>
                 <li><RouterLink class="dropdown-item" to="/createOrder">Cadastrar pedido</RouterLink></li>
               </ul>
             </li>
 
-            <li class="nav-item dropdown">
+            <li v-if="authStore.userRole" class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Tipos de persiana</a>
               
               <ul class="dropdown-menu">
@@ -38,7 +38,7 @@
           </ul>
 
           <template v-if="authStore.userRole">
-            <RouterLink to="/profile" class="btn btn-outline-primary me-2">Perfil</RouterLink>
+            <RouterLink to="/customerProfile" class="btn btn-outline-primary me-2">Perfil</RouterLink>
             <button @click="logout" class="btn btn-outline-danger">Sair</button>
           </template>
           <template v-else>

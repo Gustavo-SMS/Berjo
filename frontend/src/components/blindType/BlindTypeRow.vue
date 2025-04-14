@@ -39,7 +39,7 @@
                         
 <script setup>
 import { ref } from 'vue'
-import ConfirmationModal from '@/components/ConfirmationModal.vue'
+import ConfirmationModal from '@/components/modal/ConfirmationModal.vue'
 import { useNotificationStore } from '@/stores/notificationStore'
 import { useAuthStore } from '@/stores/authStore'
 import { fetchWithAuth } from '@/utils/api'
@@ -98,6 +98,7 @@ const submitUpdate = async (event) => {
         notificationStore.addNotification('Tipo atualizado com sucesso!', 'success')
 
         props.getBlindTypes()
+        changeToInput()
       } catch (error) {
         console.error('Erro ao enviar os dados:', error.message)
         notificationStore.addNotification(error.message, 'error')

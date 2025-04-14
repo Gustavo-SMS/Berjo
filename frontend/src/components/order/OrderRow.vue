@@ -66,7 +66,7 @@
 
 <script setup>
 import { ref, computed, watch } from 'vue'
-import ConfirmationModal from '@/components/ConfirmationModal.vue'
+import ConfirmationModal from '@/components/modal/ConfirmationModal.vue'
 import SelectType from './formCreateOrder/SelectType.vue'
 import SelectBlindType from './formCreateOrder/SelectBlindType.vue'
 import { useNotificationStore } from '@/stores/notificationStore'

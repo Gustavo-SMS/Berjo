@@ -4,20 +4,20 @@ const prismaClient = require('../database/prismaClient')
 async function authenticateToken(req, res, next) {
     const token = req.cookies.token
     const refreshToken = req.cookies.refreshToken
-
+    
     if (!token && !refreshToken) {
         return res.status(401).json({ msg: 'Token não fornecido.' })
     }
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET)
-
+      
         req.user = {
             id: decoded.id,
             role: decoded.role,
             customerId: decoded.customerId
         }
-
+        
         return next()
     } catch (err) {
         if (!refreshToken) {

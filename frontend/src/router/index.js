@@ -21,6 +21,11 @@ const router = createRouter({
       meta: { requiresAuth: true, requiresAdmin: true }
     },
     {
+      path: '/customerProfile',
+      name: 'customerProfile',
+      component: () => import('../views/customers/CustomerProfile.vue'),
+    },
+    {
       path: '/createCustomer',
       name: 'createCustomer',
       component: () => import('../views/customers/CreateCustomersView.vue'),

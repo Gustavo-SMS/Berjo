@@ -33,7 +33,7 @@
             <p v-else>{{ zip }}</p>
         </div>
         <div class="col-1">
-            <input v-if="isEditing" type="number" class="form-control" v-model="editableDebt" id="debt" name="debt">
+            <input v-if="isEditing && authStore.userRole === 'ADMIN'" type="number" class="form-control" v-model="editableDebt" id="debt" name="debt">
             <p v-else>{{ debt }}</p>
         </div>
 
@@ -56,7 +56,7 @@
                         
 <script setup>
 import { ref } from 'vue'
-import ConfirmationModal from '@/components/ConfirmationModal.vue'
+import ConfirmationModal from '@/components/modal/ConfirmationModal.vue'
 import { useNotificationStore } from '@/stores/notificationStore'
 import { useAuthStore } from '@/stores/authStore'
 import { fetchWithAuth } from '@/utils/api'
@@ -123,6 +123,7 @@ const submitUpdate = async (event) => {
         notificationStore.addNotification('Cliente atualizado com sucesso!', 'success')
 
         props.getCustomers()
+        changeToInput()
       } catch (error) {
         console.error('Erro ao enviar os dados:', error.message)
         notificationStore.addNotification(error.message, 'error')
