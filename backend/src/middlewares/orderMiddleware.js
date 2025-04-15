@@ -46,8 +46,12 @@ const validateBlindData = async (res, blind) => {
 
 const totalPrice = async (req, res, next) => {
     try {
-        const { blinds } = req.body
+        const { blinds, customer } = req.body
 
+        if(!customer) {
+            return res.status(500).json({ error: 'Selecione um cliente' })
+        }
+        
         for (const blind of blinds) {
             await validateBlindData(res, blind)
         }

@@ -7,7 +7,7 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
+import { reactive, ref, onMounted } from 'vue'
 import { useNotificationStore } from '@/stores/notificationStore'
 import { fetchWithAuth } from '@/utils/api'
 
@@ -20,24 +20,30 @@ let arrayBlindTypes = reactive([])
 
 const selectedType = ref(props.typeValue || '')
 
-try {
-    await fetchWithAuth("http://127.0.0.1:3333/blind_types/type", {
+const fetchTypes = async () => {
+    try {
+        const response = await fetchWithAuth("http://127.0.0.1:3333/blind_types/type", {
             method: 'GET',
             headers: {
                 'Content-type': 'application/json'
             }
-        }).then((res) => {
-            res.json().then((types) => {
-                arrayBlindTypes.splice(0, arrayBlindTypes.length, ...[...new Set(types.map(item => item.type))])
-                arrayBlindTypes.unshift('')
-
-                if (props.typeValue && arrayBlindTypes.includes(props.typeValue)) {
-                    selectedType.value = props.typeValue
-                }
-            })
         })
-} catch (error) {
-    console.log(error.message)
-    notificationStore.addNotification(error.message, 'error')
+        
+        const types = await response.json()
+
+        arrayBlindTypes.splice(0, arrayBlindTypes.length, ...[...new Set(types.map(item => item.type))])
+        arrayBlindTypes.unshift('')
+
+        if (props.typeValue && arrayBlindTypes.includes(props.typeValue)) {
+            selectedType.value = props.typeValue
+        }
+    } catch (error) {
+        console.log(error.message)
+        notificationStore.addNotification(error.message, 'error')
+    }
 }
+
+onMounted(() => {
+    fetchTypes()
+})
 </script>

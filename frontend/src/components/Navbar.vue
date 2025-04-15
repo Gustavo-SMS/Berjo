@@ -38,16 +38,14 @@
           </ul>
 
           <template v-if="authStore.userRole">
+            <RouterLink v-if="authStore.userRole === 'ADMIN'" to="/register" class="btn btn-secondary">Registrar</RouterLink>
             <RouterLink to="/customerProfile" class="btn btn-outline-primary me-2">Perfil</RouterLink>
             <button @click="logout" class="btn btn-outline-danger">Sair</button>
           </template>
           <template v-else>
             <RouterLink to="/login" class="btn btn-primary">Login</RouterLink>
           </template>
-
-          <div class="d-lg-flex col-lg-3 justify-content-lg-end">
-            <RouterLink v-if="authStore.userRole === 'ADMIN'" to="/register" class="btn btn-secondary">Registrar</RouterLink>
-          </div>
+          
         </div>
       </div>
     </nav>

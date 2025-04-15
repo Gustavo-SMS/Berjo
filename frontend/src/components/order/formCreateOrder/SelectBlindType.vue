@@ -7,7 +7,7 @@
 </template>
 
 <script setup>
-import { reactive, ref, watch, nextTick } from 'vue'
+import { ref, watch, nextTick } from 'vue'
 import { useNotificationStore } from '@/stores/notificationStore'
 import { fetchWithAuth } from '@/utils/api'
 
@@ -17,8 +17,7 @@ defineEmits(['selectedOption'])
 const props = defineProps(['typeValue', 'collection'])
 
 const selectedCollection = ref(props.collection || '')
-
-const blindCollections = reactive([])
+const blindCollections = ref([])
 
 const fetchBlindCollections = async (type) => {
     if (!type) return
@@ -38,16 +37,19 @@ const fetchBlindCollections = async (type) => {
 
         const blindTypes = await response.json()
 
-        blindCollections.splice(0, blindCollections.length, { collection: '', color: '' }, ...blindTypes.map(bt => ({
-            id: bt.id,
-            collection: bt.collection,
-            color: bt.color
-        })))
+        blindCollections.value = [
+            { collection: '', color: '' },
+            ...blindTypes.map(bt => ({
+                id: bt.id,
+                collection: bt.collection,
+                color: bt.color
+            }))
+        ]
 
         await nextTick()
 
         if (props.collection) {
-            const match = blindCollections.find(bc => bc.collection === props.collection)
+            const match = blindCollections.value.find(bc => bc.collection === props.collection)
             if (match) selectedCollection.value = match.collection
         }
     } catch (error) {

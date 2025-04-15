@@ -87,6 +87,7 @@ const submitForm = async (event) => {
         customer: customerId.value,
         blinds: orderRows.value
     }
+    
     try {
         const response = await fetchWithAuth('http://127.0.0.1:3333/orders', {
             method: 'POST',

@@ -204,7 +204,7 @@ const getOrdersByFilter = async (req, res) => {
 const createOrder = async (req, res) => {
     const { customer, blinds } = req.body
     const total_price = req.total_price
-
+    console.log(customer)
     try {
         const order = await prismaClient.order.create({
             data: {
@@ -218,16 +218,16 @@ const createOrder = async (req, res) => {
                 }
             }
         })
-
         if(!order) {
             return res.status(404).json({ error: 'Não foi possível criar o pedido' })
         }
-
+        
         const getCustomer = await prismaClient.customer.findUnique({
             where: {
                 id: order.customer_id
             }
         })
+        console.log(getCustomer)
         
         const newDebt = getCustomer.debt + total_price
         await prismaClient.customer.update({
