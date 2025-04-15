@@ -1,7 +1,11 @@
+import router from '@/router'
+import { useAuthStore } from '@/stores/authStore'
+
 const API_BASE_URL = 'http://127.0.0.1:3333'
 
 export async function fetchWithAuth(endpoint, options = {}, retry = true) {
   const url = endpoint.startsWith('http') ? endpoint : `${API_BASE_URL}${endpoint}`
+  const authStore = useAuthStore()
 
   const response = await fetch(url, {
     ...options,
@@ -21,6 +25,9 @@ export async function fetchWithAuth(endpoint, options = {}, retry = true) {
     if (refreshResponse.ok) {
       return fetchWithAuth(endpoint, options, false)
     } else {
+      authStore.clearUser()
+      authStore.$reset()
+      router.push('/login')
       throw new Error('Sessão expirada. Faça login novamente.')
     }
   }

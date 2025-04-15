@@ -204,7 +204,7 @@ const getOrdersByFilter = async (req, res) => {
 const createOrder = async (req, res) => {
     const { customer, blinds } = req.body
     const total_price = req.total_price
-    console.log(customer)
+    
     try {
         const order = await prismaClient.order.create({
             data: {

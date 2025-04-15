@@ -24,6 +24,7 @@ const router = createRouter({
       path: '/customerProfile',
       name: 'customerProfile',
       component: () => import('../views/customers/CustomerProfileView.vue'),
+      meta: { requiresAuth: true }
     },
     {
       path: '/createCustomer',
@@ -34,22 +35,26 @@ const router = createRouter({
     {
       path: '/customers',
       name: 'customers',
-      component: () => import('../views/customers/CustomersView.vue')
+      component: () => import('../views/customers/CustomersView.vue'),
+      meta: { requiresAuth: true }
     },
     {
       path: '/createOrder',
       name: 'createOrder',
-      component: () => import('../views/orders/CreateOrdersView.vue')
+      component: () => import('../views/orders/CreateOrdersView.vue'),
+      meta: { requiresAuth: true }
     },
     {
       path: '/orders',
       name: 'orders',
-      component: () => import('../views/orders/OrdersView.vue')
+      component: () => import('../views/orders/OrdersView.vue'),
+      meta: { requiresAuth: true }
     },
     {
       path: '/blindTypes',
       name: 'blindTypes',
-      component: () => import('../views/blindTypes/BlindTypeView.vue')
+      component: () => import('../views/blindTypes/BlindTypeView.vue'),
+      meta: { requiresAuth: true }
     },
     {
       path: '/createBlindTypes',
