@@ -21,8 +21,7 @@ router.get('/', (req, res) => {
 
 router.post('/register', authenticateToken.authenticateToken, userMiddleware.validateUserData, userController.registerUser)
 router.post('/login', userMiddleware.validateLoginData, userController.validateLogin)
-router.post('/logout', authenticateToken.authenticateToken, userController.logout)
-router.post('/refresh', userController.refreshTokenHandler)
+router.post('/logout', authenticateToken.authenticateToken, userController.doLogout)
 
 router.put('/users/login', authenticateToken.authenticateToken, userController.updateLogin)
 router.put('/users/password', authenticateToken.authenticateToken, userController.updatePassword)

@@ -1,10 +1,10 @@
 const jwt = require('jsonwebtoken')
-const prismaClient = require('../database/prismaClient')
+const  prismaClient  = require('../database/prismaClient')
 
 async function authenticateToken(req, res, next) {
     const token = req.cookies.token
     const refreshToken = req.cookies.refreshToken
-    
+
     if (!token && !refreshToken) {
         return res.status(401).json({ msg: 'Token não fornecido.' })
     }
@@ -26,11 +26,11 @@ async function authenticateToken(req, res, next) {
 
         try {
             const decodedRefresh = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET)
-
+            
             const user = await prismaClient.user.findUnique({
                 where: { id: decodedRefresh.id }
             })
-
+            
             if (!user || user.refreshToken !== refreshToken) {
                 return res.status(403).json({ msg: 'Refresh token inválido.' })
             }

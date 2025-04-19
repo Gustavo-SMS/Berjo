@@ -11,10 +11,14 @@
 import { ref, onMounted, watch } from 'vue'
 import { useNotificationStore } from '@/stores/notificationStore'
 import { fetchWithAuth } from '@/utils/api'
+import { useAuthStore } from '@/stores/authStore'
+import { useRouter } from 'vue-router'
 
 defineEmits(['selectedOption'])
 const props = defineProps(['refreshKey'])
 
+const authStore = useAuthStore()
+const router = useRouter()
 const notificationStore = useNotificationStore()
   
 const selectedUserId = ref('')
@@ -28,7 +32,7 @@ const fetchUnlinkedUsers = async () => {
                   'Content-type': 'application/json'
               },
               credentials: 'include'
-          })
+          }, authStore, router)
 
       const data = await response.json()
 

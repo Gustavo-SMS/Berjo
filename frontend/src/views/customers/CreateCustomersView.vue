@@ -42,7 +42,11 @@ import { ref } from 'vue'
 import SelectUnlinkedUsers from '@/components/customer/SelectUnlinkedUsers.vue'
 import { useNotificationStore } from '@/stores/notificationStore'
 import { fetchWithAuth } from '@/utils/api'
+import { useAuthStore } from '@/stores/authStore'
+import { useRouter } from 'vue-router'
 
+const authStore = useAuthStore()
+const router = useRouter()
 const notificationStore = useNotificationStore()
 
 const unlinkedUserId = ref('')
@@ -66,7 +70,7 @@ const submitForm = async (event) => {
             'Content-type': 'application/json'
         },
         body: JSON.stringify(data)
-        })
+        }, authStore, router)
 
         if (!response.ok) {
             const errorData = await response.json()

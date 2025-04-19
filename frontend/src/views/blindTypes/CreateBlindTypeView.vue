@@ -28,7 +28,11 @@
 <script setup>
 import { useNotificationStore } from '@/stores/notificationStore'
 import { fetchWithAuth } from '@/utils/api'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/authStore'
 
+const authStore = useAuthStore()
+const router = useRouter()
 const notificationStore = useNotificationStore()
 
 const submitForm = async (event) => {
@@ -44,7 +48,7 @@ const submitForm = async (event) => {
             'Content-type': 'application/json'
         },
         body: JSON.stringify(data)
-        })
+        }, authStore, router)
         
         if (!response.ok) {
             const errorData = await response.json()

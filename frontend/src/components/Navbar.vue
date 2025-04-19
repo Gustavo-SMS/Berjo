@@ -40,7 +40,7 @@
           <template v-if="authStore.userRole">
             <RouterLink v-if="authStore.userRole === 'ADMIN'" to="/register" class="btn btn-secondary">Registrar</RouterLink>
             <RouterLink to="/customerProfile" class="btn btn-outline-primary me-2">Perfil</RouterLink>
-            <button @click="logout" class="btn btn-outline-danger">Sair</button>
+            <button @click="doLogout" class="btn btn-outline-danger">Sair</button>
           </template>
           <template v-else>
             <RouterLink to="/login" class="btn btn-primary">Login</RouterLink>
@@ -55,27 +55,27 @@
 import { RouterLink, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore'
 import { fetchWithAuth } from '@/utils/api'
+import { useLogout } from '@/utils/logout'
 
 const router = useRouter()
 const authStore = useAuthStore()
 
-const logout = async () => {
+const doLogout = async () => {
   try {
     const response = await fetchWithAuth('http://127.0.0.1:3333/logout', {
       method: 'POST',
       credentials: 'include'
-    })
+    }, authStore, router)
 
     if (!response.ok) {
       const error = await response.json()
       throw new Error(error.msg)
     }
 
-    authStore.clearUser()
-    authStore.$reset()
-    router.push('/')
+    useLogout(authStore, router)
   } catch (error) {
     console.error('Erro ao fazer logout:', error)
+    useLogout(authStore, router)
   }
 }
 </script>

@@ -57,9 +57,11 @@ import { onMounted, ref } from 'vue'
 import CustomerRow from '@/components/customer/CustomerRow.vue'
 import { useNotificationStore } from '@/stores/notificationStore'
 import { useAuthStore } from '@/stores/authStore'
+import { useRouter } from 'vue-router'
 import { fetchWithAuth } from '@/utils/api'
 
 const authStore = useAuthStore()
+const router = useRouter()
 const notificationStore = useNotificationStore()
 
 const customers = ref([])
@@ -78,7 +80,7 @@ const customers = ref([])
                     'Content-type': 'application/json'
                 },
                 credentials: 'include'
-            })
+            }, authStore, router)
 
             if (!response.ok) {
                 const errorData = await response.json()
@@ -110,7 +112,7 @@ const customers = ref([])
                 headers: {
                     'Content-type': 'application/json'
                 }
-            })
+            }, authStore, router)
 
             if (!response.ok) {
                 const errorData = await response.json()

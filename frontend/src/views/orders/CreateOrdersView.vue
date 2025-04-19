@@ -53,8 +53,10 @@ import { ref } from 'vue'
 import { useAuthStore } from '@/stores/authStore'
 import { useNotificationStore } from '@/stores/notificationStore'
 import { fetchWithAuth } from '@/utils/api'
+import { useRouter } from 'vue-router'
 
 const authStore = useAuthStore()
+const router = useRouter()
 const notificationStore = useNotificationStore()
 
 const customerId = ref('')
@@ -95,7 +97,7 @@ const submitForm = async (event) => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)
-        })
+        }, authStore, router)
         
         if (!response.ok) {
             const errorData = await response.json()

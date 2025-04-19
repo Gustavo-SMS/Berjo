@@ -10,7 +10,11 @@
 import { ref, onMounted } from 'vue'
 import { useNotificationStore } from '@/stores/notificationStore'
 import { fetchWithAuth } from '@/utils/api'
+import { useAuthStore } from '@/stores/authStore'
+import { useRouter } from 'vue-router'
 
+const authStore = useAuthStore()
+const router = useRouter()
 const notificationStore = useNotificationStore()
 
 defineEmits(['selectedOption']) 
@@ -25,7 +29,7 @@ onMounted(async () => {
                 'Content-type': 'application/json'
         },
             credentials: 'include'
-        })
+        }, authStore, router)
     
         if (!response.ok) {
             throw new Error('Erro ao buscar clientes')

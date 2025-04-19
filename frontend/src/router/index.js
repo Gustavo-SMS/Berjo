@@ -70,6 +70,10 @@ router.beforeEach((to, from, next) => {
   const userRole = localStorage.getItem('userRole')
 
   if (to.meta.requiresAuth && !isAuthenticated) {
+    document.cookie = 'token=; Max-Age=0; path=/'
+    document.cookie = 'refreshToken=; Max-Age=0; path=/'
+    localStorage.removeItem('userRole')
+    localStorage.removeItem('customerId')
     return next('/')
   }
 

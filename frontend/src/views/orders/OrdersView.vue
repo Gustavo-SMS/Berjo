@@ -67,11 +67,13 @@
 import OrderRow from '@/components/order/OrderRow.vue'
 import SelectCustomers from '@/components/order/formCreateOrder/SelectCustomers.vue'
 import { ref, onMounted } from 'vue'
-import { useAuthStore } from '@/stores/authStore'
 import { useNotificationStore } from '@/stores/notificationStore'
 import { fetchWithAuth } from '@/utils/api'
+import { useAuthStore } from '@/stores/authStore'
+import { useRouter } from 'vue-router'
 
 const authStore = useAuthStore()
+const router = useRouter()
 const notificationStore = useNotificationStore()
 
 const selectedStatus = ref('Em espera')
@@ -110,7 +112,7 @@ const getOrders = async (status, customerId) => {
             method: 'GET',
             headers: { 'Content-type': 'application/json' },
             credentials: 'include'
-        })
+        }, authStore, router)
 
         if (!response.ok) {
             const errorData = await response.json()
@@ -147,7 +149,7 @@ const changeStatus = async (orderId) => {
             headers: { 'Content-type': 'application/json' },
             credentials: 'include',
             body: JSON.stringify(payload)
-        })
+        }, authStore, router)
 
         if (!response.ok) {
             const errorData = await response.json()
@@ -171,7 +173,7 @@ const deleteOrder = async (orderId) => {
             method: 'DELETE',
             headers: { 'Content-type': 'application/json' },
             credentials: 'include'
-        })
+        }, authStore, router)
 
         if (!response.ok) {
             const errorData = await response.json()

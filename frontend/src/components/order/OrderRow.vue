@@ -71,10 +71,14 @@ import SelectType from './formCreateOrder/SelectType.vue'
 import SelectBlindType from './formCreateOrder/SelectBlindType.vue'
 import { useNotificationStore } from '@/stores/notificationStore'
 import { fetchWithAuth } from '@/utils/api'
+import { useAuthStore } from '@/stores/authStore'
+import { useRouter } from 'vue-router'
 
 const props = defineProps(['id', 'quantity', 'type', 'collection', 'blindTypeId', 'color', 
 'width', 'height', 'command_height', 'model', 'observation', 'status', 'blind_price', 'getOrders'])
 
+const authStore = useAuthStore()
+const router = useRouter()
 const notificationStore = useNotificationStore()
 const showModal = ref(false)
 
@@ -140,7 +144,7 @@ const submitUpdate = async (event) => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(payload),
-        })
+        }, authStore, router)
 
         if (!response.ok) {
             const errorData = await response.json()
@@ -163,7 +167,7 @@ const deleteBlind = async () => {
           headers: {
             'Content-Type': 'application/json',
           }
-        })
+        }, authStore, router)
 
         if (!response.ok) {
             const errorData = await response.json()

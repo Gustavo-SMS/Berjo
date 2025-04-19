@@ -41,7 +41,11 @@ import { ref, onMounted } from 'vue'
 import { useNotificationStore } from '@/stores/notificationStore'
 import { fetchWithAuth } from '@/utils/api'
 import BlindTypeRow from '@/components/blindType/BlindTypeRow.vue'
+import { useAuthStore } from '@/stores/authStore'
+import { useRouter } from 'vue-router'
 
+const authStore = useAuthStore()
+const router = useRouter()
 const notificationStore = useNotificationStore()
 
 const blindTypes = ref([])
@@ -54,7 +58,7 @@ const blindTypes = ref([])
                     'Content-type': 'application/json'
                 },
                 credentials: 'include'
-            })
+            }, authStore, router)
 
             if (!response.ok) {
                 const errorData = await response.json()
@@ -86,7 +90,7 @@ const blindTypes = ref([])
                 headers: {
                     'Content-type': 'application/json'
                 }
-            })
+            }, authStore, router)
 
             if (!response.ok) {
                 const errorData = await response.json()

@@ -42,12 +42,14 @@
 import { ref, onMounted } from 'vue'
 import CustomerRow from '@/components/customer/CustomerRow.vue'
 import { useAuthStore } from '@/stores/authStore'
+import { useRouter } from 'vue-router'
 import { useNotificationStore } from '@/stores/notificationStore'
 import { fetchWithAuth } from '@/utils/api'
 import ChangeLoginModal from '@/components/modal/ChangeLoginModel.vue'
 import ChangePasswordModal from '@/components/modal/ChangePasswordModel.vue'
 
 const authStore = useAuthStore()
+const router = useRouter()
 const notificationStore = useNotificationStore()
 const customer = ref(null)
 
@@ -56,7 +58,7 @@ const getCustomer = async () => {
     const response = await fetchWithAuth(`/customers/${authStore.customerId}`, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' }
-    })
+    }, authStore, router)
 
     if (!response.ok) {
       const errorData = await response.json()

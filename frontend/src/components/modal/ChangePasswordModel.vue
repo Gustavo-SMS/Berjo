@@ -39,11 +39,16 @@
   import { ref, onMounted } from 'vue'
   import { useNotificationStore } from '@/stores/notificationStore'
   import { fetchWithAuth } from '@/utils/api'
-  
+  import { useAuthStore } from '@/stores/authStore'
+  import { useRouter } from 'vue-router'
+
+  const authStore = useAuthStore()
+  const router = useRouter()
+  const notificationStore = useNotificationStore()
+
   const currentPassword = ref('')
   const newPassword = ref('')
   const confirmPassword = ref('')
-  const notificationStore = useNotificationStore()
   
   const handleChangePassword = async () => {
     if (newPassword.value !== confirmPassword.value) {
@@ -61,7 +66,7 @@
             newPassword: newPassword.value,
             confirmPassword: confirmPassword.value
         })
-      })
+      }, authStore, router)
   
       if (!response.ok) {
         const data = await response.json()

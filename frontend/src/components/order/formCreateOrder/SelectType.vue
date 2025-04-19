@@ -10,7 +10,11 @@
 import { reactive, ref, onMounted } from 'vue'
 import { useNotificationStore } from '@/stores/notificationStore'
 import { fetchWithAuth } from '@/utils/api'
+import { useAuthStore } from '@/stores/authStore'
+import { useRouter } from 'vue-router'
 
+const authStore = useAuthStore()
+const router = useRouter()
 const notificationStore = useNotificationStore()
 
 defineEmits(['selectedOption'])
@@ -27,7 +31,7 @@ const fetchTypes = async () => {
             headers: {
                 'Content-type': 'application/json'
             }
-        })
+        }, authStore, router)
         
         const types = await response.json()
 

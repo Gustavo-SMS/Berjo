@@ -1,7 +1,7 @@
 <template>
     <main class="form-signin w-100 m-auto">
         <form class="form">
-            <h1 class="h3 mb-3 fw-normal">Faça Login</h1>
+            <h1 class="h3 mb-3 fw-normal">Cadastre o usuário</h1>
 
             <div class="form-floating">
             <input id="login" name="login" type="text" class="form-control" placeholder="Login">
@@ -23,11 +23,13 @@
 
 <script setup>
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/authStore'
 import { useNotificationStore } from '@/stores/notificationStore'
 import { fetchWithAuth } from '@/utils/api'
 
 const notificationStore = useNotificationStore()
 const router = useRouter()
+const authStore = useAuthStore()
 
 const submitForm = async (event) => {
     event.preventDefault()
@@ -42,7 +44,7 @@ const submitForm = async (event) => {
             'Content-type': 'application/json'
         },
         body: JSON.stringify(data)
-        })
+        }, authStore, router)
 
         if (response.ok) {
             router.push(`/createCustomer`)

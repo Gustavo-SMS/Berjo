@@ -39,7 +39,11 @@
   import { ref, onMounted } from 'vue'
   import { useNotificationStore } from '@/stores/notificationStore'
   import { fetchWithAuth } from '@/utils/api'
-  
+  import { useAuthStore } from '@/stores/authStore'
+  import { useRouter } from 'vue-router'
+
+  const authStore = useAuthStore()
+  const router = useRouter()
   const newLogin = ref('')
   const confirmLogin = ref('')
   const currentPassword = ref('')
@@ -61,7 +65,7 @@
           newLogin: newLogin.value,
           currentPassword: currentPassword.value
         })
-      })
+      }, authStore, router)
   
       if (!response.ok) {
         const data = await response.json()

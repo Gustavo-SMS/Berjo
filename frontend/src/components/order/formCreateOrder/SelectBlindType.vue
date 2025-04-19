@@ -10,7 +10,11 @@
 import { ref, watch, nextTick } from 'vue'
 import { useNotificationStore } from '@/stores/notificationStore'
 import { fetchWithAuth } from '@/utils/api'
+import { useAuthStore } from '@/stores/authStore'
+import { useRouter } from 'vue-router'
 
+const authStore = useAuthStore()
+const router = useRouter()
 const notificationStore = useNotificationStore()
 
 defineEmits(['selectedOption']) 
@@ -28,7 +32,7 @@ const fetchBlindCollections = async (type) => {
                 headers: {
                     'Content-type': 'application/json'
                 }
-            })
+            }, authStore, router)
 
         if (!response.ok) {
             const errorData = await response.json()

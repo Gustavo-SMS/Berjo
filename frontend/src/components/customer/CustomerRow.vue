@@ -60,7 +60,9 @@ import ConfirmationModal from '@/components/modal/ConfirmationModal.vue'
 import { useNotificationStore } from '@/stores/notificationStore'
 import { useAuthStore } from '@/stores/authStore'
 import { fetchWithAuth } from '@/utils/api'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const authStore = useAuthStore()
 const notificationStore = useNotificationStore()
 
@@ -113,7 +115,7 @@ const submitUpdate = async (event) => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(payload),
-        })
+        }, authStore, router)
 
         if (!response.ok) {
             const errorData = await response.json()
@@ -137,7 +139,7 @@ const deleteCustomer = async () => {
           headers: {
             'Content-Type': 'application/json',
           }
-        })
+        },authStore, router)
 
         if (!response.ok) {
             const errorData = await response.json()
