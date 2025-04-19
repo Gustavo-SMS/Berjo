@@ -17,7 +17,8 @@ model User {
   role          Role      @default(CUSTOMER)
   refreshToken  String?   @db.Text
 
-  customer  Customer?
+  customerId    String?   @unique
+  customer      Customer? @relation(fields: [customerId], references: [id])
 }
 
 enum Role {
@@ -35,8 +36,7 @@ model Customer {
   created_at  DateTime  @default(now())
   isActive    Boolean   @default(true)
 
-  user        User     @relation(fields: [userId], references: [id])
-  userId      String   @unique
+  user        User?     
 
   orders      Order[]
 

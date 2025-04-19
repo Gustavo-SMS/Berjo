@@ -15,6 +15,7 @@
               <ul class="dropdown-menu">
                 <li><RouterLink class="dropdown-item" to="/customers">Lista clientes</RouterLink></li>
                 <li><RouterLink class="dropdown-item" to="/createCustomer">Cadastrar cliente</RouterLink></li>
+                <li><RouterLink class="dropdown-item" to="/register">Cadastrar usuário</RouterLink></li>
               </ul>
             </li>
 
@@ -38,7 +39,6 @@
           </ul>
 
           <template v-if="authStore.userRole">
-            <RouterLink v-if="authStore.userRole === 'ADMIN'" to="/register" class="btn btn-secondary">Registrar</RouterLink>
             <RouterLink to="/customerProfile" class="btn btn-outline-primary me-2">Perfil</RouterLink>
             <button @click="doLogout" class="btn btn-outline-danger">Sair</button>
           </template>

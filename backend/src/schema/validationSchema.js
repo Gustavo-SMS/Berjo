@@ -4,6 +4,7 @@ const userSchema = Joi.object({
     login: Joi.string().required(), 
     password: Joi.string().min(6).pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).required(),
     confirmPassword: Joi.ref("password"),
+    customerId: Joi.string().required(),
     role: Joi.string().valid('USER', 'ADMIN').optional()
 })
 
@@ -20,8 +21,7 @@ const customerSchema = Joi.object({
     house_number: Joi.number().integer(), 
     city: Joi.string().required(), 
     district: Joi.string().required(), 
-    zip: Joi.number().integer().required(),
-    userId: Joi.string().required()
+    zip: Joi.number().integer().required()
 })
 
 const blindSchema = Joi.object({

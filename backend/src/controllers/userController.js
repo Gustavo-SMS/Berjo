@@ -83,31 +83,8 @@ const updatePassword = async (req, res) => {
   }
 }
 
-const getUnlinkedUsers = async (req, res) => {
-  try {
-    const users = await prismaClient.user.findMany({
-      where: {
-        role: 'CUSTOMER',
-        customer: null,
-      },
-      select: {
-        id: true,
-        login: true
-      }
-    })
-
-    if (users.length === 0) {
-      return res.status(404).json({ error: 'Nenhum usuário foi encontrado' })
-    }
-
-    return res.status(200).json(users)
-  } catch (error) {
-    return res.status(500).json({ error: 'Erro ao buscar usuários não vinculados' })
-  }
-}
-
 const registerUser = async (req, res) => {
-  const { login, password, confirmPassword, role } = req.body
+  const { login, password, confirmPassword, customerId, role } = req.body
 
   if (!login) {
     return res.status(422).json({ msg: 'O login é obrigatório!' })
@@ -138,7 +115,10 @@ const registerUser = async (req, res) => {
     data: {
       login,
       password: passwordHash,
-      role
+      role,
+      customer: {
+        connect: { id: customerId }
+      }
     }
   })
 
@@ -258,7 +238,6 @@ const doLogout = async (req, res) => {
 module.exports = {
   updateLogin,
   updatePassword,
-  getUnlinkedUsers,
   registerUser,
   validateLogin,
   doLogout

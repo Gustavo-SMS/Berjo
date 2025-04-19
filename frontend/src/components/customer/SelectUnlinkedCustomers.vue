@@ -1,8 +1,8 @@
 <template>
-    <select v-model="selectedUserId" @change="$emit('selectedOption', selectedUserId)" class="form-select">
-      <option value="">Selecione um usuário</option>
-      <option v-for="user in unlinkedUsers" :key="user.id" :value="user.id">
-        {{ user.login }}
+    <select v-model="selectedCustomerId" @change="$emit('selectedOption', selectedCustomerId)" class="form-select">
+      <option value="">Selecione um cliente</option>
+      <option v-for="customer in unlinkedCustomers" :key="customer.id" :value="customer.id">
+        {{ customer.name }}
       </option>
     </select>
   </template>
@@ -21,12 +21,12 @@ const authStore = useAuthStore()
 const router = useRouter()
 const notificationStore = useNotificationStore()
   
-const selectedUserId = ref('')
-const unlinkedUsers = ref([])
+const selectedCustomerId = ref('')
+const unlinkedCustomers = ref([])
   
-const fetchUnlinkedUsers = async () => {
+const fetchUnlinkedCustomers = async () => {
     try {
-      const response = await fetchWithAuth('http://127.0.0.1:3333/users/unlinked', {
+      const response = await fetchWithAuth('http://127.0.0.1:3333/customers/unlinked', {
               method: 'GET',
               headers: {
                   'Content-type': 'application/json'
@@ -35,21 +35,21 @@ const fetchUnlinkedUsers = async () => {
           }, authStore, router)
 
       const data = await response.json()
-
+      
       if (!response.ok) {
-          throw new Error(data.error || 'Erro ao buscar usuários')
+          throw new Error(data.error || 'Erro ao buscar clientes')
       }
 
-      unlinkedUsers.value = data
+      unlinkedCustomers.value = data
     } catch (error) {
       console.error(error.message)
       notificationStore.addNotification(error.message, 'error')
     }
   }
 
-onMounted(fetchUnlinkedUsers)
+onMounted(fetchUnlinkedCustomers)
 
 watch(() => props.refreshKey, () => {
-  fetchUnlinkedUsers()
+  fetchUnlinkedCustomers()
 })
 </script>

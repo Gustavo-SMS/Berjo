@@ -16,7 +16,7 @@ const blindTypeMiddleware = require("./middlewares/blindTypeMiddleware")
 const router = express.Router()
 
 router.get('/', (req, res) => {
-    res.send("Server running")
+  res.send("Server running")
 })
 
 router.post('/register', authenticateToken.authenticateToken, userMiddleware.validateUserData, userController.registerUser)
@@ -27,15 +27,14 @@ router.put('/users/login', authenticateToken.authenticateToken, userController.u
 router.put('/users/password', authenticateToken.authenticateToken, userController.updatePassword)
 
 router.get('/me', authenticateToken.authenticateToken, (req, res) => {
-    const { role, customerId } = req.user
-    res.json({ role, customerId })
-  })
-
-router.get('/users/unlinked', userController.getUnlinkedUsers)
+  const { role, customerId } = req.user
+  res.json({ role, customerId })
+})
 
 router.get('/customers', authenticateToken.authenticateToken, customerController.getAll)
-router.get('/customers/:id', authenticateToken.authenticateToken, customerController.getOne)
+router.get('/customers/unlinked', authenticateToken.authenticateToken, customerController.getUnlinkedCustomers)
 router.get('/customers/name/:name', authenticateToken.authenticateToken, customerController.getCustomerByName)
+router.get('/customers/:id', authenticateToken.authenticateToken, customerController.getOne)
 router.post('/customers', authenticateToken.authenticateToken, customerMiddleware.validateCustomerData, customerController.createCustomer)
 router.put('/customers', authenticateToken.authenticateToken, customerController.updateCustomer)
 router.delete('/customers/:id', authenticateToken.authenticateToken, customerController.deleteCustomer)

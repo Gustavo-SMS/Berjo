@@ -11,7 +11,7 @@ const getAll = async (req, res) => {
             }
         })
 
-        if(customers.length === 0) {
+        if (customers.length === 0) {
             return res.status(404).json({ error: 'Nenhum cliente foi encontrado' })
         }
 
@@ -35,7 +35,7 @@ const getOne = async (req, res) => {
             }
         })
 
-        if(!customer) {
+        if (!customer) {
             return res.status(404).json({ error: 'Cliente não foi encontrado' })
         }
 
@@ -59,7 +59,7 @@ const getCustomerByName = async (req, res) => {
             }
         })
 
-        if(customers.length === 0) {
+        if (customers.length === 0) {
             return res.status(404).json({ error: 'Cliente não foi encontrado' })
         }
 
@@ -69,18 +69,33 @@ const getCustomerByName = async (req, res) => {
     }
 }
 
-const createCustomer = async (req, res) => {
-    const { name, email, phone, street, house_number, city, district, zip, userId  } = req.body
-    
+const getUnlinkedCustomers = async (req, res) => {
     try {
-        const user = await prismaClient.user.findUnique({
-            where: { id: userId }
-          })
-      
-        if (!user) {
-            return res.status(400).json({ error: 'Usuário não encontrado.' });
+        
+        const customers = await prismaClient.customer.findMany({
+            where: {
+                user: null,
+            },
+            select: {
+                id: true,
+                name: true
+            }
+        })
+        
+        if (customers.length === 0) {
+            return res.status(404).json({ error: 'Nenhum usuário foi encontrado' })
         }
 
+        return res.status(200).json(customers)
+    } catch (error) {
+        return res.status(500).json({ error: 'Erro ao buscar usuários não vinculados' })
+    }
+}
+
+const createCustomer = async (req, res) => {
+    const { name, email, phone, street, house_number, city, district, zip } = req.body
+
+    try {
         const customer = await prismaClient.customer.create({
             data: {
                 name,
@@ -94,12 +109,7 @@ const createCustomer = async (req, res) => {
                         district,
                         zip: parseInt(zip)
                     }
-                },
-                user: {
-                    connect: {
-                      id: userId
-                    }
-                  }
+                }
             }
         })
 
@@ -124,7 +134,7 @@ const updateCustomer = async (req, res) => {
                 debt: debt !== undefined ? debt : undefined
             }
         })
-    
+
         const address = prismaClient.address.update({
             where: {
                 customer_id: id
@@ -137,9 +147,9 @@ const updateCustomer = async (req, res) => {
                 zip: zip || undefined
             }
         })
-    
+
         const transaction = await prismaClient.$transaction([customer, address])
-    
+
         return res.status(201).json(transaction)
     } catch (error) {
         return res.status(500).json({ error: error.message })
@@ -147,14 +157,14 @@ const updateCustomer = async (req, res) => {
 }
 
 const updateDebt = async (customerId, totalPrice, newTotalPrice) => {
-    
+
     try {
         const customer = await prismaClient.customer.findUnique({
             where: {
                 id: customerId
             }
         })
-        
+
         const newDebt = (customer.debt - totalPrice) + newTotalPrice
 
         const response = await prismaClient.customer.update({
@@ -213,6 +223,7 @@ module.exports = {
     getAll,
     getOne,
     getCustomerByName,
+    getUnlinkedCustomers,
     createCustomer,
     updateCustomer,
     updateDebt,

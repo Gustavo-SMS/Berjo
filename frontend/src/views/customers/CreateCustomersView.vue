@@ -2,7 +2,6 @@
     <div class="wrapper">
         <div class="box">
             <form action="" class="form">
-                <SelectUnlinkedUsers @selectedOption="selectedUnlinkedUser" :refresh-key="refreshKey"/>
                 <div class="person">
                     <label for="name">Nome</label>
                     <input type="text" name="name" id="name" required>
@@ -38,8 +37,6 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import SelectUnlinkedUsers from '@/components/customer/SelectUnlinkedUsers.vue'
 import { useNotificationStore } from '@/stores/notificationStore'
 import { fetchWithAuth } from '@/utils/api'
 import { useAuthStore } from '@/stores/authStore'
@@ -49,20 +46,12 @@ const authStore = useAuthStore()
 const router = useRouter()
 const notificationStore = useNotificationStore()
 
-const unlinkedUserId = ref('')
-const refreshKey = ref(0)
-
-const selectedUnlinkedUser = (selectedUserId) => {
-    unlinkedUserId.value = selectedUserId
-}
-
 const submitForm = async (event) => {
     event.preventDefault()
 
     const form = document.querySelector('form')
     const formData = new FormData(form)
     const data = Object.fromEntries(formData)
-    data.userId = unlinkedUserId.value
     try {
         const response = await fetchWithAuth('http://127.0.0.1:3333/customers', {
         method: 'POST',
@@ -78,8 +67,7 @@ const submitForm = async (event) => {
         }
 
         notificationStore.addNotification('Cliente cadastrado com sucesso!', 'success')
-        form.reset()
-        refreshKey.value++
+        router.push('/register')
     } catch (error) {
         console.log(error.message)
         notificationStore.addNotification(error.message, 'error')
