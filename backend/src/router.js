@@ -25,6 +25,8 @@ router.post('/logout', authenticateToken.authenticateToken, userController.doLog
 
 router.put('/users/login', authenticateToken.authenticateToken, userController.updateLogin)
 router.put('/users/password', authenticateToken.authenticateToken, userController.updatePassword)
+router.put('/users/recoverPassword', userController.recoverPassword)
+router.post('/users/resetPassword', userController.resetPassword)
 
 router.get('/me', authenticateToken.authenticateToken, (req, res) => {
   const { role, customerId } = req.user
@@ -51,7 +53,7 @@ router.delete('/orders/:id', authenticateToken.authenticateToken, orderControlle
 
 router.get('/blinds', authenticateToken.authenticateToken, blindController.getAll)
 router.post('/blinds', authenticateToken.authenticateToken, blindMiddleware.validateBlindData, blindController.createBlind)
-router.put('/blinds', blindMiddleware.calculateBlindPrice, blindController.updateBlind)
+router.put('/blinds', authenticateToken.authenticateToken, blindMiddleware.calculateBlindPrice, blindController.updateBlind)
 router.delete('/blinds/:id', authenticateToken.authenticateToken, blindController.deleteBlind)
 
 router.get('/blind_types', authenticateToken.authenticateToken, blindTypeController.getAll)

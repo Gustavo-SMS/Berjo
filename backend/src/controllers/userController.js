@@ -2,6 +2,8 @@ const { prismaClient } = require('../database/prismaClient')
 const { v4: uuidv4 } = require('uuid')
 const bcrypt = require("bcrypt")
 const jwt = require('jsonwebtoken')
+const crypto = require('crypto')
+const { sendEmail } = require('../services/nodemailer')
 
 const validateCurrentPassword = async (userId, currentPassword) => {
   const user = await prismaClient.user.findUnique({ where: { id: userId } })
@@ -163,17 +165,16 @@ const validateLogin = async (req, res) => {
   const { login, password } = req.body
 
   const user = await validateUser(login)
-
   if (!user) {
     return res.status(404).json({ msg: 'Usuário não encontrado!' })
   }
 
   const checkPassword = await validatePassword(password, user.password)
-
+  
   if (!checkPassword) {
     return res.status(422).json({ msg: 'Senha incorreta' })
   }
-
+  
   try {
     const payload = {
       id: user.id,
@@ -214,6 +215,71 @@ const validateLogin = async (req, res) => {
   }
 }
 
+const recoverPassword = async (req, res) => {
+  const { email } = req.body
+
+  const customer = await prismaClient.customer.findUnique({
+    where: { email },
+    include: { user: true }
+  })
+
+  if (!customer || !customer.user) {
+    return res.status(404).json({ error: 'Usuário não encontrado' })
+  }
+
+  const token = crypto.randomBytes(32).toString('hex');
+  const expiration = new Date(Date.now() + 60 * 60 * 1000) // 1 hora
+
+  await prismaClient.user.update({
+    where: { id: customer.user.id },
+    data: {
+      passwordResetToken: token,
+      passwordResetExpires: expiration,
+    }
+  })
+
+  const link = `http://127.0.0.1:5173/resetPassword?token=${token}`
+
+  await sendEmail({
+    to: email,
+    subject: 'Recuperação de Senha',
+    html: `<p>Clique no link abaixo para redefinir sua senha:</p><a href="${link}">${link}</a>`
+  })
+
+  return res.status(200).json({ msg: 'Link de recuperação enviado para o e-mail.' })
+}
+
+const resetPassword = async (req, res) => {
+  const { token, newPassword } = req.body
+  
+  const user = await prismaClient.user.findFirst({
+    where: {
+      passwordResetToken: token,
+      passwordResetExpires: { 
+        gte: new Date() 
+      }
+    }
+  })
+
+  if (!user) {
+    return res.status(400).json({ error: 'Token inválido ou expirado.' })
+  }
+
+  const salt = await bcrypt.genSalt(12)
+  const hashedPassword = await bcrypt.hash(newPassword, salt)
+
+  await prismaClient.user.update({
+    where: { id: user.id },
+    data: {
+      password: hashedPassword,
+      passwordResetToken: null,
+      passwordResetExpires: null
+    }
+  })
+
+  return res.status(200).json({ msg: 'Senha redefinida com sucesso!' })
+}
+
 const doLogout = async (req, res) => {
   const refreshToken = req.cookies.refreshToken
   if (refreshToken) {
@@ -240,5 +306,7 @@ module.exports = {
   updatePassword,
   registerUser,
   validateLogin,
+  recoverPassword,
+  resetPassword,
   doLogout
 }

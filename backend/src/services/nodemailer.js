@@ -9,49 +9,42 @@ const transporter = nodemailer.createTransport({
     },
 })
 
-async function sendEmail(name, email, subject, blinds, totalPrice) {
-    tabela = gerarTabela(blinds)
-
+async function sendEmail({ to, subject, html, text }) {
     const info = await transporter.sendMail({
         from: process.env.SMTP_EMAIL,
-        to: email,
-        subject: subject,
-        html: `${name} <br /> ${tabela} <br /> ${totalPrice}`
+        to,
+        subject,
+        html,
+        text: text || ''
     })
 
     return info
 }
 
-function gerarTabela(data) {
-    let tabela = '<table border="1">';
-
-    tabela += '<thead><tr>';
-
-    tabela += `<th>Qtde</th>`;
-    tabela += `<th>Largura</th>`;
-    tabela += `<th>Altura</th>`;
-    tabela += `<th>Modelo</th>`;
-    tabela += `<th>Tipo</th>`;
-    tabela += `<th>Coleção</th>`;
-    tabela += `<th>Cor</th>`;
-
-    tabela += '</tr></thead>';
-
-    tabela += '<tbody>';
+function generateHtmlTable(data) {
+    if (!Array.isArray(data) || data.length === 0) return '<p>Nenhum dado disponível.</p>'
+  
+    const headers = Object.keys(data[0])
+    let html = '<table border="1" cellspacing="0" cellpadding="5"><thead><tr>'
+  
+    headers.forEach(header => {
+      html += `<th>${header}</th>`
+    })
+    html += '</tr></thead><tbody>'
+  
     data.forEach(item => {
-        tabela += '<tr>';
-        for (let chave in item) {
-            tabela += `<td>${item[chave]}</td>`;
-        }
-        tabela += '</tr>';
-    });
-    tabela += '</tbody>';
-
-    tabela += '</table>';
-
-    return tabela;
-}
+      html += '<tr>'
+      headers.forEach(header => {
+        html += `<td>${item[header]}</td>`
+      })
+      html += '</tr>'
+    })
+  
+    html += '</tbody></table>'
+    return html
+  }
 
 module.exports = {
-    sendEmail
+    sendEmail,
+    generateHtmlTable
 }

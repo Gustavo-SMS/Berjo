@@ -21,6 +21,11 @@ const router = createRouter({
       meta: { requiresAuth: true, requiresAdmin: true }
     },
     {
+      path: '/resetPassword',
+      name: 'resetPassword',
+      component: () => import('../views/login/ResetPasswordView.vue')
+    },
+    {
       path: '/customerProfile',
       name: 'customerProfile',
       component: () => import('../views/customers/CustomerProfileView.vue'),

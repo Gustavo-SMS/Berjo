@@ -17,6 +17,9 @@ model User {
   role          Role      @default(CUSTOMER)
   refreshToken  String?   @db.Text
 
+  passwordResetToken    String?  @db.Text
+  passwordResetExpires  DateTime?
+
   customerId    String?   @unique
   customer      Customer? @relation(fields: [customerId], references: [id])
 }
@@ -29,7 +32,7 @@ enum Role {
 model Customer {
   id          String    @id @default(uuid())
   name        String
-  email       String
+  email       String    @unique
   phone       Float
   debt        Float?
   address     Address?

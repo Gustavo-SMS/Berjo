@@ -1,5 +1,5 @@
 const { prismaClient } = require('../database/prismaClient')
-const { sendEmail } = require('../services/nodemailer')
+const { sendEmail, generateHtmlTable } = require('../services/nodemailer')
 const { calculateTotalPrice } = require("../utils/priceCalculator")
 const customerController = require('./customerController')
 
@@ -23,12 +23,12 @@ const getAll = async (req, res) => {
                             }
                         }
                     }
-                    
+
                 },
             }
         })
 
-        if(orders.length === 0) {
+        if (orders.length === 0) {
             return res.status(404).json({ error: 'Nenhum pedido foi encontrado' })
         }
 
@@ -63,12 +63,12 @@ const getOne = async (req, res) => {
                             }
                         }
                     }
-                    
+
                 },
             }
         })
 
-        if(!order) {
+        if (!order) {
             return res.status(404).json({ error: 'Pedido não encontrado' })
         }
 
@@ -103,12 +103,12 @@ const getOrdersByCustomer = async (req, res) => {
                             }
                         }
                     }
-                    
+
                 },
             }
         })
 
-        if(orders.length === 0) {
+        if (orders.length === 0) {
             return res.status(404).json({ error: 'Nenhum pedido foi encontrado' })
         }
 
@@ -143,12 +143,12 @@ const getOrdersByStatus = async (req, res) => {
                             }
                         }
                     }
-                    
+
                 },
             }
         })
 
-        if(orders.length === 0) {
+        if (orders.length === 0) {
             return res.status(404).json({ error: 'Nenhum pedido foi encontrado' })
         }
 
@@ -186,12 +186,12 @@ const getOrdersByFilter = async (req, res) => {
                             }
                         }
                     }
-                    
+
                 },
             }
         })
 
-        if(orders.length === 0) {
+        if (orders.length === 0) {
             return res.status(404).json({ error: 'Nenhum pedido foi encontrado' })
         }
 
@@ -204,7 +204,7 @@ const getOrdersByFilter = async (req, res) => {
 const createOrder = async (req, res) => {
     const { customer, blinds } = req.body
     const total_price = req.total_price
-    
+
     try {
         const order = await prismaClient.order.create({
             data: {
@@ -213,27 +213,27 @@ const createOrder = async (req, res) => {
                 },
                 total_price,
                 blind: {
-                    create: 
+                    create:
                         blinds
                 }
             }
         })
-        if(!order) {
+        if (!order) {
             return res.status(404).json({ error: 'Não foi possível criar o pedido' })
         }
-        
+
         const getCustomer = await prismaClient.customer.findUnique({
             where: {
                 id: order.customer_id
             }
         })
         console.log(getCustomer)
-        
+
         const newDebt = getCustomer.debt + total_price
         await prismaClient.customer.update({
             where: {
                 id: getCustomer.id
-            }, 
+            },
             data: {
                 debt: newDebt
             }
@@ -258,11 +258,11 @@ const changeStatus = async (req, res) => {
             }
         })
 
-        if(!order) {
+        if (!order) {
             return res.status(404).json({ error: 'Não foi possível atualizar o pedido' })
         }
-        
-        if(status === "Concluido" && status) {
+
+        if (status === "Concluido" && status) {
             createMail(id)
         }
 
@@ -274,27 +274,36 @@ const changeStatus = async (req, res) => {
 
 const createMail = async (id) => {
     const order = await getBlindsToMail(id)
- 
-    let blindsEmail = []
 
     const name = order.customer.name
     const email = order.customer.email
     const total_price = order.total_price
 
-    order.blind.forEach(blind => {
-        blindEmail = {
-            quantity: blind.quantity,
-            width: blind.width,
-            height: blind.height,
-            model: blind.model,
-            type: blind.type.type,
-            collection: blind.type.collection,
-            color: blind.type.color,
-        }
-        blindsEmail.push(blindEmail)
-    })
+    const blindsEmail = order.blind.map(blind => ({
+        Qtde: blind.quantity,
+        Largura: blind.width,
+        Altura: blind.height,
+        Modelo: blind.model,
+        Tipo: blind.type.type,
+        Coleção: blind.type.collection,
+        Cor: blind.type.color,
+    }))
 
-    sendEmail(name, email, subject = "Pedido pronto", blindsEmail, total_price)
+    const tabela = generateHtmlTable(blindsEmail)
+
+    const html = `
+    <p>Olá, ${name}!</p>
+    <p>Seu pedido está pronto. Aqui estão os detalhes:</p>
+    ${tabela}
+    <p><strong>Total: R$ ${total_price}</strong></p>
+    <p>Obrigado por comprar conosco!</p>
+  `
+
+    await sendEmail({
+        to: email,
+        subject: 'Pedido pronto',
+        html,
+    })
 }
 
 const getBlindsToMail = async (id) => {
@@ -307,7 +316,7 @@ const getBlindsToMail = async (id) => {
                 total_price: true,
                 customer: {
                     select: {
-                        name:true,
+                        name: true,
                         email: true
                     }
                 },
@@ -349,7 +358,8 @@ const updateOrder = async (req, res) => {
             }
         })
 
-        if(!order) {S
+        if (!order) {
+            S
             return res.status(404).json({ error: 'Não foi possível atualizar o pedido' })
         }
 
@@ -362,24 +372,24 @@ const updateOrder = async (req, res) => {
 const updateTotalPrice = async (orderId) => {
     try {
         const order = await prismaClient.order.findUnique({
-            where: { 
-                id: orderId 
+            where: {
+                id: orderId
             },
-            include: { 
-                blind: true 
+            include: {
+                blind: true
             }
         })
 
         if (!order) return res.status(404).json({ error: "Pedido não encontrado" })
-            
+
         const newTotalPrice = await calculateTotalPrice(order.blind)
- 
+
         const response = await prismaClient.order.update({
-            where: { 
-                id: order.id 
+            where: {
+                id: order.id
             },
-            data: { 
-                total_price: newTotalPrice 
+            data: {
+                total_price: newTotalPrice
             }
         })
 
@@ -409,7 +419,7 @@ const deleteOrder = async (req, res) => {
 
         const transaction = await prismaClient.$transaction([blind, order])
 
-        if(!transaction) {
+        if (!transaction) {
             return res.status(404).json({ error: 'Não foi possível excluir o pedido' })
         }
 

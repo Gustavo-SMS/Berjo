@@ -11,6 +11,11 @@
           <input id="password" name="password" type="password" class="form-control" placeholder="Password">
           <label for="password">Senha</label>
         </div>
+
+        <div>
+          <button class="btn btn-outline-warning" type="button" @click="openRecoverPasswordModal">Esqueci minha senha</button>
+          <RecoverPasswordModal ref="recoverPasswordModal" />
+        </div>
         
         <button class="btn btn-primary w-100 py-2" type="submit" @click="submitForm">Entrar</button>
       </form>
@@ -18,9 +23,11 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useNotificationStore } from '@/stores/notificationStore'
 import { useAuthStore } from '@/stores/authStore'
+import RecoverPasswordModal from '@/components/modal/RecoverPasswordModal.vue'
 
 const authStore = useAuthStore()
 const notificationStore = useNotificationStore()
@@ -64,6 +71,11 @@ const submitForm = async (event) => {
       console.log(error.message)
       notificationStore.addNotification(error.message, 'error')
     } 
+}
+
+const recoverPasswordModal = ref(null)
+const openRecoverPasswordModal = () => {
+  recoverPasswordModal.value?.showModal()
 }
 
 </script>
