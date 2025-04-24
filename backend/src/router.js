@@ -12,6 +12,7 @@ const customerMiddleware = require("./middlewares/customerMiddleware")
 const orderMiddleware = require("./middlewares/orderMiddleware")
 const blindMiddleware = require("./middlewares/blindMiddleware")
 const blindTypeMiddleware = require("./middlewares/blindTypeMiddleware")
+const verifyCaptcha = require('./middlewares/verifyCaptcha')
 
 const router = express.Router()
 
@@ -20,7 +21,7 @@ router.get('/', (req, res) => {
 })
 
 router.post('/register', authenticateToken.authenticateToken, userMiddleware.validateUserData, userController.registerUser)
-router.post('/login', userMiddleware.validateLoginData, userController.validateLogin)
+router.post('/login', verifyCaptcha, userMiddleware.validateLoginData, userController.validateLogin)
 router.post('/logout', authenticateToken.authenticateToken, userController.doLogout)
 
 router.put('/users/login', authenticateToken.authenticateToken, userController.updateLogin)

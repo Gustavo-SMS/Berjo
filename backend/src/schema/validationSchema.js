@@ -11,6 +11,7 @@ const userSchema = Joi.object({
 const loginSchema = Joi.object({
     login: Joi.string().required(), 
     password: Joi.string().min(6).pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).required(),
+    'g-recaptcha-response': Joi.string().required()
 })
 
 const customerSchema = Joi.object({
