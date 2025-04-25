@@ -1,27 +1,35 @@
 <template>
-    <div class="wrapper">
-        <div class="box">
-            <form action="" class="form">
-                <div class="person">
-                    <label for="type">Tipo</label>
-                    <input type="text" name="type" id="type" required>
-                    
-                    <label for="collection">Coleção</label>
-                    <input type="text" name="collection" id="collection" required>
-            
-                    <label for="color">Cor</label>
-                    <input type="text" name="color" id="color" maxlength="11" required>
+    <div class="container">
+        <form class="form" @submit.prevent="submitForm">
+            <h1 class="form-title">Cadastrar Tipo de Persiana</h1>
 
-                    <label for="max_width">Largura máx.</label>
-                    <input type="number" name="max_width" id="max_width">
+            <div class="form-group">
+                <label for="type">Tipo</label>
+                <input type="text" name="type" id="type" class="form-input" required>
+            </div>
+                        
+            <div class="form-group">
+                <label for="collection">Coleção</label>
+                <input type="text" name="collection" id="collection" class="form-input" required>
+            </div>
+                
+            <div class="form-group">
+                <label for="color">Cor</label>
+                <input type="text" name="color" id="color" class="form-input" required>
+            </div>
 
-                    <label for="price">Preço</label>
-                    <input type="number" name="price" id="price" required>
-                </div>
-        
-                <button @click="submitForm" type="submit" class="btn btn-primary">Cadastrar</button>
-            </form>
-        </div>
+            <div class="form-group">
+                <label for="max_width">Largura máx.</label>
+                <input type="number" name="max_width" id="max_width" class="form-input">
+            </div>
+
+            <div class="form-group">
+                <label for="price">Preço</label>
+                <input type="number" name="price" id="price" class="form-input" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Cadastrar</button>
+        </form>
     </div>
 </template>
 
@@ -56,6 +64,7 @@ const submitForm = async (event) => {
         }
 
         notificationStore.addNotification('Tipo cadastrado com sucesso!', 'success')
+        form.reset()
     } catch (error) {
         console.log(error.message)
         notificationStore.addNotification(error.message, 'error')
@@ -65,64 +74,63 @@ const submitForm = async (event) => {
 </script>
 
 <style scoped>
-div.wrapper {
-    width: 100vw;
-    height: 100vh;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  background-color: var(--color-background);
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
-div.box {
-    width: 70vw;
-    height: 60vh;
-
-    border-radius: 8px;
-    box-shadow: 1px 1px 5px #333;
-    background-color: #f8f9fa;
-
-    padding: 40px;
-
-    overflow: scroll;
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
 }
 
-form {
-    display: flex;
-
-    align-items: start;
-    justify-content: space-between;
-    
-    flex-wrap: wrap;
+.form-title {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: var(--color-text);
 }
 
-label, button {
-    display: block;
-
-    font-family: "Roboto", sans-serif;
-    font-weight: 400;
-    font-size: 18px;
+.form-group {
+  display: flex;
+  flex-direction: column;
 }
 
 label {
-    width: fit-content;
-    height: fit-content;
-
-    margin-bottom: 10px;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: var(--color-text);
 }
 
-input {
-    width: 400px;
-    height: 30px;
-    
-    font-family: "Roboto", sans-serif;
-    font-weight: 400;
-    font-size: 14px;
-
-    margin-bottom:20px;
-
-    border-radius: 8px;
+.form-input {
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  background-color: var(--color-surface);
+  color: var(--color-text);
 }
 
+.form-input:focus {
+  outline: 2px solid var(--color-primary);
+}
+
+.btn-primary {
+  background-color: var(--color-primary);
+  color: #fff;
+  padding: 0.75rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-dark);
+}
 </style>

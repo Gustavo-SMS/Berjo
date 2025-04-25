@@ -1,5 +1,5 @@
 <template>
-    <form action="" class="row mb-2">
+    <form @submit.prevent="submitUpdate" class="row mb-2">
         <div class="col-2">
             <input v-if="isEditing" type="text" class="form-control" v-model="editableName" id="name" name="name">
             <p v-else>{{ name }}</p>
@@ -37,12 +37,13 @@
             <p v-else>{{ debt }}</p>
         </div>
 
-        <button @click="changeToInput" type="button" class="btn btn-danger col-1 row justify-content-center">Editar</button>
+        <button @click="changeToInput" type="button" class="btn btn-danger col-1">Editar</button>
 
-        <button @click="submitUpdate" type="submit" class="btn col-1 row justify-content-center" :disabled="disabled">Enviar</button>
+        <button type="submit" class="btn btn-primary col-1" :disabled="disabled">Enviar</button>
 
-        <button v-if="authStore.userRole === 'ADMIN'" @click="openDeleteModal" type="button" class="btn col-1 row justify-content-center">Excluir</button>
+        <button v-if="authStore.userRole === 'ADMIN'" @click="openDeleteModal" type="button" class="btn btn-warning col-1">Excluir</button>
       </form>
+
       <Teleport to="body">
         <ConfirmationModal
           v-if="showModal"
@@ -157,8 +158,9 @@ const deleteCustomer = async () => {
 
 </script>
 
-<style>
+<style scoped>
 p {
-    overflow: scroll;
+  overflow: auto;
+  margin: 0;
 }
 </style>

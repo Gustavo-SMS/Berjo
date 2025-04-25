@@ -1,6 +1,6 @@
 <template>
     <select v-model="selectedCustomerId" @change="$emit('selectedOption', selectedCustomerId)" class="form-select">
-      <option value="">Selecione um cliente</option>
+      <option disabled value="">Selecione um cliente</option>
       <option v-for="customer in unlinkedCustomers" :key="customer.id" :value="customer.id">
         {{ customer.name }}
       </option>

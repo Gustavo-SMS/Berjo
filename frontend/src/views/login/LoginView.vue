@@ -1,25 +1,29 @@
 <template>
-    <main class="form-signin w-100 m-auto">
-      <form ref="loginForm" @submit.prevent="submitForm">
-        <h1 class="h3 mb-3 fw-normal">Faça Login</h1>
+    <main class="login-container">
+      <form ref="loginForm" @submit.prevent="submitForm" class="login-form">
+        <h1 class="login-title">Faça Login</h1>
         
-        <div class="form-floating">
-          <input id="login" name="login" type="text" class="form-control" placeholder="Login">
+        <div class="form-group">
           <label for="login">Login</label>
+          <input id="login" name="login" type="text" class="form-input" placeholder="Digite o login" required>
         </div>
-        <div class="form-floating">
-          <input id="password" name="password" type="password" class="form-control" placeholder="Password">
+        <div class="form-group">
           <label for="password">Senha</label>
+          <input id="password" name="password" type="password" class="form-control" placeholder="Digite a senha" required>
         </div>
 
         <div class="g-recaptcha"></div>
 
-        <div>
-          <button class="btn btn-outline-warning" type="button" @click="openRecoverPasswordModal">Esqueci minha senha</button>
+        <div class="login-actions">
+          <button class="btn-secondary" type="button" @click="openRecoverPasswordModal">
+            Esqueci minha senha
+          </button>
           <RecoverPasswordModal ref="recoverPasswordModal" />
         </div>
         
-        <button :disabled="!captchaToken" class="btn btn-primary w-100 py-2" type="submit">Entrar</button>
+        <button :disabled="!captchaToken" type="submit" class="btn-primary full-width">
+          Entrar
+        </button>
       </form>
     </main>
 </template>
@@ -118,25 +122,88 @@ const openRecoverPasswordModal = () => {
 </script>
 
 <style scoped>
-.form-signin {
-  max-width: 330px;
-  padding: 1rem;
+.login-container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  background-color: var(--color-background);
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
 }
 
-.form-signin .form-floating:focus-within {
-  z-index: 2;
+.login-title {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: var(--color-text);
 }
 
-.form-signin input[type="email"] {
-  margin-bottom: -1px;
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-.form-signin input[type="password"] {
-  margin-bottom: 10px;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
+.form-group {
+  display: flex;
+  flex-direction: column;
 }
 
+.form-group label {
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.form-input {
+  padding: 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  font-size: 1rem;
+}
+
+.form-input:focus {
+  outline: 2px solid var(--color-primary);
+}
+
+.login-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn-primary {
+  background-color: var(--color-primary);
+  color: white;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.btn-primary:disabled {
+  background-color: var(--color-disabled);
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--color-primary);
+  border: none;
+  padding: 0.5rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.btn-secondary:hover {
+  color: var(--color-primary-dark);
+}
+
+.full-width {
+  width: 100%;
+}
 </style>

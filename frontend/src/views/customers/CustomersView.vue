@@ -1,53 +1,38 @@
 <template>
-    <div class="wrapper">
+    <div class="container">
         <div class="box">
-                <input v-if="authStore.userRole === 'ADMIN'" type="text" id="searchByName">
-                <button v-if="authStore.userRole === 'ADMIN'" @click="getByName">Buscar</button>
-            <div class="row">
-                    <div class="col-2">
-                        <label for="" class="form-label">Nome</label>
-                    </div>
-                    <div class="col-2">
-                        <label for="" class="form-label">Email</label>
-                    </div>
-                    <div class="col-1">
-                        <label for="" class="form-label">Telefone</label>
-                    </div>
-                    <div class="col-2">
-                        <label for="" class="form-label">Rua</label>
-                    </div>
-                    <div class="col-1">
-                        <label for="" class="form-label">Número</label>
-                    </div>
-                    <div class="col-2">
-                        <label for="" class="form-label">Cidade</label>
-                    </div>
-                    <div class="col-1">
-                        <label for="" class="form-label">Bairro</label>
-                    </div>
-                    <div class="col-1">
-                        <label for="" class="form-label">CEP</label>
-                    </div>
-                    <div class="col-1">
-                        <label for="" class="form-label">Dívida</label>
-                    </div>
-                </div>
+            <div v-if="authStore.userRole === 'ADMIN'" class="d-flex gap-2 mb-3">
+                <input type="text" id="searchByName" class="form-control" placeholder="Buscar por nome" />
+                <button @click="getByName" class="btn btn-primary">Buscar</button>
+            </div>
 
-                <CustomerRow
-                    v-for="customer in customers"
-                    :key="customer.id"
-                    :id="customer.id"
-                    :name="customer.name"
-                    :email="customer.email"
-                    :phone="customer.phone"
-                    :street="customer.address.street"
-                    :house_number="customer.address.house_number"
-                    :city="customer.address.city"
-                    :district="customer.address.district"
-                    :zip="customer.address.zip"
-                    :debt="customer.debt"
-                    :getCustomers="getCustomers"
-                />
+            <div class="row fw-bold mb-2 text-center">
+                <div class="col-2">Nome</div>
+                <div class="col-2">Email</div>
+                <div class="col-1">Telefone</div>
+                <div class="col-2">Rua</div>
+                <div class="col-1">Número</div>
+                <div class="col-2">Cidade</div>
+                <div class="col-1">Bairro</div>
+                <div class="col-1">CEP</div>
+                <div class="col-1">Dívida</div>
+            </div>
+
+            <CustomerRow
+                v-for="customer in customers"
+                :key="customer.id"
+                :id="customer.id"
+                :name="customer.name"
+                :email="customer.email"
+                :phone="customer.phone"
+                :street="customer.address.street"
+                :house_number="customer.address.house_number"
+                :city="customer.address.city"
+                :district="customer.address.district"
+                :zip="customer.address.zip"
+                :debt="customer.debt"
+                :getCustomers="getCustomers"
+            />
         </div>
     </div>
 </template>
@@ -130,31 +115,29 @@ const customers = ref([])
 </script>
 
 <style scoped>
-div.wrapper {
-    width: 100vw;
-    height: 100vh;
+.container {
+  width: 100vw;
+  height: 100vh;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-div.box {
-    width: 80vw;
-    height: 60vh;
+.box {
+  width: 100%;
+  max-width: 1200px;
+  height: 60vh;
 
-    border-radius: 8px;
-    box-shadow: 1px 1px 5px #333;
-    background-color: #f8f9fa;
-
-    padding: 40px;
-
-    overflow: scroll;
+  background-color: var(--color-surface);
+  padding: 2rem;
+  border-radius: 8px;
+  overflow: auto;
+  box-shadow: 1px 1px 5px #333;
 }
 
 label {
-    font-family: "Roboto", sans-serif;
-    font-weight: 700;
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
 }
 </style>

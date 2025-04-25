@@ -1,34 +1,19 @@
 <template>
-    <div class="wrapper">
-        <div class="box">
-            <form>
-                <div v-if="authStore.userRole === 'ADMIN'">
-                    <label for="" class="form-label">Cliente</label>
-                    <SelectCustomers @selectedOption="selectedCustomerId" />
+    <div class="container">
+            <form @submit.prevent="submitForm">
+                <div v-if="authStore.userRole === 'ADMIN'" class="mb-3">
+                    <label for="selectCustomer" class="form-label">Cliente</label>
+                    <SelectCustomers id="selectCustomer" @selectedOption="selectedCustomerId" />
                 </div>
 
-                <div class="row">
-                    <div class="col-1">
-                        <label for="" class="form-label">Quantidade</label>
-                    </div>
-                    <div class="col-2">
-                        <label for="" class="form-label">Tipo</label>
-                    </div>
-                    <div class="col-4">
-                        <label for="" class="form-label">Coleção - Cor</label>
-                    </div>
-                    <div class="col-1">
-                        <label for="" class="form-label">Largura</label>
-                    </div>
-                    <div class="col-1">
-                        <label for="" class="form-label">Altura</label>
-                    </div>
-                    <div class="col-1">
-                        <label for="" class="form-label">Alt.Comando</label>
-                    </div>
-                    <div class="col-1">
-                        <label for="" class="form-label">Modelo</label>
-                    </div>
+                <div class="header-row">
+                    <span>Quantidade</span>
+                    <span>Tipo</span>
+                    <span>Coleção - Cor</span>
+                    <span>Largura</span>
+                    <span>Altura</span>
+                    <span>Alt. Comando</span>
+                    <span>Modelo</span>
                 </div>
 
                 <CreateOrderRow 
@@ -39,10 +24,9 @@
                     @selectedBlindTypeId="selectedBlindTypeId(index, $event.field, $event.value)"
                 />
                 
-                    <button @click="submitForm" type="submit" class="btn btn-primary w-100 py-1">Enviar</button>
-                </form>
-                <button @click="addRow" class="btn btn-primary w-100 py-1">Add linha</button>
-        </div>
+                <button type="submit" class="btn btn-primary w-100 mt-4">Enviar</button>
+            </form>
+            <button @click="addRow" class="btn btn-outline-secondary w-100 mt-3">Add linha</button>
     </div>
 </template>
 
@@ -113,25 +97,24 @@ const submitForm = async (event) => {
 </script>
 
 <style scoped>
-div.wrapper {
-    width: 100vw;
-    height: 100vh;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  background-color: var(--color-background);
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  overflow-x: auto;
 }
 
-div.box {
-    width: 70vw;
-    height: 60vh;
-
-    border-radius: 8px;
-    box-shadow: 1px 1px 5px #333;
-    background-color: #f8f9fa;
-
-    padding: 30px;
-
-    overflow: scroll;
+.header-row {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr 2fr 1fr 1fr 1.2fr 1fr;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  font-weight: bold;
+  border-bottom: 2px solid var(--color-border);
+  margin-bottom: 1rem;
+  color: var(--color-text);
 }
 </style>

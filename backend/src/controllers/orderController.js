@@ -227,7 +227,6 @@ const createOrder = async (req, res) => {
                 id: order.customer_id
             }
         })
-        console.log(getCustomer)
 
         const newDebt = getCustomer.debt + total_price
         await prismaClient.customer.update({

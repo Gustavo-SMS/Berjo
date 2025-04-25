@@ -1,5 +1,5 @@
 <template>
-    <div class="row">
+    <div class="row mb-3">
         <div class="col-1">
             <input type="number" class="form-control" v-model="row.quantity" @input="$emit('updateRow', { field: 'quantity', value: row.quantity })">
         </div>
@@ -26,13 +26,13 @@
         </div>
         <div class="col-1">
             <select v-if="modelOptions.length" class="form-control" v-model="row.model" @change="$emit('updateRow', { field: 'model', value: row.model })">
-                <option value="" disabled selected></option>
+                <option value="" disabled></option>
                 <option v-for="option in modelOptions" :key="option" :value="option">
                     {{ option }}
                 </option>
             </select>
         </div>
-        <div >
+        <div class="col-12 mt-2">
             <input type="text" class="form-control" placeholder="Observações" v-model="row.observation" @input="$emit('updateRow', { field: 'observation', value: row.observation })">
         </div>
     </div>

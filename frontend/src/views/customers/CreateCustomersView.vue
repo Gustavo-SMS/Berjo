@@ -1,36 +1,50 @@
 <template>
-    <div class="wrapper">
-        <div class="box">
-            <form action="" class="form">
-                <div class="person">
-                    <label for="name">Nome</label>
-                    <input type="text" name="name" id="name" required>
-                    
-                    <label for="email">Email</label>
-                    <input type="text" name="email" id="email" required>
-            
-                    <label for="phone">Telefone</label>
-                    <input type="number" name="phone" id="phone" maxlength="11" required>
+    <div class="container">
+        <div class="form-wrapper shadow-sm">
+            <form @submit.prevent="submitForm" class="row g-4">
+                <div class="col-12 col-md-6">
+                    <label for="name" class="form-label">Nome</label>
+                    <input type="text" name="name" id="name" class="form-control" required>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" name="email" id="email" class="form-control" required>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label for="phone" class="form-label">Telefone</label>
+                    <input type="tel" name="phone" id="phone" maxlength="11" class="form-control" required>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label for="zip" class="form-label">CEP</label>
+                    <input type="text" name="zip" id="zip" class="form-control" required>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label for="street" class="form-label">Rua</label>
+                    <input type="text" name="street" id="street" class="form-control" required>
+                </div>
+
+                <div class="col-6 col-md-3">
+                    <label for="house_number" class="form-label">Número</label>
+                    <input type="text" name="house_number" id="house_number" class="form-control" required>
+                </div>
+
+                <div class="col-6 col-md-3">
+                    <label for="district" class="form-label">Bairro</label>
+                    <input type="text" name="district" id="district" class="form-control" required>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label for="city" class="form-label">Cidade</label>
+                    <input type="text" name="city" id="city" class="form-control" required>
                 </div>
         
-                <div class="adress">
-                    <label for="street">Rua</label>
-                    <input type="text" name="street" id="street" required>
-            
-                    <label for="house_number">Número</label>
-                    <input type="number" name="house_number" id="house_number" required>
-            
-                    <label for="city">Cidade</label>
-                    <input type="text" name="city" id="city" required>
-            
-                    <label for="district">Bairro</label>
-                    <input type="text" name="district" id="district" required>
-            
-                    <label for="zip">CEP</label>
-                    <input type="number" name="zip" id="zip" required>
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary w-100">Cadastrar</button>
                 </div>
-        
-                <button @click="submitForm" type="submit" class="btn btn-primary">Cadastrar</button>
             </form>
         </div>
     </div>
@@ -77,64 +91,20 @@ const submitForm = async (event) => {
 </script>
 
 <style scoped>
-div.wrapper {
-    width: 100vw;
-    height: 100vh;
+.container {
+  width: 100vw;
+  height: 100vh;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-div.box {
-    width: 70vw;
-    height: 60vh;
-
-    border-radius: 8px;
-    box-shadow: 1px 1px 5px #333;
-    background-color: #f8f9fa;
-
-    padding: 40px;
-
-    overflow: scroll;
+.form-wrapper {
+  background-color: var(--color-surface);
+  padding: 2rem;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 800px;
 }
-
-form {
-    display: flex;
-
-    align-items: start;
-    justify-content: space-between;
-    
-    flex-wrap: wrap;
-}
-
-label, button {
-    display: block;
-
-    font-family: "Roboto", sans-serif;
-    font-weight: 400;
-    font-size: 18px;
-}
-
-label {
-    width: fit-content;
-    height: fit-content;
-
-    margin-bottom: 10px;
-}
-
-input {
-    width: 400px;
-    height: 30px;
-    
-    font-family: "Roboto", sans-serif;
-    font-weight: 400;
-    font-size: 14px;
-
-    margin-bottom:20px;
-
-    border-radius: 8px;
-}
-
 </style>

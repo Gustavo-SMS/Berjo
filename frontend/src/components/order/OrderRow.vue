@@ -1,13 +1,15 @@
 <template>
-    <form action="" class="row mb-2">
+    <form @submit.prevent="submitUpdate" class="row mb-2">
         <div class="col-1">
             <input v-if="isEditing" type="text" class="form-control" v-model="editableQuantity" id="quantity" name="quantity">
             <p v-else>{{ quantity }}</p>
         </div>
+
         <div class="col-2">
             <SelectType v-if="isEditing" @selectedOption="selectedType" :typeValue="editableType"/>
             <p v-else>{{ type }}</p>
         </div>
+
         <div class="col-2">
           <SelectBlindType 
                 v-if="isEditing" 
@@ -18,6 +20,7 @@
             />
             <p v-else>{{ collection + ' ' + color }}</p>
         </div>
+
         <div class="col-1">
             <input v-if="isEditing" type="number" class="form-control" v-model="editableWidth" id="width" name="width">
             <p v-else>{{ width }}</p>
@@ -41,12 +44,12 @@
         </div>
 
         <template v-if="props.status === 'Em espera'">
-          <button @click="changeToInput" type="button" class="btn btn-danger col-1 row justify-content-center">Editar</button>
-          <button @click="submitUpdate" type="submit" class="btn col-1 row justify-content-center" :disabled="disabled">Enviar</button>
-          <button @click="openDeleteModal" type="button" class="btn btn-danger col-1 row justify-content-center">Excluir</button>
+          <button @click="changeToInput" type="button" class="btn btn-danger col-1">Editar</button>
+          <button type="submit" class="btn btn-primary col-1" :disabled="disabled">Enviar</button>
+          <button @click="openDeleteModal" type="button" class="btn btn-warning col-1">Excluir</button>
         </template>
         
-        <div>
+        <div class="mt-2 col-12">
             <label for="observation">Observações: </label>
             <input v-if="isEditing" type="text" class="form-control" v-model="editableObservation" id="observation" name="observation">
             <p v-else>{{ observation }}</p>
@@ -187,8 +190,11 @@ watch(() => props.blind_price, (newVal) => {
 })
 </script>
 
-<style>
+<style scoped>
 p {
-    overflow: scroll;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>

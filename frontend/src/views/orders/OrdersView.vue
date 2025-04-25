@@ -1,43 +1,52 @@
 <template>
-    <div class="wrapper">
-        <div class="box">
-            <select v-model="selectedStatus" name="selectStatus" id="selectStatus">
-                <option value="Em espera">Em espera</option>
-                <option value="Em produção">Em produção</option>
-                <option value="Concluido">Concluido</option>
-            </select>
-            <SelectCustomers v-if="authStore.userRole === 'ADMIN'" @selectedOption="selectedCustomerId" />
-            <button @click="getWithFilter">Filtrar</button>
+        <div class="container">
+            <div class="filter-section d-flex flex-column flex-md-row gap-2 align-items-start align-items-md-center mb-4">
+                <select v-model="selectedStatus" name="selectStatus" id="selectStatus" class="form-select w-100 w-md-auto">
+                    <option value="Em espera">Em espera</option>
+                    <option value="Em produção">Em produção</option>
+                    <option value="Concluido">Concluido</option>
+                </select>
+                <SelectCustomers v-if="authStore.userRole === 'ADMIN'" @selectedOption="selectedCustomerId" />
+                <button @click="getWithFilter" class="btn btn-outline-primary">Filtrar</button>
+            </div>
             
-            <div v-for="order in orders" :key="order.id" class="order-block">
+            <div v-for="order in orders" :key="order.id" class="order-card">
                 <div class="order-header">
-                    <h3>Cliente: {{ order.customer.name }}</h3>
+                    <h5>Cliente: {{ order.customer.name }}</h5>
 
-                    <select v-if="editingOrderId === order.id" v-model="statusMap[order.id]">
-                        <option value="Em espera">Em espera</option>
-                        <option value="Em produção">Em produção</option>
-                        <option value="Concluido">Concluído</option>
-                    </select>
-                    <h3 v-else>({{ order.status }})</h3>
-
-                    <button v-if="editingOrderId === order.id" @click="changeStatus(order.id)" class="btn btn-success">Confirmar</button>
-                    <button v-else v-if="authStore.userRole === 'ADMIN'" @click="editStatus(order.id, order.status)" class="btn btn-primary">Mudar Status</button>
-
-                    <h3>Total: {{ order.total_price }}</h3>
+                    <div class="d-flex flex-wrap gap-2 align-items-center">
+                        <div v-if="editingOrderId === order.id" class="d-flex gap-2 align-items-center">
+                            <select v-model="statusMap[order.id]" class="form-select">
+                                <option value="Em espera">Em espera</option>
+                                <option value="Em produção">Em produção</option>
+                                <option value="Concluido">Concluído</option>
+                            </select>
+                            <button v-if="editingOrderId === order.id" @click="changeStatus(order.id)" class="btn btn-success">Confirmar</button>
+                            <button v-else v-if="authStore.userRole === 'ADMIN'" @click="editStatus(order.id, order.status)" class="btn btn-primary">Mudar Status</button>
+                        </div>
+                        <div v-else class="d-flex gap-2 align-items-center">
+                            <span class="badge bg-secondary">{{ order.status }}</span>
+                            <button v-if="authStore.userRole === 'ADMIN' "@click="editStatus(order.id, order.status)" class="btn btn-outline-primary">
+                                Mudar Status
+                            </button>
+                        </div>
+                
+                    <span class="fw-bold">Total: R$ {{ order.total_price }}</span>
 
                     <button v-if="authStore.userRole === 'ADMIN' || (authStore.userRole === 'CUSTOMER' && order.status === 'Em espera')"
-                    @click="deleteOrder(order.id)" class="btn btn-danger">Excluir</button>
+                    @click="deleteOrder(order.id)" class="btn btn-outline-danger">Excluir</button>
                 </div>
+            </div>
 
-                <div class="row header">
-                    <div class="col-1"><strong>Qtd</strong></div>
-                    <div class="col-2"><strong>Tipo</strong></div>
-                    <div class="col-2"><strong>Cor</strong></div>
-                    <div class="col-1"><strong>Largura</strong></div>
-                    <div class="col-1"><strong>Altura</strong></div>
-                    <div class="col-1"><strong>Alt. Comando</strong></div>
-                    <div class="col-1"><strong>Modelo</strong></div>
-                    <div class="col-1"><strong>Preço</strong></div>
+                <div class="order-table-header">
+                    <span>Qtd</span>
+                    <span>Tipo</span>
+                    <span>Cor</span>
+                    <span>Largura</span>
+                    <span>Altura</span>
+                    <span>Alt. Cmd</span>
+                    <span>Modelo</span>
+                    <span>Preço</span>
                 </div>
 
                 <OrderRow 
@@ -60,7 +69,6 @@
                 />
             </div>
         </div>
-    </div>
 </template>
 
 <script setup>
@@ -191,43 +199,33 @@ const deleteOrder = async (orderId) => {
 </script>
 
 <style scoped>
-div.wrapper {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
 }
 
-div.box {
-    width: 70vw;
-    height: 60vh;
-    border-radius: 8px;
-    box-shadow: 1px 1px 5px #333;
-    background-color: #f8f9fa;
-    padding: 30px;
-    overflow: scroll;
-}
-
-.order-block {
-    background: white;
-    padding: 15px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+.order-card {
+  background-color: var(--color-surface);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
 .order-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1rem;
 }
 
-.row.header {
-    font-weight: bold;
-    border-bottom: 2px solid #ddd;
-    margin-bottom: 10px;
-    padding-bottom: 5px;
+.order-table-header {
+  display: grid;
+  grid-template-columns: 1fr 2fr 2fr 1fr 1fr 1fr 1fr 1fr;
+  font-weight: bold;
+  padding: 0.5rem 0;
+  border-bottom: 2px solid var(--color-border);
+  color: var(--color-text);
 }
 </style>

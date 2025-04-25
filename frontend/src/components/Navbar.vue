@@ -1,17 +1,17 @@
 <template>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary rounded" aria-label="Thirteenth navbar example">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary shadow-sm rounded">
       <div class="container-fluid">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample11" aria-controls="navbarsExample11" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="collapse navbar-collapse d-lg-flex" id="navbarsExample11">
-          <RouterLink to="/" class="navbar-brand col-lg-3 me-0" href="#">Berjo</RouterLink>
+        <div class="collapse navbar-collapse d-lg-flex" id="mainNavbar">
+          <RouterLink to="/" class="navbar-brand col-lg-3 me-0 fw-bold text-primary" href="#">Berjo</RouterLink>
 
-          <ul class="navbar-nav col-lg-6 justify-content-lg-center">
-
+          <ul class="navbar-nav col-lg-6 justify-content-lg-center gap-2">
             <li v-if="authStore.userRole && authStore.userRole === 'ADMIN'" class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Clientes</a>
+              
               <ul class="dropdown-menu">
                 <li><RouterLink class="dropdown-item" to="/customers">Lista clientes</RouterLink></li>
                 <li><RouterLink class="dropdown-item" to="/createCustomer">Cadastrar cliente</RouterLink></li>
@@ -81,5 +81,10 @@ const doLogout = async () => {
 </script>
 
 <style scoped>
-  
+.navbar {
+  padding: 0.8rem 1rem;
+}
+.nav-link {
+  font-weight: 500;
+}
 </style>

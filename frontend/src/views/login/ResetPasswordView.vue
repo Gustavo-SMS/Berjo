@@ -1,19 +1,19 @@
 <template>
-    <main class="form-signin w-100 m-auto">
-      <form @submit.prevent="submitNewPassword">
-        <h1 class="h3 mb-3 fw-normal">Redefinir Senha</h1>
+    <main class="reset-container">
+      <form class="reset-form" @submit.prevent="submitNewPassword">
+        <h1 class="reset-title">Redefinir Senha</h1>
   
-        <div class="form-floating mb-3">
-          <input type="password" v-model="newPassword" class="form-control" placeholder="Nova Senha" required />
-          <label>Nova Senha</label>
+        <div class="form-group">
+          <label for="newPassword">Nova Senha</label>
+          <input id="newPassword" type="password" v-model="newPassword" class="form-input" placeholder="Digite a nova senha" required />
         </div>
   
-        <div class="form-floating mb-3">
-          <input type="password" v-model="confirmPassword" class="form-control" placeholder="Confirmar Senha" required />
-          <label>Confirmar Senha</label>
+        <div class="form-group">
+          <label for="confirmPassword">Confirmar Senha</label>
+          <input id="confirmPassword" type="password" v-model="confirmPassword" class="form-input" placeholder="Confirme a nova senha" required />
         </div>
   
-        <button class="btn btn-primary w-100 py-2" type="submit">Redefinir</button>
+        <button class="btn-primary full-width" type="submit">Redefinir</button>
       </form>
     </main>
   </template>
@@ -68,10 +68,69 @@
   }
   </script>
   
-  <style scoped>
-  .form-signin {
-    max-width: 330px;
-    padding: 1rem;
-  }
-  </style>
+<style scoped>
+.reset-container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  background-color: var(--color-background);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.reset-title {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: var(--color-text);
+}
+
+.reset-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.form-input {
+  padding: 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  font-size: 1rem;
+}
+
+.form-input:focus {
+  outline: 2px solid var(--color-primary);
+}
+
+.btn-primary {
+  background-color: var(--color-primary);
+  color: white;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-dark);
+}
+
+.full-width {
+  width: 100%;
+}
+</style>
   

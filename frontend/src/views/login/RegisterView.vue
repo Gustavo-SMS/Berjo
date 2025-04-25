@@ -1,22 +1,26 @@
 <template>
-    <main class="form-signin w-100 m-auto">
-        <form class="form">
-            <h1 class="h3 mb-3 fw-normal">Cadastre o usuário</h1>
+    <main class="register-container">
+        <form class="register-form" @submit.prevent="submitForm">
+            <h1 class="register-title">Cadastre o usuário</h1>
+
             <SelectUnlinkedCustomers @selectedOption="selectedUnlinkedCustomer" :refresh-key="refreshKey"/>
-            <div class="form-floating">
-            <input id="login" name="login" type="text" class="form-control" placeholder="Login">
-            <label for="login">Login</label>
-            </div>
-            <div class="form-floating">
-            <input id="password" name="password" type="password" class="form-control" placeholder="Senha">
-            <label for="password">Senha</label>
-            </div>
-            <div class="form-floating">
-            <input id="confirmPassword" name="confirmPassword" type="password" class="form-control" placeholder="Confirmar senha">
-            <label for="confirmPassword">Confirmar Senha</label>
+
+            <div class="form-group">
+                <label for="login">Login</label>
+                <input id="login" name="login" type="text" class="form-input" placeholder="Digite o login" required>
             </div>
 
-            <button class="btn btn-primary w-100 py-2" type="submit" @click="submitForm">Entrar</button>
+            <div class="form-group">
+                <label for="password">Senha</label>
+                <input id="password" name="password" type="password" class="form-input" placeholder="Digite a senha" required>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword">Confirmar Senha</label>
+                <input id="confirmPassword" name="confirmPassword" type="password" class="form-input" placeholder="Confirme a senha" required>
+            </div>
+
+            <button class="btn-primary full-width" type="submit" @click="submitForm">Entrar</button>
         </form>
     </main>
 </template>
@@ -73,29 +77,67 @@ const submitForm = async (event) => {
 </script>
 
 <style scoped>
-    .form-signin {
-    max-width: 330px;
-    padding: 1rem;
-    }
+.register-container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  background-color: var(--color-background);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
 
-    .form-signin .form-floating:focus-within {
-    z-index: 2;
-    }
+.register-title {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: var(--color-text);
+}
 
-    .form-signin input[type="email"] {
-    margin-bottom: -1px;
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius: 0;
-    }
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
 
-    .form-signin input[type="password"] {
-    margin-bottom: 10px;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-    }
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
 
-    #floatingConfirmPassword {
-    border-top-left-radius: 0.375rem;
-    border-top-right-radius: 0.375rem;
-    }
+.form-group label {
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.form-input {
+  padding: 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  font-size: 1rem;
+}
+
+.form-input:focus {
+  outline: 2px solid var(--color-primary);
+}
+
+.btn-primary {
+  background-color: var(--color-primary);
+  color: white;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-dark);
+}
+
+.full-width {
+  width: 100%;
+}
 </style>

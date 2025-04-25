@@ -1,29 +1,31 @@
 <template>
-    <form action="" class="row mb-2">
+    <form @submit.prevent="submitUpdate" class="row align-items-center mb-3 gx-2">
         <div class="col-2">
             <input v-if="isEditing" type="text" class="form-control" v-model="editableType" id="type" name="type">
-            <p v-else>{{ type }}</p>
+            <p v-else class="mb-0">{{ type }}</p>
         </div>
         <div class="col-2">
             <input v-if="isEditing" type="text" class="form-control" v-model="editableCollection" id="collection" name="collection">
-            <p v-else>{{ collection }}</p>
+            <p v-else class="mb-0">{{ collection }}</p>
         </div>
         <div class="col-1">
             <input v-if="isEditing" type="text" class="form-control" v-model="editableColor" id="color" name="color">
-            <p v-else>{{ color }}</p>
+            <p v-else class="mb-0">{{ color }}</p>
         </div>
         <div class="col-2">
-            <input v-if="isEditing" type="number" class="form-control" v-model="editableMaxWidth" id="max_width" name="max_width">
-            <p v-else>{{ max_width }}</p>
+            <input v-if="isEditing" type="number" class="form-control" v-model="editableMaxWidth" id="max_width" name="max_width" min="0">
+            <p v-else class="mb-0">{{ max_width }}</p>
         </div>
         <div class="col-1">
-            <input v-if="isEditing" type="number" class="form-control" v-model="editablePrice" id="price" name="price">
-            <p v-else>{{ price }}</p>
+            <input v-if="isEditing" type="number" class="form-control" v-model="editablePrice" id="price" name="price" min="0" step="0.01">
+            <p v-else class="mb-0">R$ {{ price }}</p>
         </div>
 
-        <button v-if="authStore.userRole === 'ADMIN'" @click="changeToInput" type="button" class="btn btn-danger col-1 row justify-content-center">Editar</button>
-        <button v-if="authStore.userRole === 'ADMIN'" @click="submitUpdate" type="submit" class="btn col-1 row justify-content-center" :disabled="disabled">Enviar</button>
-        <button v-if="authStore.userRole === 'ADMIN'" @click="openDeleteModal" type="button" class="btn col-1 row justify-content-center">Excluir</button>
+        <div v-if="authStore.userRole === 'ADMIN'" class="col-4 d-flex gap-2 justify-content-end">
+          <button @click="changeToInput" type="button" class="btn btn-outline-warning">Editar</button>
+          <button type="submit" class="btn btn-success" :disabled="disabled">Enviar</button>
+          <button @click="openDeleteModal" type="button" class="btn btn-outline-danger">Excluir</button>
+        </div>
       </form>
 
       <Teleport to="body">
@@ -134,6 +136,8 @@ const deleteCustomer = async () => {
 
 <style>
 p {
-    overflow: scroll;
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
 }
 </style>

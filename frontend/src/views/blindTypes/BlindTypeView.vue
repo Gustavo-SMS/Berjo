@@ -1,38 +1,30 @@
 <template>
-    <div class="wrapper">
-        <div class="box">
-                <input type="text" id="searchByType">
-                <button @click="getByType">Buscar tipo</button>
-            <div class="row">
-                    <div class="col-2">
-                        <label for="" class="form-label">Tipo</label>
-                    </div>
-                    <div class="col-2">
-                        <label for="" class="form-label">Coleção</label>
-                    </div>
-                    <div class="col-1">
-                        <label for="" class="form-label">Cor</label>
-                    </div>
-                    <div class="col-2">
-                        <label for="" class="form-label">Largura máx.</label>
-                    </div>
-                    <div class="col-1">
-                        <label for="" class="form-label">Preço</label>
-                    </div>
-            </div>
-
-            <BlindTypeRow
-                v-for="blindType in blindTypes" 
-                :key="blindType.id"
-                :id="blindType.id"
-                :type="blindType.type"
-                :collection="blindType.collection"
-                :color="blindType.color"
-                :max_width="blindType.max_width"
-                :price="blindType.price"
-                :getBlindTypes="getBlindTypes"
-            />
+    <div class="container">
+        <div class="search-section">
+            <input v-model="searchTerm" type="text" id="searchByType" class="form-input" placeholder="Buscar por tipo">
+            <button @click="getByType" class="btn-secondary">Buscar</button>
         </div>
+
+        <div class="header-row">
+            <span>Tipo</span>
+            <span>Coleção</span>
+            <span>Cor</span>
+            <span>Largura Máx.</span>
+            <span>Preço</span>
+        </div>
+
+        <BlindTypeRow
+            v-for="blindType in blindTypes" 
+            :key="blindType.id"
+            :id="blindType.id"
+            :type="blindType.type"
+            :collection="blindType.collection"
+            :color="blindType.color"
+            :max_width="blindType.max_width"
+            :price="blindType.price"
+            :getBlindTypes="getBlindTypes"
+        />
+        
     </div>
 </template>
 
@@ -49,6 +41,7 @@ const router = useRouter()
 const notificationStore = useNotificationStore()
 
 const blindTypes = ref([])
+const searchTerm = ref('')
 
     const getBlindTypes = async () => {
         try {
@@ -78,14 +71,12 @@ const blindTypes = ref([])
     const getByType = async (event) => {
         event.preventDefault()
 
-        const input = document.querySelector('#searchByType')
-
-        if(!input.value) {
+        if(!searchTerm.value) {
             return getBlindTypes()
         }
 
         try {
-            const response = await fetchWithAuth(`http://127.0.0.1:3333/blind_types/type/${input.value}`, {
+            const response = await fetchWithAuth(`http://127.0.0.1:3333/blind_types/type/${searchTerm.value}`, {
                 method: 'GET',
                 headers: {
                     'Content-type': 'application/json'
@@ -108,31 +99,57 @@ const blindTypes = ref([])
 </script>
 
 <style scoped>
-div.wrapper {
-    width: 100vw;
-    height: 100vh;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  background-color: var(--color-background);
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  overflow-x: auto;
 }
 
-div.box {
-    width: 80vw;
-    height: 60vh;
-
-    border-radius: 8px;
-    box-shadow: 1px 1px 5px #333;
-    background-color: #f8f9fa;
-
-    padding: 40px;
-
-    overflow: scroll;
+.search-section {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
 }
 
-label {
-    font-family: "Roboto", sans-serif;
-    font-weight: 700;
+.form-input {
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  min-width: 200px;
+}
+
+.btn-secondary {
+  background-color: var(--color-secondary);
+  color: #fff;
+  padding: 0.75rem 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-secondary-dark);
+}
+
+.header-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1rem;
+  padding: 0.75rem;
+  font-weight: bold;
+  background-color: var(--color-surface);
+  border-bottom: 2px solid var(--color-border);
+  margin-bottom: 1rem;
+  color: var(--color-text);
 }
 </style>
