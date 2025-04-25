@@ -1,24 +1,30 @@
 <template>
     <div class="main-banner">
-        <h1>Berjo</h1>
-    </div>
+  </div>
 </template>
 
 <style scoped>
-    .main-banner {
-        background-image: url("../assets/img/banner-persiana-rolo.jpg");
-        background-size: cover;
-        height: 80vh;
+.main-banner {
+  background-image: url("../assets/img/banner-homepage.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
 
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-    }
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 5vw;
+}
 
-    .main-banner h1 {
-        color: #fff;
-        text-align: center;
-        font-size: 60px;
-        padding: 10px 250px;
-    }
+.logo-box {
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.logo {
+  max-width: 300px;
+  height: auto;
+}
 </style>

@@ -4,12 +4,15 @@ const getAll = async (req, res) => {
     try {
         const customers = await prismaClient.customer.findMany({
             where: {
-                isActive: true
+              isActive: true,
+              user: {
+                role: 'CUSTOMER'
+              }
             },
             include: {
-                address: true
+              address: true
             }
-        })
+          })
 
         if (customers.length === 0) {
             return res.status(404).json({ error: 'Nenhum cliente foi encontrado' })
