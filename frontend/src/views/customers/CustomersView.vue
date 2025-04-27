@@ -1,21 +1,22 @@
 <template>
     <div class="container">
         <div class="box">
-            <div v-if="authStore.userRole === 'ADMIN'" class="d-flex gap-2 mb-3">
+            <div v-if="authStore.userRole === 'ADMIN'" class="search-bar">
                 <input type="text" id="searchByName" class="form-control" placeholder="Buscar por nome" />
                 <button @click="getByName" class="btn btn-primary">Buscar</button>
             </div>
 
-            <div class="row fw-bold mb-2 text-center">
-                <div class="col-2">Nome</div>
-                <div class="col-2">Email</div>
-                <div class="col-1">Telefone</div>
-                <div class="col-2">Rua</div>
-                <div class="col-1">Número</div>
-                <div class="col-2">Cidade</div>
-                <div class="col-1">Bairro</div>
-                <div class="col-1">CEP</div>
-                <div class="col-1">Dívida</div>
+            <div class="customer-header">
+                <div>Nome</div>
+                <div>Email</div>
+                <div>Telefone</div>
+                <div>Rua</div>
+                <div>Nº</div>
+                <div>Cidade</div>
+                <div>Bairro</div>
+                <div>CEP</div>
+                <div>Dívida</div>
+                <div>Ações</div>
             </div>
 
             <CustomerRow
@@ -118,7 +119,6 @@ const customers = ref([])
 .container {
   width: 100vw;
   height: 100vh;
-
   display: flex;
   align-items: center;
   justify-content: center;
@@ -126,9 +126,7 @@ const customers = ref([])
 
 .box {
   width: 100%;
-  max-width: 1200px;
-  height: 60vh;
-
+  height: 70vh;
   background-color: var(--color-surface);
   padding: 2rem;
   border-radius: 8px;
@@ -136,8 +134,41 @@ const customers = ref([])
   box-shadow: 1px 1px 5px #333;
 }
 
-label {
-  font-family: "Roboto", sans-serif;
-  font-weight: 700;
+.customer-header {
+  display: grid;
+  grid-template-columns: 6fr 5fr 2.5fr 5fr 1fr 3fr 3fr 2fr 1.5fr 5.2fr;
+  gap: 8px;
+  margin-bottom: 1rem;
+  font-weight: bold;
+  text-align: start;
+}
+
+.customer-header > div {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  .customer-header {
+    display: none;
+  }
+
+  .search-bar {
+    flex-direction: column;
+  }
+
+  .search-bar input,
+  .search-bar button {
+    width: 100%;
+  }
+}
+
+.search-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 1rem;
 }
 </style>

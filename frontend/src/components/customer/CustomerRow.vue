@@ -1,47 +1,47 @@
 <template>
-    <form @submit.prevent="submitUpdate" class="row mb-2">
-        <div class="col-2">
+    <form @submit.prevent="submitUpdate" class="customer-row">
+        <div>
             <input v-if="isEditing" type="text" class="form-control" v-model="editableName" id="name" name="name">
             <p v-else>{{ name }}</p>
         </div>
-        <div class="col-2">
+        <div>
             <input v-if="isEditing" type="email" class="form-control" v-model="editableEmail" id="email" name="email">
             <p v-else>{{ email }}</p>
         </div>
-        <div class="col-1">
+        <div>
             <input v-if="isEditing" type="tel" class="form-control" v-model="editablePhone" id="phone" name="phone">
             <p v-else>{{ phone }}</p>
         </div>
-        <div class="col-2">
+        <div>
             <input v-if="isEditing" type="text" class="form-control" v-model="editableStreet" id="street" name="street">
             <p v-else>{{ street }}</p>
         </div>
-        <div class="col-1">
+        <div>
             <input v-if="isEditing" type="number" class="form-control" v-model="editableHouseNumber" id="house_number" name="house_number">
             <p v-else>{{ house_number }}</p>
         </div>
-        <div class="col-2">
+        <div>
             <input v-if="isEditing" type="text" class="form-control" v-model="editableCity" id="city" name="city">
             <p v-else>{{ city }}</p>
         </div>
-        <div class="col-1">
+        <div>
             <input v-if="isEditing" type="text" class="form-control" v-model="editableDistrict" id="district" name="district">
             <p v-else>{{ district }}</p>
         </div>
-        <div class="col-1">
+        <div>
             <input v-if="isEditing" type="number" class="form-control" v-model="editableZip" id="zip" name="zip">
             <p v-else>{{ zip }}</p>
         </div>
-        <div class="col-1">
+        <div>
             <input v-if="isEditing && authStore.userRole === 'ADMIN'" type="number" class="form-control" v-model="editableDebt" id="debt" name="debt">
             <p v-else>{{ debt }}</p>
         </div>
 
-        <button @click="changeToInput" type="button" class="btn btn-danger col-1">Editar</button>
-
-        <button type="submit" class="btn btn-primary col-1" :disabled="disabled">Enviar</button>
-
-        <button v-if="authStore.userRole === 'ADMIN'" @click="openDeleteModal" type="button" class="btn btn-warning col-1">Excluir</button>
+        <div class="actions">
+          <button @click="changeToInput" type="button" class="btn btn-danger">Editar</button>
+          <button type="submit" class="btn btn-primary" :disabled="disabled">Enviar</button>
+          <button v-if="authStore.userRole === 'ADMIN'" @click="openDeleteModal" type="button" class="btn btn-warning">Excluir</button>
+        </div>
       </form>
 
       <Teleport to="body">
@@ -159,8 +159,62 @@ const deleteCustomer = async () => {
 </script>
 
 <style scoped>
-p {
-  overflow: auto;
+.customer-row {
+  display: grid;
+  grid-template-columns: 6fr 5fr 2.5fr 5fr 1fr 3fr 3fr 2fr 1.5fr 5.2fr;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  text-align: start;
+}
+
+.customer-row > div {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.customer-row p,
+.customer-row input {
+  width: 100%;
+  text-align: start;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.customer-row p {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   margin: 0;
+}
+
+.customer-row input {
+  width: 100%;
+}
+
+.customer-row button {
+  width: 100%;
+  min-width: 80px;
+}
+
+@media (max-width: 768px) {
+  .customer-row {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+  }
+  
+  .customer-row button {
+    width: 100%;
+  }
 }
 </style>
