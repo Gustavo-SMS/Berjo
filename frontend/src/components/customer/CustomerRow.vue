@@ -38,9 +38,14 @@
         </div>
 
         <div class="actions">
-          <button @click="changeToInput" type="button" class="btn btn-danger">Editar</button>
-          <button type="submit" class="btn btn-primary" :disabled="disabled">Enviar</button>
-          <button v-if="authStore.userRole === 'ADMIN'" @click="openDeleteModal" type="button" class="btn btn-warning">Excluir</button>
+          <template v-if="isEditing">
+            <button type="submit" @click="submitUpdate" class="btn btn-success">Confirmar</button>
+            <button type="button" @click="changeToInput" class="btn btn-secondary">Cancelar</button>
+          </template>
+          <template v-else>
+            <button @click="changeToInput" type="button" class="btn btn-primary">Editar</button>
+            <button v-if="authStore.userRole === 'ADMIN'" @click="openDeleteModal" type="button" class="btn btn-danger">Excluir</button>
+          </template>
         </div>
       </form>
 
@@ -168,7 +173,7 @@ const deleteCustomer = async () => {
   text-align: start;
 }
 
-.customer-row > div {
+.customer-row > div:not(.actions) {
   width: 100%;
   display: flex;
   align-items: center;
@@ -187,7 +192,7 @@ const deleteCustomer = async () => {
 
 .actions {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 8px;
 }
 
@@ -203,8 +208,8 @@ const deleteCustomer = async () => {
 }
 
 .customer-row button {
-  width: 100%;
-  min-width: 80px;
+  width: auto;
+  min-width: 70px;
 }
 
 @media (max-width: 768px) {

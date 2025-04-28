@@ -7,7 +7,7 @@
                     <option value="Concluido">Concluido</option>
                 </select>
                 <SelectCustomers v-if="authStore.userRole === 'ADMIN'" @selectedOption="selectedCustomerId" />
-                <button @click="getWithFilter" class="btn btn-outline-primary">Filtrar</button>
+                <button @click="getWithFilter" class="btn btn-primary">Filtrar</button>
             </div>
             
             <div v-for="order in orders" :key="order.id" class="order-card">
@@ -47,6 +47,7 @@
                     <span>Alt. Cmd</span>
                     <span>Modelo</span>
                     <span>Preço</span>
+                    <span>Ações</span>
                 </div>
 
                 <OrderRow 
@@ -210,7 +211,7 @@ const deleteOrder = async (orderId) => {
   background-color: var(--color-surface);
   border-radius: 8px;
   padding: 1.5rem;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
@@ -232,7 +233,7 @@ const deleteOrder = async (orderId) => {
 
 .order-table-header {
   display: grid;
-  grid-template-columns: 0.5fr 1.5fr 1.5fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 0.5fr 1.5fr 1.5fr 1fr 1fr 1fr 1fr 1fr 1fr;
   gap: 0.5rem;
   padding: 0.5rem 0;
   font-weight: bold;

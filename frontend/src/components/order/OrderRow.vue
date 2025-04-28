@@ -43,13 +43,18 @@
         <div>
             <p>{{ editableBlind_price }}</p>
         </div>
-      </div>
         
-        <div v-if="props.status === 'Em espera'" class="order-actions">
-          <button @click="changeToInput" type="button" class="btn btn-danger col-1">Editar</button>
-          <button type="submit" class="btn btn-primary col-1" :disabled="disabled">Enviar</button>
-          <button @click="openDeleteModal" type="button" class="btn btn-warning col-1">Excluir</button>
+        <div class="order-actions">
+          <template v-if="isEditing">
+            <button type="submit" @click="submitUpdate" class="btn btn-success">Confirmar</button>
+            <button type="button" @click="changeToInput" class="btn btn-secondary">Cancelar</button>
+          </template>
+          <template v-else>
+            <button @click="changeToInput" type="button" class="btn btn-primary">Editar</button>
+            <button v-if="authStore.userRole === 'ADMIN'" @click="openDeleteModal" type="button" class="btn btn-danger">Excluir</button>
+          </template>
         </div>
+      </div>
         
         <template class="observation">
             <label for="observation">Observações: </label>
@@ -201,16 +206,15 @@ watch(() => props.blind_price, (newVal) => {
 
 .order-row {
   display: grid;
-  grid-template-columns: 0.5fr 1.5fr 1.5fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 0.5fr 1.5fr 1.5fr 1fr 1fr 1fr 1fr 1fr 1fr;
   gap: 0.5rem;
   align-items: center;
 }
 
 .order-actions {
   display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
 }
 
 .observation {
@@ -225,4 +229,19 @@ p {
   text-overflow: ellipsis;
 }
 
+@media (max-width: 768px) {
+  .order-row, .order-table-header {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .order-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .observation {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
 </style>

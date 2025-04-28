@@ -25,9 +25,9 @@
                     @deleteRow="deleteRow(index)"
                 />
                 
+                <button @click="addRow" type="button" class="btn btn-outline-secondary w-100 mt-3">Add linha</button>
                 <button type="submit" class="btn btn-primary w-100 mt-4">Enviar</button>
             </form>
-            <button @click="addRow" class="btn btn-outline-secondary w-100 mt-3">Add linha</button>
     </div>
 </template>
 

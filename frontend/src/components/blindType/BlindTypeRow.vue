@@ -1,30 +1,35 @@
 <template>
-    <form @submit.prevent="submitUpdate" class="blind-type-form">
-        <div class="grid-item">
+    <form @submit.prevent="submitUpdate" class="blind-type-row">
+        <div>
             <input v-if="isEditing" type="text" class="form-control" v-model="editableType" id="type" name="type">
             <p v-else class="mb-0">{{ type }}</p>
         </div>
-        <div class="grid-item">
+        <div>
             <input v-if="isEditing" type="text" class="form-control" v-model="editableCollection" id="collection" name="collection">
             <p v-else class="mb-0">{{ collection }}</p>
-        </div class="grid-item">
-        <div class="grid-item">
+        </div>
+        <div>
             <input v-if="isEditing" type="text" class="form-control" v-model="editableColor" id="color" name="color">
             <p v-else class="mb-0">{{ color }}</p>
-        </div class="grid-item">
+        </div>
         <div>
             <input v-if="isEditing" type="number" class="form-control" v-model="editableMaxWidth" id="max_width" name="max_width" min="0">
             <p v-else class="mb-0">{{ max_width }}</p>
         </div>
-        <div class="grid-item">
+        <div>
             <input v-if="isEditing" type="number" class="form-control" v-model="editablePrice" id="price" name="price" min="0" step="0.01">
             <p v-else class="mb-0">R$ {{ price }}</p>
         </div>
 
-        <div v-if="authStore.userRole === 'ADMIN'" class="d-flex gap-2 justify-content-end">
-          <button @click="changeToInput" type="button" class="btn btn-outline-warning">Editar</button>
-          <button type="submit" class="btn btn-success" :disabled="disabled">Enviar</button>
-          <button @click="openDeleteModal" type="button" class="btn btn-outline-danger">Excluir</button>
+        <div class="actions" v-if="authStore.userRole === 'ADMIN'">
+          <template v-if="isEditing">
+            <button type="submit" @click="submitUpdate" class="btn btn-success">Confirmar</button>
+            <button type="button" @click="changeToInput" class="btn btn-secondary">Cancelar</button>
+          </template>
+          <template v-else>
+            <button @click="changeToInput" type="button" class="btn btn-primary">Editar</button>
+            <button v-if="authStore.userRole === 'ADMIN'" @click="openDeleteModal" type="button" class="btn btn-danger">Excluir</button>
+          </template>
         </div>
       </form>
 
@@ -141,23 +146,34 @@ p {
   font-size: 14px;
 }
 
-.blind-type-form {
+.blind-type-row {
   display: grid;
-  grid-template-columns: 2fr 2fr 1fr 2fr 1fr;
+  grid-template-columns: 2fr 2fr 1fr 2fr 1fr 2fr;
   gap: 1rem;
   align-items: center;
   width: 100%;
   padding: 0.75rem;
 }
 
-.grid-item {
+.blind-type-row > div {
   display: flex;
   align-items: center;
   justify-content: flex-start;
 }
 
+.actions {
+  display: flex;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.blind-type-row button {
+  width: auto;
+  min-width: 70px;
+}
+
 @media (max-width: 768px) {
-  .blind-type-form {
+  .blind-type-row {
     grid-template-columns: 1fr 1fr 1fr;
   }
 }

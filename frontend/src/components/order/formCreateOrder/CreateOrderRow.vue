@@ -36,7 +36,7 @@
             <input type="text" class="form-control" placeholder="Observações" v-model="row.observation" @input="$emit('updateRow', { field: 'observation', value: row.observation })">
         </div>
         <div class="col-12 mt-2">
-            <button @click="$emit('deleteRow', row)" class="btn btn-outline-danger w-100">Excluir Linha</button>
+            <button @click="$emit('deleteRow', row)" class="btn btn-outline-danger w-100" type="button">Excluir Linha</button>
         </div>
     </div>
 </template>
