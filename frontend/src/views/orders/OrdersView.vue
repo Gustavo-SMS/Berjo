@@ -1,7 +1,7 @@
 <template>
         <div class="container">
-            <div class="filter-section d-flex flex-column flex-md-row gap-2 align-items-start align-items-md-center mb-4">
-                <select v-model="selectedStatus" name="selectStatus" id="selectStatus" class="form-select w-100 w-md-auto">
+            <div class="filter-section">
+                <select v-model="selectedStatus" name="selectStatus" id="selectStatus" class="form-select">
                     <option value="Em espera">Em espera</option>
                     <option value="Em produção">Em produção</option>
                     <option value="Concluido">Concluido</option>
@@ -14,8 +14,8 @@
                 <div class="order-header">
                     <h5>Cliente: {{ order.customer.name }}</h5>
 
-                    <div class="d-flex flex-wrap gap-2 align-items-center">
-                        <div v-if="editingOrderId === order.id" class="d-flex gap-2 align-items-center">
+                    <div class="order-actions">
+                        <div v-if="editingOrderId === order.id" class="status-edit">
                             <select v-model="statusMap[order.id]" class="form-select">
                                 <option value="Em espera">Em espera</option>
                                 <option value="Em produção">Em produção</option>
@@ -24,7 +24,7 @@
                             <button v-if="editingOrderId === order.id" @click="changeStatus(order.id)" class="btn btn-success">Confirmar</button>
                             <button v-else v-if="authStore.userRole === 'ADMIN'" @click="editStatus(order.id, order.status)" class="btn btn-primary">Mudar Status</button>
                         </div>
-                        <div v-else class="d-flex gap-2 align-items-center">
+                        <div v-else class="status-view">
                             <span class="badge bg-secondary">{{ order.status }}</span>
                             <button v-if="authStore.userRole === 'ADMIN' "@click="editStatus(order.id, order.status)" class="btn btn-outline-primary">
                                 Mudar Status
@@ -199,32 +199,43 @@ const deleteOrder = async (orderId) => {
 </script>
 
 <style scoped>
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem 1rem;
+.filter-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
 }
 
 .order-card {
   background-color: var(--color-surface);
   border-radius: 8px;
-  padding: 1rem;
+  padding: 1.5rem;
   margin-bottom: 2rem;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
 .order-header {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
   gap: 1rem;
   margin-bottom: 1rem;
 }
 
+.order-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .order-table-header {
   display: grid;
-  grid-template-columns: 1fr 2fr 2fr 1fr 1fr 1fr 1fr 1fr;
-  font-weight: bold;
+  grid-template-columns: 0.5fr 1.5fr 1.5fr 1fr 1fr 1fr 1fr 1fr;
+  gap: 0.5rem;
   padding: 0.5rem 0;
+  font-weight: bold;
   border-bottom: 2px solid var(--color-border);
   color: var(--color-text);
 }

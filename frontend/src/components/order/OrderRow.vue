@@ -1,16 +1,17 @@
 <template>
-    <form @submit.prevent="submitUpdate" class="row mb-2">
-        <div class="col-1">
-            <input v-if="isEditing" type="text" class="form-control" v-model="editableQuantity" id="quantity" name="quantity">
-            <p v-else>{{ quantity }}</p>
+    <form @submit.prevent="submitUpdate" class="order-row-wrapper">
+      <div class="order-row">
+        <div>
+          <input v-if="isEditing" type="text" class="form-control" v-model="editableQuantity" id="quantity" name="quantity">
+          <p v-else>{{ quantity }}</p>
         </div>
-
-        <div class="col-2">
+        
+        <div>
             <SelectType v-if="isEditing" @selectedOption="selectedType" :typeValue="editableType"/>
             <p v-else>{{ type }}</p>
         </div>
-
-        <div class="col-2">
+        
+        <div>
           <SelectBlindType 
                 v-if="isEditing" 
                 :key="editableType"
@@ -20,41 +21,42 @@
             />
             <p v-else>{{ collection + ' ' + color }}</p>
         </div>
-
-        <div class="col-1">
+        
+        <div>
             <input v-if="isEditing" type="number" class="form-control" v-model="editableWidth" id="width" name="width">
             <p v-else>{{ width }}</p>
         </div>
-        <div class="col-1">
+        <div>
             <input v-if="isEditing" type="number" class="form-control" v-model="editableHeight" id="height" name="height">
             <p v-else>{{ height }}</p>
         </div>
-        <div class="col-1">
-            <input v-if="isEditing" type="number" class="form-control" v-model="editableCommand_height" id="command_height" name="command_height">
-            <p v-else>{{ command_height }}</p>
+        <div>
+          <input v-if="isEditing" type="number" class="form-control" v-model="editableCommand_height" id="command_height" name="command_height">
+          <p v-else>{{ command_height }}</p>
         </div>
-        <div class="col-1">
-            <select v-if="isEditing" class="form-control" v-model="editableModel">
+        <div>
+          <select v-if="isEditing" class="form-control" v-model="editableModel">
                <option v-for="option in modelOptions" :key="option" >{{ option }}</option>
             </select>
             <p v-else>{{ model }}</p>
         </div>
-        <div class="col-1">
+        <div>
             <p>{{ editableBlind_price }}</p>
         </div>
-
-        <template v-if="props.status === 'Em espera'">
+      </div>
+        
+        <div v-if="props.status === 'Em espera'" class="order-actions">
           <button @click="changeToInput" type="button" class="btn btn-danger col-1">Editar</button>
           <button type="submit" class="btn btn-primary col-1" :disabled="disabled">Enviar</button>
           <button @click="openDeleteModal" type="button" class="btn btn-warning col-1">Excluir</button>
-        </template>
+        </div>
         
-        <div class="mt-2 col-12">
+        <template class="observation">
             <label for="observation">Observações: </label>
             <input v-if="isEditing" type="text" class="form-control" v-model="editableObservation" id="observation" name="observation">
             <p v-else>{{ observation }}</p>
-        </div>
-      </form>
+        </template>
+    </form>
 
       <Teleport to="body">
         <ConfirmationModal
@@ -191,10 +193,36 @@ watch(() => props.blind_price, (newVal) => {
 </script>
 
 <style scoped>
+.order-row-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.order-row {
+  display: grid;
+  grid-template-columns: 0.5fr 1.5fr 1.5fr 1fr 1fr 1fr 1fr 1fr;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.order-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.observation {
+  display: flex;
+  flex-direction: column;
+}
+
 p {
   margin: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 </style>

@@ -1,27 +1,27 @@
 <template>
-    <form @submit.prevent="submitUpdate" class="row align-items-center mb-3 gx-2">
-        <div class="col-2">
+    <form @submit.prevent="submitUpdate" class="blind-type-form">
+        <div class="grid-item">
             <input v-if="isEditing" type="text" class="form-control" v-model="editableType" id="type" name="type">
             <p v-else class="mb-0">{{ type }}</p>
         </div>
-        <div class="col-2">
+        <div class="grid-item">
             <input v-if="isEditing" type="text" class="form-control" v-model="editableCollection" id="collection" name="collection">
             <p v-else class="mb-0">{{ collection }}</p>
-        </div>
-        <div class="col-1">
+        </div class="grid-item">
+        <div class="grid-item">
             <input v-if="isEditing" type="text" class="form-control" v-model="editableColor" id="color" name="color">
             <p v-else class="mb-0">{{ color }}</p>
-        </div>
-        <div class="col-2">
+        </div class="grid-item">
+        <div>
             <input v-if="isEditing" type="number" class="form-control" v-model="editableMaxWidth" id="max_width" name="max_width" min="0">
             <p v-else class="mb-0">{{ max_width }}</p>
         </div>
-        <div class="col-1">
+        <div class="grid-item">
             <input v-if="isEditing" type="number" class="form-control" v-model="editablePrice" id="price" name="price" min="0" step="0.01">
             <p v-else class="mb-0">R$ {{ price }}</p>
         </div>
 
-        <div v-if="authStore.userRole === 'ADMIN'" class="col-4 d-flex gap-2 justify-content-end">
+        <div v-if="authStore.userRole === 'ADMIN'" class="d-flex gap-2 justify-content-end">
           <button @click="changeToInput" type="button" class="btn btn-outline-warning">Editar</button>
           <button type="submit" class="btn btn-success" :disabled="disabled">Enviar</button>
           <button @click="openDeleteModal" type="button" class="btn btn-outline-danger">Excluir</button>
@@ -139,5 +139,37 @@ p {
   margin: 0;
   padding: 0;
   font-size: 14px;
+}
+
+.blind-type-form {
+  display: grid;
+  grid-template-columns: 2fr 2fr 1fr 2fr 1fr;
+  gap: 1rem;
+  align-items: center;
+  width: 100%;
+  padding: 0.75rem;
+}
+
+.grid-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+@media (max-width: 768px) {
+  .blind-type-form {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+.d-flex {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+button {
+  white-space: nowrap;
 }
 </style>

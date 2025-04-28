@@ -22,6 +22,7 @@
                     :row="row"
                     @updateRow="updateRow(index, $event.field, $event.value)"
                     @selectedBlindTypeId="selectedBlindTypeId(index, $event.field, $event.value)"
+                    @deleteRow="deleteRow(index)"
                 />
                 
                 <button type="submit" class="btn btn-primary w-100 mt-4">Enviar</button>
@@ -60,6 +61,10 @@ function addRow() {
 
 function updateRow(index, field, value) {
     orderRows.value[index][field] = value
+}
+
+function deleteRow(index) {
+    orderRows.value.splice(index, 1)
 }
 
 function selectedCustomerId(event, arrayNomes) {

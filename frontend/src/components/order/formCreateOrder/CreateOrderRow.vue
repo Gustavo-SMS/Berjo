@@ -1,7 +1,7 @@
 <template>
     <div class="row mb-3">
         <div class="col-1">
-            <input type="number" class="form-control" v-model="row.quantity" @input="$emit('updateRow', { field: 'quantity', value: row.quantity })">
+            <input type="number" class="form-control" v-model="row.quantity" min="1" @input="$emit('updateRow', { field: 'quantity', value: row.quantity })">
         </div>
         <div class="col-2">
              <SelectType @selectedOption="selectedType"/>
@@ -16,13 +16,13 @@
             />
         </div>
         <div class="col-1">
-            <input type="number" class="form-control" v-model="row.width" @input="$emit('updateRow', { field: 'width', value: row.width })">
+            <input type="number" class="form-control" v-model="row.width" min="0" @input="$emit('updateRow', { field: 'width', value: row.width })">
         </div>
         <div class="col-1">
-            <input type="number" class="form-control" v-model="row.height" @input="$emit('updateRow', { field: 'height', value: row.height })">
+            <input type="number" class="form-control" v-model="row.height" min="0" @input="$emit('updateRow', { field: 'height', value: row.height })">
         </div>
         <div class="col-1">
-            <input type="number" class="form-control" v-model="row.command_height" @input="$emit('updateRow', { field: 'command_height', value: row.command_height })">
+            <input type="number" class="form-control" v-model="row.command_height" min="0" @input="$emit('updateRow', { field: 'command_height', value: row.command_height })">
         </div>
         <div class="col-1">
             <select v-if="modelOptions.length" class="form-control" v-model="row.model" @change="$emit('updateRow', { field: 'model', value: row.model })">
@@ -35,6 +35,9 @@
         <div class="col-12 mt-2">
             <input type="text" class="form-control" placeholder="Observações" v-model="row.observation" @input="$emit('updateRow', { field: 'observation', value: row.observation })">
         </div>
+        <div class="col-12 mt-2">
+            <button @click="$emit('deleteRow', row)" class="btn btn-outline-danger w-100">Excluir Linha</button>
+        </div>
     </div>
 </template>
 
@@ -44,7 +47,7 @@ import SelectBlindType from './SelectBlindType.vue'
 import SelectType from './SelectType.vue'
 
 defineProps(['row'])
-defineEmits(['updateRow', 'selectedBlindTypeId'])
+defineEmits(['updateRow', 'selectedBlindTypeId', 'deleteRow'])
 
 const type = ref(null)
 const type_id = ref('')

@@ -66,7 +66,7 @@ watch(() => props.typeValue, fetchBlindCollections, { immediate: true })
 
 watch(() => props.collection, (newValue) => {
     if (newValue) {
-        const match = blindCollections.find(bc => bc.collection === newValue)
+        const match = blindCollections.value.find(bc => bc.collection === newValue)
         if (match) selectedCollection.value = match.collection
     }
 }, { immediate: true })

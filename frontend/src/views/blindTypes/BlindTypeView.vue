@@ -143,7 +143,7 @@ const searchTerm = ref('')
 
 .header-row {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: 2fr 2fr 1fr 2fr 1fr;
   gap: 1rem;
   padding: 0.75rem;
   font-weight: bold;
@@ -151,5 +151,17 @@ const searchTerm = ref('')
   border-bottom: 2px solid var(--color-border);
   margin-bottom: 1rem;
   color: var(--color-text);
+}
+
+header {
+  display: grid;
+  grid-template-columns: 2fr 2fr 1fr 2fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 768px) {
+  .header-row {
+    display: none;
+  }
 }
 </style>
