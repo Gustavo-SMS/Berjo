@@ -1,12 +1,15 @@
 :root {
   --color-primary: #4a4a4a;
+  --color-primary-dark: #2c2c2c;
   --color-secondary: #6c757d;
+  --color-secondary-dark: #495057;
   --color-accent: #ffc107;
   --color-background: #f8f9fa;
   --color-surface: #ffffff;
   --color-text: #212529;
   --color-text-light: #f1f1f1;
   --color-border: #dee2e6;
+  --color-disabled: #adb5bd;
 
   --font-size-base: 1rem;
   --font-size-small: 0.875rem;
@@ -30,6 +33,10 @@ body {
   font-size: var(--font-size-base);
   margin: 0;
   padding: 0;
+}
+
+body.no-scroll {
+  overflow: hidden;
 }
 
 .container {

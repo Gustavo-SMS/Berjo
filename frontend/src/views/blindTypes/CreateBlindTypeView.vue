@@ -4,17 +4,17 @@
             <h1 class="form-title">Cadastrar Tipo de Persiana</h1>
 
             <div class="form-group">
-                <label for="type">Tipo</label>
+                <label for="type">Tipo *</label>
                 <input type="text" name="type" id="type" class="form-input" required>
             </div>
                         
             <div class="form-group">
-                <label for="collection">Coleção</label>
+                <label for="collection">Coleção *</label>
                 <input type="text" name="collection" id="collection" class="form-input" required>
             </div>
                 
             <div class="form-group">
-                <label for="color">Cor</label>
+                <label for="color">Cor *</label>
                 <input type="text" name="color" id="color" class="form-input" required>
             </div>
 
@@ -24,7 +24,7 @@
             </div>
 
             <div class="form-group">
-                <label for="price">Preço</label>
+                <label for="price">Preço *</label>
                 <input type="number" name="price" id="price" class="form-input" required>
             </div>
 

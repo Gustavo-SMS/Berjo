@@ -12,31 +12,33 @@
             
             <div v-for="order in orders" :key="order.id" class="order-card">
                 <div class="order-header">
-                    <h5>Cliente: {{ order.customer.name }}</h5>
+                    <div class="order-title-status">
+                        <h5 class="order-client-name">Cliente: {{ order.customer.name }}</h5>
+
+                        <div v-if="editingOrderId === order.id" class="status-edit">
+                        <select v-model="statusMap[order.id]" class="form-select">
+                            <option value="Em espera">Em espera</option>
+                            <option value="Em produção">Em produção</option>
+                            <option value="Concluido">Concluído</option>
+                        </select>
+                        <button @click="changeStatus(order.id)" class="btn btn-success">Confirmar</button>
+                        </div>
+
+                        <div v-else class="status-view">
+                        <span class="badge bg-secondary badge-status">{{ order.status }}</span>
+                        <button v-if="authStore.userRole === 'ADMIN'" @click="editStatus(order.id, order.status)" class="btn btn-outline-primary">
+                            Mudar Status
+                        </button>
+                        </div>
+                    </div>
 
                     <div class="order-actions">
-                        <div v-if="editingOrderId === order.id" class="status-edit">
-                            <select v-model="statusMap[order.id]" class="form-select">
-                                <option value="Em espera">Em espera</option>
-                                <option value="Em produção">Em produção</option>
-                                <option value="Concluido">Concluído</option>
-                            </select>
-                            <button v-if="editingOrderId === order.id" @click="changeStatus(order.id)" class="btn btn-success">Confirmar</button>
-                            <button v-else v-if="authStore.userRole === 'ADMIN'" @click="editStatus(order.id, order.status)" class="btn btn-primary">Mudar Status</button>
-                        </div>
-                        <div v-else class="status-view">
-                            <span class="badge bg-secondary">{{ order.status }}</span>
-                            <button v-if="authStore.userRole === 'ADMIN' "@click="editStatus(order.id, order.status)" class="btn btn-outline-primary">
-                                Mudar Status
-                            </button>
-                        </div>
-                
-                    <span class="fw-bold">Total: R$ {{ order.total_price }}</span>
+                        <span class="fw-bold">Total: R$ {{ order.total_price }}</span>
 
-                    <button v-if="authStore.userRole === 'ADMIN' || (authStore.userRole === 'CUSTOMER' && order.status === 'Em espera')"
-                    @click="deleteOrder(order.id)" class="btn btn-outline-danger">Excluir</button>
+                        <button v-if="authStore.userRole === 'ADMIN' || (authStore.userRole === 'CUSTOMER' && order.status === 'Em espera')"
+                        @click="deleteOrder(order.id)" class="btn btn-outline-danger">Excluir</button>
+                    </div>
                 </div>
-            </div>
 
                 <div class="order-table-header">
                     <span>Qtd</span>
@@ -228,7 +230,7 @@ const deleteOrder = async (orderId) => {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.5rem;
+  gap: 1rem;
 }
 
 .order-table-header {
@@ -239,5 +241,34 @@ const deleteOrder = async (orderId) => {
   font-weight: bold;
   border-bottom: 2px solid var(--color-border);
   color: var(--color-text);
+}
+
+.order-title-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+}
+
+.order-client-name {
+  margin: 0;
+}
+
+.badge-status {
+  font-size: 1rem;
+  padding: 0.375rem 0.75rem;
+  line-height: 1.5;
+  display: inline-flex;
+  align-items: center;
+  margin-right: 0.5rem;
+  height: calc(1rem * 1.5 + 0.75rem);
+}
+
+.status-edit,
+.status-view {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 </style>

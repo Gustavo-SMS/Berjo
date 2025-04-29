@@ -38,7 +38,7 @@
           v-if="showModal"
           :show="showModal"
           message="Tem certeza que deseja excluir este tipo?"
-          :onConfirm="deleteCustomer"
+          :onConfirm="deleteBlindType"
           @close="showModal = false"
         />
       </Teleport>
@@ -114,7 +114,7 @@ const submitUpdate = async (event) => {
       }
     }
 
-const deleteCustomer = async () => {
+const deleteBlindType = async () => {
   try {
         const response = await fetchWithAuth(`http://127.0.0.1:3333/blind_types/${props.id}`, {
           method: 'DELETE',
@@ -124,15 +124,14 @@ const deleteCustomer = async () => {
         }, authStore, router)
 
         if (!response.ok) {
-            const errorData = await response.json()
-            throw new Error(errorData.error || 'Erro ao excluir tipo')
+            throw new Error('Erro ao excluir tipo')
         }
 
         notificationStore.addNotification('Tipo excluído com sucesso', 'success')
         
         props.getBlindTypes()
       } catch (error) {
-        console.error('Erro ao excluir cliente:', error.message)
+        console.error('Erro ao excluir tipo de persiana:', error.message)
         notificationStore.addNotification(error.message, 'error')
       }
 }

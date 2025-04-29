@@ -7,9 +7,26 @@
           <label for="login">Login</label>
           <input id="login" name="login" type="text" class="form-input" placeholder="Digite o login" required>
         </div>
-        <div class="form-group">
+        <div class="form-group password-group">
           <label for="password">Senha</label>
-          <input id="password" name="password" type="password" class="form-control" placeholder="Digite a senha" required>
+          <div class="password-wrapper">
+            <input
+              id="password"
+              name="password"
+              :type="showPassword ? 'text' : 'password'"
+              class="form-control"
+              placeholder="Digite a senha"
+              required
+            >
+            <button
+              type="button"
+              class="toggle-password"
+              @click="togglePassword"
+              :aria-label="showPassword ? 'Ocultar senha' : 'Mostrar senha'"
+            >
+              <i :class="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+            </button>
+          </div>
         </div>
 
         <div class="g-recaptcha"></div>
@@ -119,6 +136,10 @@ const openRecoverPasswordModal = () => {
   recoverPasswordModal.value?.showModal()
 }
 
+const showPassword = ref(false)
+const togglePassword = () => {
+  showPassword.value = !showPassword.value
+}
 </script>
 
 <style scoped>
@@ -205,5 +226,26 @@ const openRecoverPasswordModal = () => {
 
 .full-width {
   width: 100%;
+}
+
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding-right: 2.5rem;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 0.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: var(--color-text);
 }
 </style>

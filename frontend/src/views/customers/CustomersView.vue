@@ -39,7 +39,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 import CustomerRow from '@/components/customer/CustomerRow.vue'
 import { useNotificationStore } from '@/stores/notificationStore'
 import { useAuthStore } from '@/stores/authStore'
@@ -113,6 +113,13 @@ const customers = ref([])
         }
         
     }
+
+onMounted(() => {
+  document.body.classList.add('no-scroll')
+})
+onUnmounted(() => {
+  document.body.classList.remove('no-scroll')
+})
 </script>
 
 <style scoped>
