@@ -29,10 +29,10 @@
       />
 
       <div class="d-flex flex-column flex-md-row gap-2 mt-4">
-        <button class="btn btn-outline-warning w-100" @click="openChangePasswordModal">Alterar senha</button>
+        <button class="btn btn-warning w-100" @click="openChangePasswordModal">Alterar senha</button>
         <ChangePasswordModal ref="changePasswordModal" />
 
-        <button class="btn btn-outline-warning w-100" @click="openChangeLoginModal">Alterar login</button>
+        <button class="btn btn-warning w-100" @click="openChangeLoginModal">Alterar login</button>
         <ChangeLoginModal ref="changeLoginModal" />
       </div>
     </div>

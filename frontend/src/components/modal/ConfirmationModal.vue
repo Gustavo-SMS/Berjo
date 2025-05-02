@@ -14,6 +14,7 @@
     show: Boolean,
     message: String,
     onConfirm: Function,
+    onCancel: Function,
   })
   
   const emit = defineEmits(['close'])
@@ -24,6 +25,7 @@
   }
   
   const closeModal = () => {
+    props.onCancel()
     emit('close')
   }
   </script>

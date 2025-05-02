@@ -14,7 +14,7 @@
               id="password"
               name="password"
               :type="showPassword ? 'text' : 'password'"
-              class="form-control"
+              class="form-input"
               placeholder="Digite a senha"
               required
             >
@@ -119,7 +119,7 @@ const submitForm = async (event) => {
       }
         
       authStore.setUser(meData.role, meData.customerId)
-      router.push('/')   
+      router.push('/orders')   
     } catch (error) {
       console.log(error.message)
       notificationStore.addNotification(error.message, 'error')

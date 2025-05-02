@@ -7,16 +7,19 @@
             </div>
 
             <div class="customer-header">
-                <div>Nome</div>
-                <div>Email</div>
-                <div>Telefone</div>
-                <div>Rua</div>
-                <div>Nº</div>
-                <div>Cidade</div>
-                <div>Bairro</div>
-                <div>CEP</div>
-                <div>Dívida</div>
-                <div>Ações</div>
+                <span>Nome</span>
+                <span>Email</span>
+                <span>CPF/CNPJ</span>
+                <span>Telefone</span>
+                <span>Rua</span>
+                <span>Nº</span>
+                <span>Complemento</span>
+                <span>Cidade</span>
+                <span>Bairro</span>
+                <span>UF</span>
+                <span>CEP</span>
+                <span>Dívida</span>
+                <span>Ações</span>
             </div>
 
             <CustomerRow
@@ -25,11 +28,14 @@
                 :id="customer.id"
                 :name="customer.name"
                 :email="customer.email"
+                :docNumber="customer.docNumber"
                 :phone="customer.phone"
                 :street="customer.address.street"
                 :house_number="customer.address.house_number"
+                :complement="customer.address.complement"
                 :city="customer.address.city"
                 :district="customer.address.district"
+                :state="customer.address.state"
                 :zip="customer.address.zip"
                 :debt="customer.debt"
                 :getCustomers="getCustomers"

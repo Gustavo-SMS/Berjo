@@ -15,7 +15,7 @@
               </div>
   
               <div class="mb-3">
-                <label class="form-label">Confirmar novo loign</label>
+                <label class="form-label">Confirmar novo login</label>
                 <input type="text" class="form-control" v-model="confirmLogin" required />
               </div>
   

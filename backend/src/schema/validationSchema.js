@@ -15,14 +15,17 @@ const loginSchema = Joi.object({
 })
 
 const customerSchema = Joi.object({
-    name: Joi.string().min(3).max(70).required(), 
-    email: Joi.string().email().required(), 
+    name: Joi.string().min(3).max(50).required(), 
+    email: Joi.string().email().max(40).required(), 
+    docNumber: Joi.string().pattern(/^\d{11}$|^\d{14}$/).required(),
     phone: Joi.number().required(), 
-    street: Joi.string().required(), 
-    house_number: Joi.number().integer(), 
-    city: Joi.string().required(), 
-    district: Joi.string().required(), 
-    zip: Joi.number().integer().required()
+    zip: Joi.number().integer().required(),
+    street: Joi.string().invalid('...').required(),
+    house_number: Joi.number().integer().allow('', null).optional(), 
+    complement: Joi.string().allow('', null).optional(), 
+    city: Joi.string().invalid('...').required(), 
+    district: Joi.string().invalid('...').required(),
+    state: Joi.string().invalid('...').required()
 })
 
 const blindSchema = Joi.object({
