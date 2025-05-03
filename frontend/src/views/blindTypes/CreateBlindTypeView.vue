@@ -5,27 +5,27 @@
 
             <div class="form-group">
                 <label for="type">Tipo *</label>
-                <input type="text" name="type" id="type" class="form-input" required>
+                <input v-model="type" type="text" name="type" id="type" class="form-input" required>
             </div>
                         
             <div class="form-group">
                 <label for="collection">Coleção *</label>
-                <input type="text" name="collection" id="collection" class="form-input" required>
+                <input v-model="collection" type="text" name="collection" id="collection" class="form-input" required>
             </div>
                 
             <div class="form-group">
                 <label for="color">Cor *</label>
-                <input type="text" name="color" id="color" class="form-input" required>
+                <input v-model="color" type="text" name="color" id="color" class="form-input" required>
             </div>
 
             <div class="form-group">
                 <label for="max_width">Largura máx.</label>
-                <input type="number" name="max_width" id="max_width" class="form-input">
+                <input v-model="maxWidth" type="number" name="max_width" id="max_width" class="form-input" min="0">
             </div>
 
             <div class="form-group">
                 <label for="price">Preço *</label>
-                <input type="number" name="price" id="price" class="form-input" required>
+                <input v-model="price" type="number" name="price" id="price" class="form-input" min="0" required>
             </div>
 
             <button type="submit" class="btn btn-primary">Cadastrar</button>
@@ -34,6 +34,7 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import { useNotificationStore } from '@/stores/notificationStore'
 import { fetchWithAuth } from '@/utils/api'
 import { useRouter } from 'vue-router'
@@ -43,12 +44,21 @@ const authStore = useAuthStore()
 const router = useRouter()
 const notificationStore = useNotificationStore()
 
-const submitForm = async (event) => {
-    event.preventDefault()
+const type = ref('')
+const collection = ref('')
+const color = ref('')
+const maxWidth = ref('')
+const price = ref('')
 
-    const form = document.querySelector('form')
-    const formData = new FormData(form)
-    const data = Object.fromEntries(formData)
+const submitForm = async () => {
+  const data = {
+    type: type.value,
+    collection: collection.value,
+    color: color.value,
+    max_width: maxWidth.value,
+    price: price.value
+  }
+
     try {
         const response = await fetchWithAuth('http://127.0.0.1:3333/blind_types', {
         method: 'POST',
@@ -64,7 +74,7 @@ const submitForm = async (event) => {
         }
 
         notificationStore.addNotification('Tipo cadastrado com sucesso!', 'success')
-        form.reset()
+        router.push('/blindTypes')
     } catch (error) {
         console.log(error.message)
         notificationStore.addNotification(error.message, 'error')

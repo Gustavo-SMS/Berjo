@@ -13,8 +13,7 @@
   const props = defineProps({
     show: Boolean,
     message: String,
-    onConfirm: Function,
-    onCancel: Function,
+    onConfirm: Function
   })
   
   const emit = defineEmits(['close'])
@@ -25,7 +24,6 @@
   }
   
   const closeModal = () => {
-    props.onCancel()
     emit('close')
   }
   </script>

@@ -6,6 +6,8 @@
         <div class="container">
             <div class="form-wrapper shadow-sm">
                 <form id="modalForm" @submit.prevent="handleUpdateCustomer" class="row g-4">
+                    <h3 class="form-title">Editar cliente</h3>
+
                     <div class="col-12 col-md-6">
                         <label for="name" class="form-label">Nome *</label>
                         <input v-model="editableName" type="text" name="name" id="name" class="form-control" required>
@@ -261,5 +263,9 @@ defineExpose({ showModal })
 </script>
 
 <style scoped>
-
+.form-title {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: var(--color-text);
+}
 </style>

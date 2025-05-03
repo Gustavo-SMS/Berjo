@@ -1,39 +1,28 @@
 <template>
     <form @submit.prevent="submitUpdate" class="blind-type-row">
         <div>
-            <input v-if="isEditing" type="text" class="form-control" v-model="editableType" id="type" name="type">
-            <p v-else class="mb-0">{{ type }}</p>
+            <p>{{ type }}</p>
         </div>
         <div>
-            <input v-if="isEditing" type="text" class="form-control" v-model="editableCollection" id="collection" name="collection">
-            <p v-else class="mb-0">{{ collection }}</p>
+            <p>{{ collection }}</p>
         </div>
         <div>
-            <input v-if="isEditing" type="text" class="form-control" v-model="editableColor" id="color" name="color">
-            <p v-else class="mb-0">{{ color }}</p>
+            <p>{{ color }}</p>
         </div>
         <div>
-            <input v-if="isEditing" type="number" class="form-control" v-model="editableMaxWidth" id="max_width" name="max_width" min="0">
-            <p v-else class="mb-0">{{ max_width }}</p>
+            <p>{{ max_width }}</p>
         </div>
         <div>
-            <input v-if="isEditing" type="number" class="form-control" v-model="editablePrice" id="price" name="price" min="0" step="0.01">
-            <p v-else class="mb-0">R$ {{ price }}</p>
+            <p>R$ {{ price }}</p>
         </div>
 
         <div class="actions" v-if="authStore.userRole === 'ADMIN'">
-          <template v-if="isEditing">
-            <button type="submit" @click="submitUpdate" class="btn btn-success">Confirmar</button>
-            <button type="button" @click="changeToInput" class="btn btn-secondary">Cancelar</button>
-          </template>
-          <template v-else>
-            <button @click="changeToInput" type="button" class="btn btn-primary">Editar</button>
+            <button @click="openUpdateBlindTypeModal" type="button" class="btn btn-primary">Editar</button>
+            <UpdateBlindTypeModal ref="updateBlindTypeModal" :blindType="blindTypeData" />
             <button v-if="authStore.userRole === 'ADMIN'" @click="openDeleteModal" type="button" class="btn btn-danger">Excluir</button>
-          </template>
         </div>
       </form>
 
-      <Teleport to="body">
         <ConfirmationModal
           v-if="showModal"
           :show="showModal"
@@ -41,11 +30,11 @@
           :onConfirm="deleteBlindType"
           @close="showModal = false"
         />
-      </Teleport>
 </template>
                         
 <script setup>
-import { ref } from 'vue'
+import { ref, nextTick } from 'vue'
+import UpdateBlindTypeModal from '../modal/UpdateBlindTypeModal.vue'
 import ConfirmationModal from '@/components/modal/ConfirmationModal.vue'
 import { useNotificationStore } from '@/stores/notificationStore'
 import { useAuthStore } from '@/stores/authStore'
@@ -63,56 +52,6 @@ const showModal = ref(false)
 const openDeleteModal = () => {
   showModal.value = true
 }
-
-const isEditing = ref(false)
-let disabled = ref(true)
-
-const changeToInput = () => {
-    isEditing.value = !isEditing.value
-    disabled.value = !disabled.value
-}
-
-const editableType = ref(props.type)
-const editableCollection = ref(props.collection)
-const editableColor = ref(props.color)
-const editableMaxWidth = ref(props.max_width)
-const editablePrice = ref(props.price)
-
-const submitUpdate = async (event) => {
-      event.preventDefault();
-
-      const payload = {
-        id: props.id,
-        type: editableType.value,
-        collection: editableCollection.value,
-        color: editableColor.value,
-        max_width: editableMaxWidth.value,
-        price: editablePrice.value
-      }
-
-      try {
-        const response = await fetchWithAuth("http://127.0.0.1:3333/blind_types", {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(payload),
-        }, authStore, router)
-
-        if (!response.ok) {
-            const errorData = await response.json()
-            throw new Error(errorData.error || 'Erro ao atualizar tipo')
-        }
-
-        notificationStore.addNotification('Tipo atualizado com sucesso!', 'success')
-
-        props.getBlindTypes()
-        changeToInput()
-      } catch (error) {
-        console.error('Erro ao enviar os dados:', error.message)
-        notificationStore.addNotification(error.message, 'error')
-      }
-    }
 
 const deleteBlindType = async () => {
   try {
@@ -136,6 +75,22 @@ const deleteBlindType = async () => {
       }
 }
 
+const blindTypeData = ref({})
+const updateBlindTypeModal = ref(null)
+
+const openUpdateBlindTypeModal = async () => {
+  blindTypeData.value = {
+    id: props.id,
+    type: props.type,
+    collection: props.collection,
+    color: props.color,
+    max_width: props.max_width,
+    price: props.price,
+    getBlindTypes: props.getBlindTypes
+  }
+  await nextTick()
+  updateBlindTypeModal.value?.showModal()
+}
 </script>
 
 <style>

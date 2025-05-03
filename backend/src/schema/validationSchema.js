@@ -30,20 +30,20 @@ const customerSchema = Joi.object({
 
 const blindSchema = Joi.object({
     quantity: Joi.number().required(), 
-    width: Joi.number().required(), 
-    height: Joi.number().required(), 
-    command_height: Joi.number().required(), 
+    width: Joi.number().positive().required(), 
+    height: Joi.number().positive().required(), 
+    command_height: Joi.number().positive().required(), 
     model: Joi.string().min(1).max(3).required(), 
     type_id: Joi.string().required(),
-    observation: Joi.string().min(0).max(250).optional(),
+    observation: Joi.string().min(0).max(191).optional(),
 })
 
 const blindTypeSchema = Joi.object({
     type: Joi.string().required(), 
     collection: Joi.string().required(), 
     color: Joi.string().required(), 
-    max_width: Joi.number().allow('', null).optional(), 
-    price: Joi.number().required()
+    max_width: Joi.number().allow('', null).positive().optional(), 
+    price: Joi.number().positive().required()
 })
 
 module.exports = {

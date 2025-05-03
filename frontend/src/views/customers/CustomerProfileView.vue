@@ -2,30 +2,37 @@
   <div class="container">
     <div class="box">
       <div class="customer-header">
-        <div>Nome</div>
-        <div>Email</div>
-        <div>Telefone</div>
-        <div>Rua</div>
-        <div>Nº</div>
-        <div>Cidade</div>
-        <div>Bairro</div>
-        <div>CEP</div>
-        <div>Dívida</div>
+        <span>Nome</span>
+        <span>Email</span>
+        <span>CPF/CNPJ</span>
+        <span>Telefone</span>
+        <span>Rua</span>
+        <span>Nº</span>
+        <span>Complemento</span>
+        <span>Cidade</span>
+        <span>Bairro</span>
+        <span>UF</span>
+        <span>CEP</span>
+        <span>Dívida</span>
+        <span>Ações</span>
       </div>
 
       <CustomerRow
-        v-if="customer"
-        :id="customer.id"
-        :name="customer.name"
-        :email="customer.email"
-        :phone="customer.phone"
-        :street="customer.address.street"
-        :house_number="customer.address.house_number"
-        :city="customer.address.city"
-        :district="customer.address.district"
-        :zip="customer.address.zip"
-        :debt="customer.debt"
-        :getCustomers="getCustomer"
+          v-if="customer"
+          :key="customer.id"
+          :id="customer.id"
+          :name="customer.name"
+          :email="customer.email"
+          :docNumber="customer.docNumber"
+          :phone="customer.phone"
+          :street="customer.address.street"
+          :house_number="customer.address.house_number"
+          :complement="customer.address.complement"
+          :city="customer.address.city"
+          :district="customer.address.district"
+          :state="customer.address.state"
+          :zip="customer.address.zip"
+          :debt="customer.debt"
       />
 
       <div class="d-flex flex-column flex-md-row gap-2 mt-4">
@@ -41,17 +48,18 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import CustomerRow from '@/components/customer/CustomerRow.vue'
 import { useAuthStore } from '@/stores/authStore'
 import { useRouter } from 'vue-router'
 import { useNotificationStore } from '@/stores/notificationStore'
 import { fetchWithAuth } from '@/utils/api'
-import ChangeLoginModal from '@/components/modal/ChangeLoginModel.vue'
-import ChangePasswordModal from '@/components/modal/ChangePasswordModel.vue'
+import CustomerRow from '@/components/customer/CustomerRow.vue'
+import ChangeLoginModal from '@/components/modal/ChangeLoginModal.vue'
+import ChangePasswordModal from '@/components/modal/ChangePasswordModal.vue'
 
 const authStore = useAuthStore()
 const router = useRouter()
 const notificationStore = useNotificationStore()
+
 const customer = ref(null)
 
 const getCustomer = async () => {

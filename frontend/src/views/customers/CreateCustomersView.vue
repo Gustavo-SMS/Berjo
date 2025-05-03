@@ -74,7 +74,7 @@
           :show="showModal"
           message="Deseja cadastrar um usuário para este cliente?"
           :onConfirm="registerUser"
-          :onCancel="changeView"
+          @close="changeView"
         />
 </template>
 
