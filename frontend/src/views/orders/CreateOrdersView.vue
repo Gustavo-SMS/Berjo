@@ -92,6 +92,7 @@ const submitForm = async () => {
         }
 
         notificationStore.addNotification('Pedido criado com sucesso!', 'success')
+        router.push('/orders')
     } catch (error) {
         console.log(error.message)
         notificationStore.addNotification(error.message, 'error')

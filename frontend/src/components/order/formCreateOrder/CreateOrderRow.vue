@@ -16,13 +16,13 @@
             />
         </div>
         <div class="col-1">
-            <input type="number" class="form-control" v-model="row.width" min="0" @input="$emit('updateRow', { field: 'width', value: row.width })">
+            <input type="number" class="form-control" v-model="row.width" min="0" step="0.01" @input="$emit('updateRow', { field: 'width', value: row.width })">
         </div>
         <div class="col-1">
-            <input type="number" class="form-control" v-model="row.height" min="0" @input="$emit('updateRow', { field: 'height', value: row.height })">
+            <input type="number" class="form-control" v-model="row.height" min="0" step="0.01" @input="$emit('updateRow', { field: 'height', value: row.height })">
         </div>
         <div class="col-1">
-            <input type="number" class="form-control" v-model="row.command_height" min="0" @input="$emit('updateRow', { field: 'command_height', value: row.command_height })">
+            <input type="number" class="form-control" v-model="row.command_height" min="0" step="0.01" @input="$emit('updateRow', { field: 'command_height', value: row.command_height })">
         </div>
         <div class="col-1">
             <select v-if="modelOptions.length" class="form-control" v-model="row.model" @change="$emit('updateRow', { field: 'model', value: row.model })">
