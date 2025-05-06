@@ -1,60 +1,30 @@
 <template>
-    <form @submit.prevent="submitUpdate" class="customer-row">
-        <div>
-            <p>{{ name }}</p>
-        </div>
-        <div>
-            <p>{{ email }}</p>
-        </div>
-        <div>
-            <p>{{ docNumber }}</p>
-        </div>
-        <div>
-            <p>{{ phone }}</p>
-        </div>
-        <div>
-            <p>{{ street }}</p>
-        </div>
-        <div>
-            <p>{{ house_number }}</p>
-        </div>
-        <div>
-            <p>{{ complement }}</p>
-        </div>
-        <div>
-            <p>{{ city }}</p>
-        </div>
-        <div>
-            <p>{{ district }}</p>
-        </div>
-        <div>
-            <p>{{ state }}</p>
-        </div>
-        <div>
-            <p>{{ zip }}</p>
-        </div>
-        <div>
-            <p>{{ debt }}</p>
-        </div>
+  <div class="card mb-3">
+    <div class="card-body row g-3">
+      <div class="col-md-3 col-sm-6" v-for="(field, index) in fields" :key="index">
+        <label class="form-label mb-1 fw-bold">{{ field.label }}</label>
+        <p class="form-control-plaintext">{{ field.value }}</p>
+      </div>
 
-        <div class="actions">
-            <button @click="openUpdateCustomerModal" type="button" class="btn btn-primary">Editar</button>
-            <UpdateCustomerModal ref="updateCustomerModal" :customer="customerData" />
-            <button v-if="authStore.userRole === 'ADMIN'" @click="openDeleteModal" type="button" class="btn btn-danger">Excluir</button>
-        </div>
-      </form>
+      <div class="col-12 d-flex justify-content-end gap-2 mt-3">
+        <button @click="openUpdateCustomerModal" type="button" class="btn btn-primary">Editar</button>
+        <UpdateCustomerModal ref="updateCustomerModal" :customer="customerData" />
+        <button v-if="authStore.userRole === 'ADMIN'" @click="openDeleteModal" type="button" class="btn btn-danger">Excluir</button>
+      </div>
+    </div>
+  </div>
 
-        <ConfirmationModal
-          v-if="showModal"
-          :show="showModal"
-          message="Tem certeza que deseja excluir este cliente?"
-          :onConfirm="deleteCustomer"
-          @close="showModal = false"
-        />
+  <ConfirmationModal
+    v-if="showModal"
+    :show="showModal"
+    message="Tem certeza que deseja excluir este cliente?"
+    :onConfirm="deleteCustomer"
+    @close="showModal = false"
+  />
 </template>
                         
 <script setup>
-import { ref, nextTick } from 'vue'
+import { ref, nextTick, computed } from 'vue'
 import ConfirmationModal from '@/components/modal/ConfirmationModal.vue'
 import UpdateCustomerModal from '@/components/modal/UpdateCustomerModal.vue'
 import { useNotificationStore } from '@/stores/notificationStore'
@@ -66,7 +36,22 @@ const router = useRouter()
 const authStore = useAuthStore()
 const notificationStore = useNotificationStore()
 
-const props = defineProps(['id', 'name', 'email', 'docNumber', 'phone', 'street', 'house_number', 'complement', 'city', 'district', 'state', 'zip', 'debt', 'getCustomers'])
+const props = defineProps(['customer', 'getCustomers'])
+
+const fields = computed(() => [
+  { label: 'Nome', value: props.customer.name },
+  { label: 'Email', value: props.customer.email },
+  { label: 'CPF/CNPJ', value: props.customer.docNumber },
+  { label: 'Telefone', value: props.customer.phone },
+  { label: 'Rua', value: props.customer.address.street },
+  { label: 'Nº', value: props.customer.address.house_number },
+  { label: 'Complemento', value: props.customer.address.complement },
+  { label: 'Cidade', value: props.customer.address.city },
+  { label: 'Bairro', value: props.customer.address.district },
+  { label: 'UF', value: props.customer.address.state },
+  { label: 'CEP', value: props.customer.address.zip },
+  { label: 'Dívida', value: props.customer.debt }
+])
 
 const showModal = ref(false)
 
@@ -102,19 +87,19 @@ const updateCustomerModal = ref(null)
 
 const openUpdateCustomerModal = async () => {
   customerData.value = {
-    id: props.id,
-    name: props.name,
-    email: props.email,
-    docNumber: props.docNumber,
-    phone: props.phone,
-    street: props.street,
-    house_number: props.house_number,
-    complement: props.complement,
-    city: props.city,
-    district: props.district,
-    state: props.state,
-    zip: props.zip,
-    debt: props.debt,
+    id: props.customer.id,
+    name: props.customer.name,
+    email: props.customer.email,
+    docNumber: props.customer.docNumber,
+    phone: props.customer.phone,
+    street: props.customer.address.street,
+    house_number: props.customer.address.house_number,
+    complement: props.customer.address.complement,
+    city: props.customer.address.city,
+    district: props.customer.address.district,
+    state: props.customer.address.state,
+    zip: props.customer.address.zip,
+    debt: props.customer.debt,
     getCustomers: props.getCustomers
   }
   await nextTick()
@@ -123,62 +108,5 @@ const openUpdateCustomerModal = async () => {
 </script>
 
 <style scoped>
-.customer-row {
-  display: grid;
-  grid-template-columns: 6fr 5fr 2.5fr 5fr 1fr 3fr 3fr 2fr 1.5fr 5.2fr;
-  gap: 8px;
-  align-items: center;
-  margin-bottom: 0.5rem;
-  text-align: start;
-}
 
-.customer-row > div:not(.actions) {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-.customer-row p,
-.customer-row input {
-  width: 100%;
-  text-align: start;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.actions {
-  display: flex;
-  justify-content: flex-start;
-  gap: 8px;
-}
-
-.customer-row p {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  margin: 0;
-}
-
-.customer-row input {
-  width: 100%;
-}
-
-.customer-row button {
-  width: auto;
-  min-width: 70px;
-}
-
-@media (max-width: 768px) {
-  .customer-row {
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto;
-  }
-  
-  .customer-row button {
-    width: 100%;
-  }
-}
 </style>

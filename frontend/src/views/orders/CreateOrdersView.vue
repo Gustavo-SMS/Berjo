@@ -1,32 +1,38 @@
 <template>
     <div class="container">
             <form @submit.prevent="submitForm">
-                <div v-if="authStore.userRole === 'ADMIN'" class="mb-3">
+                <div v-if="authStore.userRole === 'ADMIN'" class="mb-4">
                     <label for="selectCustomer" class="form-label">Cliente</label>
-                    <SelectCustomers id="selectCustomer" @selectedOption="selectedCustomerId" />
-                </div>
-
-                <div class="header-row">
-                    <span>Quantidade</span>
-                    <span>Tipo</span>
-                    <span>Coleção - Cor</span>
-                    <span>Largura</span>
-                    <span>Altura</span>
-                    <span>Alt. Comando</span>
-                    <span>Modelo</span>
+                    <div class="row">
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-4">
+                            <SelectCustomers id="selectCustomer" class="w-100" @selectedOption="selectedCustomerId" />
+                        </div>
+                    </div>
                 </div>
 
                 <CreateOrderRow 
-                    v-for="(row, index) in orderRows" 
-                    :key="index" 
+                    v-for="row in orderRows" 
+                    :key="row.id" 
                     :row="row"
-                    @updateRow="updateRow(index, $event.field, $event.value)"
+                    :rowId="row.id"
+                    :canDelete="orderRows.length > 1"
+                    @updateRow="updateRow(row.id, $event.field, $event.value)"
                     @selectedBlindTypeId="selectedBlindTypeId(index, $event.field, $event.value)"
-                    @deleteRow="deleteRow(index)"
+                    @deleteRow="deleteRow"
                 />
-                
-                <button @click="addRow" type="button" class="btn btn-outline-secondary w-100 mt-3">Add linha</button>
-                <button type="submit" class="btn btn-primary w-100 mt-4">Enviar</button>
+
+                <div class="row mt-4">
+                    <div class="col-12 col-md-6 mb-3 mb-md-0">
+                        <button @click="addRow" type="button" class="btn btn-secondary w-100">
+                            Adicionar linha
+                        </button>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <button type="submit" class="btn btn-primary w-100">
+                            Enviar
+                        </button>
+                    </div>
+                </div>
             </form>
     </div>
 </template>
@@ -47,8 +53,11 @@ const notificationStore = useNotificationStore()
 const customerId = ref('')
 const orderRows = ref([])
 
+let idCounter = 0
+
 function addRow() {
     orderRows.value.push({
+        id: idCounter++,
         quantity: '',
         type_id: '',
         width: '',
@@ -59,12 +68,20 @@ function addRow() {
     })
 }
 
-function updateRow(index, field, value) {
-    orderRows.value[index][field] = value
+addRow()
+
+function updateRow(id, field, value) {
+  const row = orderRows.value.find(r => r.id === id)
+  if (row) row[field] = value
 }
 
-function deleteRow(index) {
-    orderRows.value.splice(index, 1)
+function deleteRow(id) {
+  if (orderRows.value.length > 1) {
+    const index = orderRows.value.findIndex(r => r.id === id)
+    if (index !== -1) {
+      orderRows.value.splice(index, 1)
+    }
+  }
 }
 
 function selectedCustomerId(event, arrayNomes) {
@@ -72,9 +89,11 @@ function selectedCustomerId(event, arrayNomes) {
 }
 
 const submitForm = async () => {
+    const blinds = orderRows.value.map(({ id, ...rest }) => rest)
+
     const data = {
         customer: authStore.userRole === 'ADMIN' ? customerId.value : authStore.customerId,
-        blinds: orderRows.value
+        blinds
     }
     
     try {
@@ -109,16 +128,5 @@ const submitForm = async () => {
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
   overflow-x: auto;
-}
-
-.header-row {
-  display: grid;
-  grid-template-columns: 1fr 1.2fr 2fr 1fr 1fr 1.2fr 1fr;
-  gap: 1rem;
-  padding: 0.75rem 0;
-  font-weight: bold;
-  border-bottom: 2px solid var(--color-border);
-  margin-bottom: 1rem;
-  color: var(--color-text);
 }
 </style>

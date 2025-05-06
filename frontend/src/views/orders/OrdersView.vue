@@ -1,55 +1,64 @@
 <template>
-        <div class="container">
-            <div class="filter-section">
-                <select v-model="selectedStatus" name="selectStatus" id="selectStatus" class="form-select">
-                    <option value="Em espera">Em espera</option>
-                    <option value="Em produção">Em produção</option>
-                    <option value="Concluido">Concluido</option>
-                </select>
-                <SelectCustomers v-if="authStore.userRole === 'ADMIN'" @selectedOption="selectedCustomerId" />
-                <button @click="getWithFilter" class="btn btn-primary">Filtrar</button>
+        <div class="container-lg px-3 mt-5">
+            <div v-if="authStore.userRole === 'ADMIN'" class="row g-3 align-items-center mb-4">
+                <div class="col-md-6 col-lg-4">
+                    <input
+                    v-model="searchTerm"
+                    type="text"
+                    class="form-control"
+                    placeholder="Buscar por nome..."
+                    />
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <select v-model="selectedStatus" name="selectStatus" id="selectStatus" class="form-select">
+                        <option value="Em espera">Em espera</option>
+                        <option value="Em produção">Em produção</option>
+                        <option value="Concluido">Concluido</option>
+                    </select>
+                </div>
             </div>
-            
-            <div v-for="order in orders" :key="order.id" class="order-card">
+
+            <div v-if="paginatedOrders.length === 0" class="order-card text-center">
+                <p class="mb-0">Nenhum pedido encontrado.</p>
+            </div>
+
+            <div v-else v-for="order in paginatedOrders" :key="order.id" class="order-card">
                 <div class="order-header">
                     <div class="order-title-status">
                         <h5 class="order-client-name">Cliente: {{ order.customer.name }}</h5>
 
                         <div v-if="editingOrderId === order.id" class="status-edit">
-                        <select v-model="statusMap[order.id]" class="form-select">
-                            <option value="Em espera">Em espera</option>
-                            <option value="Em produção">Em produção</option>
-                            <option value="Concluido">Concluído</option>
-                        </select>
-                        <button @click="changeStatus(order.id)" class="btn btn-success">Confirmar</button>
+                            <select v-model="statusMap[order.id]" class="form-select">
+                                <option value="Em espera">Em espera</option>
+                                <option value="Em produção">Em produção</option>
+                                <option value="Concluido">Concluído</option>
+                            </select>
+                            <button @click="changeStatus(order.id)" class="btn btn-success">Confirmar</button>
                         </div>
 
                         <div v-else class="status-view">
-                        <span class="badge bg-secondary badge-status">{{ order.status }}</span>
-                        <button v-if="authStore.userRole === 'ADMIN'" @click="editStatus(order.id, order.status)" class="btn btn-outline-primary">
+                            <span class="badge bg-secondary badge-status">{{ order.status }}</span>
+                            <button
+                            v-if="authStore.userRole === 'ADMIN'"
+                            @click="editStatus(order.id, order.status)"
+                            class="btn btn-outline-primary"
+                            >
                             Mudar Status
-                        </button>
+                            </button>
                         </div>
                     </div>
 
                     <div class="order-actions">
                         <span class="fw-bold">Total: R$ {{ order.total_price }}</span>
 
-                        <button v-if="authStore.userRole === 'ADMIN' || (authStore.userRole === 'CUSTOMER' && order.status === 'Em espera')"
-                        @click="deleteOrder(order.id)" class="btn btn-outline-danger">Excluir</button>
+                        <button
+                            v-if="authStore.userRole === 'ADMIN' || (authStore.userRole === 'CUSTOMER' && order.status === 'Em espera')"
+                            @click="() => openDeleteModal(order.id)"
+                            class="btn btn-danger"
+                        >
+                            Excluir
+                        </button>
                     </div>
-                </div>
-
-                <div class="order-table-header">
-                    <span>Qtd</span>
-                    <span>Tipo</span>
-                    <span>Cor</span>
-                    <span>Largura</span>
-                    <span>Altura</span>
-                    <span>Alt. Cmd</span>
-                    <span>Modelo</span>
-                    <span>Preço</span>
-                    <span>Ações</span>
                 </div>
 
                 <OrderRow 
@@ -71,13 +80,47 @@
                     :getOrders="getOrders"
                 />
             </div>
+
+            <nav v-if="totalPages > 1" class="mt-3">
+              <ul class="pagination justify-content-center">
+                <li class="page-item" :class="{ disabled: currentPage === 1 }">
+                  <button class="page-link" @click="goToPage(currentPage - 1)" :disabled="currentPage === 1">
+                    Anterior
+                  </button>
+                </li>
+
+                <li
+                  v-for="page in totalPages"
+                  :key="page"
+                  class="page-item"
+                  :class="{ active: currentPage === page }"
+                >
+                  <button class="page-link" @click="goToPage(page)">
+                    {{ page }}
+                  </button>
+                </li>
+
+                <li class="page-item" :class="{ disabled: currentPage === totalPages }">
+                  <button class="page-link" @click="goToPage(currentPage + 1)" :disabled="currentPage === totalPages">
+                    Próxima
+                  </button>
+                </li>
+              </ul>
+            </nav>
         </div>
+    <ConfirmationModal
+    v-if="showModal"
+    :show="showModal"
+    message="Tem certeza que deseja excluir?"
+    :onConfirm="() => deleteOrder(orderToDeleteId)"
+    @close="showModal = false"
+  />
 </template>
 
 <script setup>
 import OrderRow from '@/components/order/OrderRow.vue'
-import SelectCustomers from '@/components/order/formCreateOrder/SelectCustomers.vue'
-import { ref, onMounted } from 'vue'
+import ConfirmationModal from '@/components/modal/ConfirmationModal.vue'
+import { ref, onMounted, computed, watch, nextTick } from 'vue'
 import { useNotificationStore } from '@/stores/notificationStore'
 import { fetchWithAuth } from '@/utils/api'
 import { useAuthStore } from '@/stores/authStore'
@@ -93,15 +136,10 @@ const orders = ref([])
 const editingOrderId = ref(null)
 const statusMap = ref({})
 
-const customerId = ref('')
+const searchTerm = ref('')
 
-const getWithFilter = async () => {
-    await getOrders(selectedStatus.value, customerId.value)
-}
-
-function selectedCustomerId(event, arrayNomes) {
-    customerId.value = arrayNomes[event.target.selectedIndex].id
-}
+const currentPage = ref(1)
+const itemsPerPage = 2
 
 const getOrders = async (status, customerId) => {
     let url = 'http://127.0.0.1:3333/orders/filter/'
@@ -125,15 +163,15 @@ const getOrders = async (status, customerId) => {
             credentials: 'include'
         }, authStore, router)
 
-        if (!response.ok) {
-            const errorData = await response.json()
-            throw new Error(errorData.error || 'Erro ao buscar pedidos')
-        }
         const data = await response.json()
+        
+        if (!response.ok) {
+            throw new Error(data.error || 'Erro ao buscar pedidos')
+        }
+
         orders.value = data
     } catch (error) {
         console.error(error.message)
-        notificationStore.addNotification(error.message, 'error')
     }
 }
 
@@ -167,8 +205,9 @@ const changeStatus = async (orderId) => {
             throw new Error(errorData.error || 'Erro ao mudar status')
         }
 
+        orders.value = []
         await getOrders(selectedStatus.value || 'Em espera')
-
+        currentPage.value = 1
         editingOrderId.value = null
     } catch (error) {
         console.error(error.message)
@@ -176,9 +215,15 @@ const changeStatus = async (orderId) => {
     }
 }
 
-const deleteOrder = async (orderId) => {
-    if (!confirm('Tem certeza que deseja excluir este pedido?')) return
+const showModal = ref(false)
+const orderToDeleteId = ref(null)
 
+const openDeleteModal = (id) => {
+    orderToDeleteId.value = id
+    showModal.value = true
+}
+
+const deleteOrder = async (orderId) => {
     try {
         const response = await fetchWithAuth(`http://127.0.0.1:3333/orders/${orderId}`, {
             method: 'DELETE',
@@ -199,16 +244,41 @@ const deleteOrder = async (orderId) => {
         notificationStore.addNotification(error.message, 'error')
     }
 }
+
+const filteredOrders = computed(() => {
+  return orders.value.filter((order) => {
+    const nameMatch = order.customer.name.toLowerCase().includes(searchTerm.value.toLowerCase())
+    const statusMatch = !selectedStatus.value || order.status === selectedStatus.value
+    return nameMatch && statusMatch
+  })
+})
+
+const totalPages = computed(() =>
+  Math.ceil(filteredOrders.value.length / itemsPerPage)
+)
+
+const paginatedOrders = computed(() => {
+    const start = (currentPage.value - 1) * itemsPerPage
+    return filteredOrders.value.slice(start, start + itemsPerPage)
+})
+
+const goToPage = (page) => {
+    if (page >= 1 && page <= totalPages.value) {
+        currentPage.value = page
+    }
+}
+
+watch(searchTerm, () => {
+    currentPage.value = 1
+})
+
+watch(selectedStatus, () => {
+    getOrders(selectedStatus.value)
+    currentPage.value = 1
+})
 </script>
 
 <style scoped>
-.filter-section {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-bottom: 2rem;
-}
-
 .order-card {
   background-color: var(--color-surface);
   border-radius: 8px;

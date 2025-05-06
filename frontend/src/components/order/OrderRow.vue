@@ -1,54 +1,92 @@
 <template>
-    <form @submit.prevent="submitUpdate" class="order-row-wrapper">
-      <div class="order-row">
-        <div>
-          <p>{{ quantity }}</p>
+  <form @submit.prevent="submitUpdate" class="order-row-wrapper">
+    <div class="card p-3">
+      <div class="row gy-3 align-items-start">
+        <div class="col-6 col-md-1">
+          <label class="form-label fw-semibold">Qtd.</label>
+          <p class="mb-0">{{ quantity }}</p>
         </div>
-        
-        <div>
-            <p>{{ type }}</p>
+
+        <div class="col-6 col-md-2">
+          <label class="form-label fw-semibold">Tipo</label>
+          <p class="mb-0">{{ type }}</p>
         </div>
-        
-        <div>
-            <p>{{ collection + ' ' + color }}</p>
+
+        <div class="col-12 col-md-3">
+          <label class="form-label fw-semibold">Coleção / Cor</label>
+          <p class="mb-0">{{ collection + ' ' + color }}</p>
         </div>
-        
-        <div>
-            <p>{{ width }}</p>
+
+        <div class="col-6 col-md-1">
+          <div class="col-6 col-md-1">
+            <label class="form-label fw-semibold label-full">Largura</label>
+            <label class="form-label fw-semibold label-short">Larg.</label>
+            <p class="mb-0">{{ width }}</p>
+          </div>
         </div>
-        <div>
-            <p>{{ height }}</p>
+
+        <div class="col-6 col-md-1">
+          <label class="form-label fw-semibold">Altura</label>
+          <p class="mb-0">{{ height }}</p>
         </div>
-        <div>
-          <p>{{ command_height }}</p>
+
+        <div class="col-6 col-md-1">
+          <div class="col-6 col-md-1">
+            <label class="form-label fw-semibold label-full">Comando</label>
+            <label class="form-label fw-semibold label-short">Cmd.</label>
+            <p class="mb-0">{{ command_height }}</p>
+          </div>
         </div>
-        <div>
-            <p>{{ model }}</p>
+
+        <div class="col-6 col-md-1">
+          <label class="form-label fw-semibold">Lado</label>
+          <p class="mb-0">{{ model }}</p>
         </div>
-        <div>
-            <p>{{ editableBlind_price }}</p>
+
+        <div class="col-6 col-md-1">
+          <label class="form-label fw-semibold">Preço</label>
+          <p class="mb-0">{{ editableBlind_price }}</p>
         </div>
-        
-        <div class="order-actions">
-            <button @click="openUpdateBlindModal" type="button" class="btn btn-primary">Editar</button>
-            <UpdateBlindModal ref="updateBlindModal" :blind="blindData" />
-            <button v-if="authStore.userRole === 'ADMIN'" @click="openDeleteModal" type="button" class="btn btn-danger">Excluir</button>
+
+        <div class="col-6 col-md-1">
+          <label class="form-label fw-semibold">Ações</label>
+          <div class="dropdown">
+            <button
+              class="btn"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              ⋮
+            </button>
+            <ul class="dropdown-menu">
+              <li>
+                <button class="dropdown-item" @click="openUpdateBlindModal">Editar</button>
+              </li>
+              <li v-if="authStore.userRole === 'ADMIN'">
+                <button class="dropdown-item text-danger" @click="openDeleteModal">Excluir</button>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <label class="form-label fw-semibold">Observações</label>
+          <p class="mb-0">{{ observation }}</p>
         </div>
       </div>
-        
-        <template class="observation">
-            <label for="observation">Observações: </label>
-            <p>{{ observation }}</p>
-        </template>
-    </form>
+    </div>
 
-      <ConfirmationModal
-        v-if="showModal"
-        :show="showModal"
-        message="Tem certeza que deseja excluir?"
-        :onConfirm="deleteBlind"
-        @close="showModal = false"
-      />
+    <UpdateBlindModal ref="updateBlindModal" :blind="blindData" />
+
+  </form>
+  <ConfirmationModal
+    v-if="showModal"
+    :show="showModal"
+    message="Tem certeza que deseja excluir?"
+    :onConfirm="deleteBlind"
+    @close="showModal = false"
+  />
 </template>
 
 <script setup>
@@ -125,50 +163,26 @@ watch(() => props.blind_price, (newVal) => {
 </script>
 
 <style scoped>
-.order-row-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.order-row {
-  display: grid;
-  grid-template-columns: 0.5fr 1.5fr 1.5fr 1fr 1fr 1fr 1fr 1fr 1fr;
-  gap: 0.5rem;
-  align-items: center;
-}
-
-.order-actions {
-  display: flex;
-  justify-content: flex-start;
-  gap: 8px;
-}
-
-.observation {
-  display: flex;
-  flex-direction: column;
-}
-
-p {
-  margin: 0;
+.form-label {
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
-@media (max-width: 768px) {
-  .order-row, .order-table-header {
-    grid-template-columns: repeat(2, 1fr);
+.label-full {
+  display: block;
+}
+
+.label-short {
+  display: none;
+}
+
+@media (max-width: 999.98px) and (min-width: 768px) {
+  .label-full {
+    display: none;
   }
 
-  .order-actions {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .observation {
-    flex-direction: column;
-    gap: 0.5rem;
+  .label-short {
+    display: block;
   }
 }
+
 </style>
