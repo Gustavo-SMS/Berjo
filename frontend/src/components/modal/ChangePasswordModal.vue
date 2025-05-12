@@ -11,23 +11,71 @@
             <div class="modal-body">
               <div class="mb-3">
                 <label class="form-label">Senha Atual</label>
-                <input type="password" class="form-control" v-model="currentPassword" required />
+                <div class="password-wrapper">
+                  <input
+                    :type="showCurrentPassword ? 'text' : 'password'"
+                    class="form-control"
+                    placeholder="Digite a senha"
+                    v-model="currentPassword"
+                    required
+                  >
+                  <button
+                    type="button"
+                    class="toggle-password"
+                    @click="toggleCurrentPassword"
+                    :aria-label="showCurrentPassword ? 'Ocultar senha' : 'Mostrar senha'"
+                  >
+                    <i :class="showCurrentPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+                  </button>
+                </div>
               </div>
-  
+
               <div class="mb-3">
                 <label class="form-label">Nova Senha</label>
-                <input type="password" class="form-control" v-model="newPassword" required />
+                <div class="password-wrapper">
+                  <input
+                    :type="showNewPassword ? 'text' : 'password'"
+                    class="form-control"
+                    placeholder="Digite a nova senha"
+                    v-model="newPassword"
+                    required
+                  >
+                  <button
+                    type="button"
+                    class="toggle-password"
+                    @click="toggleNewPassword"
+                    :aria-label="showNewPassword ? 'Ocultar senha' : 'Mostrar senha'"
+                  >
+                    <i :class="showNewPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+                  </button>
+                </div>
               </div>
-  
+
               <div class="mb-3">
                 <label class="form-label">Confirmar Nova Senha</label>
-                <input type="password" class="form-control" v-model="confirmPassword" required />
+                <div class="password-wrapper">
+                  <input
+                    :type="showConfirmPassword ? 'text' : 'password'"
+                    class="form-control"
+                    placeholder="Confirme a nova senha"
+                    v-model="confirmPassword"
+                    required
+                  >
+                  <button
+                    type="button"
+                    class="toggle-password"
+                    @click="toggleConfirmPassword"
+                    :aria-label="showConfirmPassword ? 'Ocultar senha' : 'Mostrar senha'"
+                  >
+                    <i :class="showConfirmPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+                  </button>
+                </div>
               </div>
             </div>
   
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-              <button type="submit" class="btn btn-primary">Alterar</button>
+              <button type="submit" class="btn btn-primary">Salvar</button>
             </div>
           </form>
         </div>
@@ -80,6 +128,20 @@
       notificationStore.addNotification(err.message, 'error')
     }
   }
+
+const showCurrentPassword = ref(false)
+const showNewPassword = ref(false)
+const showConfirmPassword = ref(false)
+
+const toggleCurrentPassword = () => {
+  showCurrentPassword.value = !showCurrentPassword.value
+}
+const toggleNewPassword = () => {
+  showNewPassword.value = !showNewPassword.value
+}
+const toggleConfirmPassword = () => {
+  showConfirmPassword.value = !showConfirmPassword.value
+}
   
 const passwordModal = ref(null)
 let modalInstance = null
@@ -104,6 +166,28 @@ const resetFields = () => {
   confirmPassword.value = ''
 }
   
-  defineExpose({ showModal })
-  </script>
+defineExpose({ showModal })
+</script>
   
+<style scoped>
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding-right: 2.5rem;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 0.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: var(--color-text);
+}
+</style>

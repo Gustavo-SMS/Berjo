@@ -1,52 +1,50 @@
 <template>
-    <div class="container">
-        <div class="box">
-            <div v-if="authStore.userRole === 'ADMIN'" class="search-bar">
-                <!-- <input type="text" id="searchByName" class="form-control" placeholder="Buscar por nome" />
+  <div class="container">
+    <div class="box">
+      <div v-if="authStore.userRole === 'ADMIN'" class="search-bar">
+        <!-- <input type="text" id="searchByName" class="form-control" placeholder="Buscar por nome" />
                 <button @click="getByName" class="btn btn-primary">Buscar</button> -->
-                <input
-                  v-model="searchTerm"
-                  type="text"
-                  class="form-control"
-                  placeholder="Buscar por nome..."
-                />
-            </div>
-           
-            <CustomerRow
-                v-for="customer in paginatedCustomers"
-                :key="customer.id"
-                :customer="customer"
-                :getCustomers="getCustomers"
-            />
+        <input v-model="searchTerm" type="text" class="form-control" placeholder="Buscar por nome..." />
+        <select @change="getCustomers" v-model="isActive" name="isActive" id="isActive" class="form-control">
+          <option :value=true>Ativos</option>
+          <option :value=false>Inativos</option>
+        </select>
+      </div>
 
-            <nav v-if="totalPages > 1" class="mt-3">
-              <ul class="pagination justify-content-center">
-                <li class="page-item" :class="{ disabled: currentPage === 1 }">
-                  <button class="page-link" @click="goToPage(currentPage - 1)" :disabled="currentPage === 1">
-                    Anterior
-                  </button>
-                </li>
+      <div v-if="customers.length === 0" class="order-card text-center">
+        <p class="mb-0">Nenhum cliente encontrado.</p>
+      </div>
 
-                <li
-                  v-for="page in totalPages"
-                  :key="page"
-                  class="page-item"
-                  :class="{ active: currentPage === page }"
-                >
-                  <button class="page-link" @click="goToPage(page)">
-                    {{ page }}
-                  </button>
-                </li>
+      <CustomerRow v-for="customer in paginatedCustomers" 
+        :key="customer.id" 
+        :customer="customer"
+        :canDelete="true"
+        :getCustomers="getCustomers" 
+      />
 
-                <li class="page-item" :class="{ disabled: currentPage === totalPages }">
-                  <button class="page-link" @click="goToPage(currentPage + 1)" :disabled="currentPage === totalPages">
-                    Próxima
-                  </button>
-                </li>
-              </ul>
-            </nav>
-        </div>
+      <nav v-if="totalPages > 1" class="mt-3">
+        <ul class="pagination justify-content-center">
+          <li class="page-item" :class="{ disabled: currentPage === 1 }">
+            <button class="page-link" @click="goToPage(currentPage - 1)" :disabled="currentPage === 1">
+              Anterior
+            </button>
+          </li>
+
+          <li v-for="page in totalPages" :key="page" class="page-item" :class="{ active: currentPage === page }">
+            <button class="page-link" @click="goToPage(page)">
+              {{ page }}
+            </button>
+          </li>
+
+          <li class="page-item" :class="{ disabled: currentPage === totalPages }">
+            <button class="page-link" @click="goToPage(currentPage + 1)" :disabled="currentPage === totalPages">
+              Próxima
+            </button>
+          </li>
+        </ul>
+      </nav>
     </div>
+  </div>
 </template>
 
 <script setup>
@@ -63,37 +61,44 @@ const notificationStore = useNotificationStore()
 
 const customers = ref([])
 const searchTerm = ref('')
+const isActive = ref(true)
 
 const currentPage = ref(1)
 const itemsPerPage = 2
 
 const getCustomers = async () => {
-    try {
-        let url = 'http://127.0.0.1:3333/customers'
+  let url = 'http://127.0.0.1:3333/customers'
 
-        if (authStore.userRole === 'CUSTOMER') {
-            url += `/${authStore.customerId}`
-        }
+  if(!isActive.value) {
+    url = url + "/inactive"
+  }
+  
+  try {
 
-        const response = await fetchWithAuth(url, {
-            method: 'GET',
-            headers: {
-                'Content-type': 'application/json'
-            },
-            credentials: 'include'
-        }, authStore, router)
+    if (authStore.userRole === 'CUSTOMER') {
+      url += `/${authStore.customerId}`
+    }
 
-        const data = await response.json()
+    const response = await fetchWithAuth(url, {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      credentials: 'include'
+    }, authStore, router)
 
-        if (!response.ok) {
-            throw new Error(data.error || 'Erro ao buscar clientes')
-        }   
+    const data = await response.json()
 
-        customers.value = Array.isArray(data) ? data : [data]
-    } catch (error) {
-        console.log(error.message)
-        notificationStore.addNotification(error.message, 'error')
-      }
+    if (!response.ok) {
+      throw new Error(data.error || 'Erro ao buscar clientes')
+    }
+
+    customers.value = Array.isArray(data) ? data : [data]
+    currentPage.value = 1
+  } catch (error) {
+    console.log(error.message)
+    notificationStore.addNotification(error.message, 'error')
+  }
 }
 
 onMounted(getCustomers)
@@ -174,7 +179,7 @@ watch(searchTerm, () => {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.box > *:not(:last-child) {
+.box>*:not(:last-child) {
   margin-bottom: 1rem;
 }
 
@@ -182,6 +187,14 @@ watch(searchTerm, () => {
   display: flex;
   gap: 0.5rem;
   margin-bottom: 1.5rem;
+}
+
+.order-card {
+  background-color: var(--color-surface);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2.5rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
 @media (max-width: 768px) {

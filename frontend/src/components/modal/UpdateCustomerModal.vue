@@ -1,9 +1,8 @@
 <template>
   <div class="modal fade" ref="customerModal" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
       <div class="modal-content">
 
-        <div class="container">
             <div class="form-wrapper shadow-sm">
                 <form id="modalForm" @submit.prevent="handleUpdateCustomer" class="row g-4">
                     <h3 class="form-title">Editar cliente</h3>
@@ -66,6 +65,11 @@
                         <label for="state" class="form-label">UF *</label>
                         <input v-model="editableState" type="text" name="state" id="state" class="form-control" required readonly>
                     </div>
+
+                    <div v-if="authStore.userRole === 'ADMIN'" class="col-6 col-md-3">
+                        <label for="debt" class="form-label">Dívida</label>
+                        <input v-model="editableDebt" type="number" name="debt" id="debt" class="form-control" min="0" step="0.01" required>
+                    </div>
             
                     <div class="col-12">
                         <button type="submit" class="btn btn-primary w-100">Salvar alterações</button>
@@ -73,7 +77,6 @@
                     </div>
                 </form>
             </div>
-        </div>
         
       </div>
     </div>
@@ -104,6 +107,7 @@ const editableCity = ref('')
 const editableDistrict = ref('')
 const editableState = ref('')
 const editableZip = ref('')
+const editableDebt = ref('')
 
 const selectedRadio = ref('')
 
@@ -120,7 +124,8 @@ const handleUpdateCustomer = async () => {
         complement: editableComplement.value,
         city: editableCity.value,
         district: editableDistrict.value,
-        state: editableState.value
+        state: editableState.value,
+        debt: editableDebt.value
     }
 
     try {
@@ -227,6 +232,7 @@ const resetFields = () => {
     editableDistrict.value = ''
     editableState.value = ''
     editableZip.value = ''
+    editableDebt.value = ''
 }
 
 function unmask(value) {
@@ -256,6 +262,7 @@ watch(() => props.customer, (newCustomer) => {
   editableDistrict.value = newCustomer.district || ''
   editableState.value = newCustomer.state || ''
   editableZip.value = newCustomer.zip || ''
+  editableDebt.value = newCustomer.debt || ''
   selectedRadio.value = (newCustomer.docNumber && newCustomer.docNumber.length === 11) ? 'cpf' : 'cnpj'
 }, { immediate: true })
 
@@ -263,6 +270,10 @@ defineExpose({ showModal })
 </script>
 
 <style scoped>
+.form-wrapper {
+  padding: 1rem 1rem;
+}
+
 .form-title {
   text-align: center;
   margin-bottom: 1.5rem;

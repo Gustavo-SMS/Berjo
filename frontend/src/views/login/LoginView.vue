@@ -79,9 +79,7 @@ onMounted(() => {
   }
 })
 
-const submitForm = async (event) => {
-    event.preventDefault()
-
+const submitForm = async () => {
     if (!captchaToken.value) {
       notificationStore.addNotification('Confirme o captcha para continuar.', 'error')
       return

@@ -1,38 +1,12 @@
 <template>
   <div class="container">
     <div class="box">
-      <div class="customer-header">
-        <span>Nome</span>
-        <span>Email</span>
-        <span>CPF/CNPJ</span>
-        <span>Telefone</span>
-        <span>Rua</span>
-        <span>Nº</span>
-        <span>Complemento</span>
-        <span>Cidade</span>
-        <span>Bairro</span>
-        <span>UF</span>
-        <span>CEP</span>
-        <span>Dívida</span>
-        <span>Ações</span>
-      </div>
 
       <CustomerRow
           v-if="customer"
           :key="customer.id"
-          :id="customer.id"
-          :name="customer.name"
-          :email="customer.email"
-          :docNumber="customer.docNumber"
-          :phone="customer.phone"
-          :street="customer.address.street"
-          :house_number="customer.address.house_number"
-          :complement="customer.address.complement"
-          :city="customer.address.city"
-          :district="customer.address.district"
-          :state="customer.address.state"
-          :zip="customer.address.zip"
-          :debt="customer.debt"
+          :customer="customer"
+          :canDelete="false"
       />
 
       <div class="d-flex flex-column flex-md-row gap-2 mt-4">
@@ -98,42 +72,41 @@ onMounted(getCustomer)
 <style scoped>
 .container {
   width: 100vw;
-  height: 50vh;
+  min-height: 100vh;
+  padding: 2rem 1rem;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
+  background-color: var(--color-background, #f8f9fa);
 }
 
 .box {
   width: 100%;
-  height: 23vh;
-  background-color: var(--color-surface);
-  padding: 2rem;
-  border-radius: 8px;
-  overflow: auto;
-  box-shadow: 1px 1px 5px #333;
+  max-width: 1200px;
+  background-color: var(--color-surface, #ffffff);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.customer-header {
-  display: grid;
-  grid-template-columns: 6fr 5fr 2.5fr 5fr 1fr 3fr 3fr 2fr 1.5fr 5.2fr;
-  gap: 8px;
+.box > *:not(:last-child) {
   margin-bottom: 1rem;
-  font-weight: bold;
-  text-align: start;
 }
 
-.customer-header > div {
-  width: 100%;
+.search-bar {
   display: flex;
-  align-items: center;
-  justify-content: start;
-  overflow: hidden;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
 }
 
 @media (max-width: 768px) {
-  .customer-header {
-    display: none;
+  .search-bar {
+    flex-direction: column;
+  }
+
+  .search-bar input,
+  .search-bar button {
+    width: 100%;
   }
 }
 </style>

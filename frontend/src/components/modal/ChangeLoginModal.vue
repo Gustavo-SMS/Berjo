@@ -21,13 +21,31 @@
   
               <div class="mb-3">
                 <label class="form-label">Senha atual</label>
-                <input type="password" class="form-control" v-model="currentPassword" required />
+                <div class="password-wrapper">
+                  <input
+                    id="password"
+                    name="password"
+                    :type="showPassword ? 'text' : 'password'"
+                    class="form-control"
+                    placeholder="Digite a senha"
+                    v-model="currentPassword"
+                    required
+                  >
+                  <button
+                    type="button"
+                    class="toggle-password"
+                    @click="togglePassword"
+                    :aria-label="showPassword ? 'Ocultar senha' : 'Mostrar senha'"
+                  >
+                    <i :class="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+                  </button>
+                </div>
               </div>
             </div>
   
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-              <button type="submit" class="btn btn-primary">Salvar alterações</button>
+              <button type="submit" class="btn btn-primary">Salvar</button>
             </div>
           </form>
         </div>
@@ -79,6 +97,11 @@
       notificationStore.addNotification(err.message, 'error')
     }
   }
+
+const showPassword = ref(false)
+const togglePassword = () => {
+  showPassword.value = !showPassword.value
+}
   
 const loginModal = ref(null)
 let modalInstance = null
@@ -103,5 +126,27 @@ const hideModal = () => {
   }
   
   defineExpose({ showModal })
-  </script>
+</script>
   
+<style scoped>
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding-right: 2.5rem;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 0.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: var(--color-text);
+}
+</style>

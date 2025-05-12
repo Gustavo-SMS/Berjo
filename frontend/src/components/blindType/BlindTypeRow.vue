@@ -55,7 +55,7 @@ const openDeleteModal = () => {
 
 const deleteBlindType = async () => {
   try {
-        const response = await fetchWithAuth(`http://127.0.0.1:3333/blind_types/${props.id}`, {
+        const response = await fetchWithAuth(`http://127.0.0.1:3333/blind_types/${props.blindType.id}`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',

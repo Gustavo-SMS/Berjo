@@ -9,7 +9,14 @@
       <div class="col-12 d-flex justify-content-end gap-2 mt-3">
         <button @click="openUpdateCustomerModal" type="button" class="btn btn-primary">Editar</button>
         <UpdateCustomerModal ref="updateCustomerModal" :customer="customerData" />
-        <button v-if="authStore.userRole === 'ADMIN'" @click="openDeleteModal" type="button" class="btn btn-danger">Excluir</button>
+        <button
+          v-if="authStore.userRole === 'ADMIN' && canDelete"
+          @click="props.customer.isActive ? openDeleteModal() : reactivateCustomer()"
+          :class="props.customer.isActive ? 'btn btn-danger' : 'btn btn-success'"
+          type="button"
+        >
+          {{ props.customer.isActive ? 'Excluir' : 'Reativar' }}
+        </button>
       </div>
     </div>
   </div>
@@ -36,22 +43,55 @@ const router = useRouter()
 const authStore = useAuthStore()
 const notificationStore = useNotificationStore()
 
-const props = defineProps(['customer', 'getCustomers'])
+const props = defineProps(['customer', 'getCustomers', 'canDelete'])
 
 const fields = computed(() => [
   { label: 'Nome', value: props.customer.name },
   { label: 'Email', value: props.customer.email },
-  { label: 'CPF/CNPJ', value: props.customer.docNumber },
-  { label: 'Telefone', value: props.customer.phone },
+  { label: 'CPF/CNPJ', value: formatDocNumber(props.customer.docNumber) },
+  { label: 'Telefone', value: formatPhone(props.customer.phone) },
   { label: 'Rua', value: props.customer.address.street },
   { label: 'Nº', value: props.customer.address.house_number },
   { label: 'Complemento', value: props.customer.address.complement },
   { label: 'Cidade', value: props.customer.address.city },
   { label: 'Bairro', value: props.customer.address.district },
   { label: 'UF', value: props.customer.address.state },
-  { label: 'CEP', value: props.customer.address.zip },
-  { label: 'Dívida', value: props.customer.debt }
+  { label: 'CEP', value: formatCEP(props.customer.address.zip) },
+  {
+    label: 'Dívida',
+    value: new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    }).format(props.customer.debt || 0)
+  },
+  { label: 'Status', value: props.customer.isActive ? 'Ativo' : 'Inativo'}
 ])
+
+function formatDocNumber(doc) {
+  const cleaned = doc.replace(/\D/g, '')
+  if (cleaned.length === 11) {
+    return cleaned.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4')
+  } else if (cleaned.length === 14) {
+    return cleaned.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5')
+  }
+  return doc
+}
+
+function formatPhone(phone) {
+  if (!phone) return ''
+  const cleaned = String(phone).replace(/\D/g, '')
+  if (cleaned.length === 11) {
+    return cleaned.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3')
+  } else if (cleaned.length === 10) {
+    return cleaned.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3')
+  }
+  return phone
+}
+
+function formatCEP(cep) {
+  if (!cep) return ''
+  return String(cep).replace(/^(\d{5})(\d{3})$/, '$1-$2')
+}
 
 const showModal = ref(false)
 
@@ -61,7 +101,7 @@ const openDeleteModal = () => {
 
 const deleteCustomer = async () => {
   try {
-        const response = await fetchWithAuth(`http://127.0.0.1:3333/customers/${props.id}`, {
+        const response = await fetchWithAuth(`http://127.0.0.1:3333/customers/${props.customer.id}`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
@@ -73,11 +113,32 @@ const deleteCustomer = async () => {
             throw new Error(errorData.error || 'Erro ao excluir cliente')
         }
 
-        notificationStore.addNotification('Cliente excluído com sucesso', 'success')
+        notificationStore.addNotification('Cliente desativado', 'success')
         
         props.getCustomers()
       } catch (error) {
         console.error('Erro ao excluir cliente:', error.message)
+        notificationStore.addNotification(error.message, 'error')
+      }
+}
+
+const reactivateCustomer = async () => {
+    try {
+        const response = await fetchWithAuth(`http://127.0.0.1:3333/customers/reactivate/${props.customer.id}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        },authStore, router)
+
+        if (!response.ok) {
+            const errorData = await response.json()
+            throw new Error(errorData.error || 'Erro ao reativar cliente')
+        }
+        
+        props.getCustomers()
+      } catch (error) {
+        console.error('Erro ao reativar cliente:', error.message)
         notificationStore.addNotification(error.message, 'error')
       }
 }
