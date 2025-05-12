@@ -89,15 +89,15 @@ const registerUser = async (req, res) => {
   const { login, password, confirmPassword, customerId, role } = req.body
 
   if (!login) {
-    return res.status(422).json({ msg: 'O login é obrigatório!' })
+    return res.status(422).json({ error: 'O login é obrigatório!' })
   }
 
   if (!password) {
-    return res.status(422).json({ msg: 'A senha é obrigatória!' })
+    return res.status(422).json({ error: 'A senha é obrigatória!' })
   }
 
   if (password !== confirmPassword) {
-    return res.status(422).json({ msg: 'As senhas não conferem!' })
+    return res.status(422).json({ error: 'As senhas não conferem!' })
   }
 
   const userExists = await prismaClient.user.findUnique({
@@ -107,7 +107,7 @@ const registerUser = async (req, res) => {
   })
 
   if (userExists) {
-    return res.status(422).json({ msg: 'Por favor, utilize outro login!' })
+    return res.status(422).json({ error: 'Por favor, utilize outro login!' })
   }
 
   const salt = await bcrypt.genSalt(12)
@@ -129,8 +129,13 @@ const registerUser = async (req, res) => {
 
 async function validateUser(login) {
   try {
-    const user = await prismaClient.user.findUnique({
-      where: { login },
+    const user = await prismaClient.user.findFirst({
+      where: {
+        OR: [
+          { login },
+          { customer: { email: login } }
+        ]
+      },
       include: { customer: true }
     })
 
@@ -165,14 +170,15 @@ const validateLogin = async (req, res) => {
   const { login, password } = req.body
 
   const user = await validateUser(login)
-  if (!user) {
-    return res.status(404).json({ msg: 'Usuário não encontrado!' })
+
+  if (user.error) {
+    return res.status(404).json({ error: user.error })
   }
 
   const checkPassword = await validatePassword(password, user.password)
   
   if (!checkPassword) {
-    return res.status(422).json({ msg: 'Senha incorreta' })
+    return res.status(422).json({ error: 'Senha incorreta' })
   }
   
   try {
@@ -211,7 +217,7 @@ const validateLogin = async (req, res) => {
     res.status(200).json({ msg: 'Autenticação realizada com sucesso' })
   } catch (err) {
     console.log(err)
-    res.status(500).json({ msg: 'Aconteceu um erro no servidor, tente novamente mais tarde!' })
+    res.status(500).json({ error: 'Aconteceu um erro no servidor, tente novamente mais tarde!' })
   }
 }
 

@@ -5,7 +5,7 @@
         
         <div class="form-group">
           <label for="login">Login</label>
-          <input id="login" name="login" type="text" class="form-input" placeholder="Digite o login" required>
+          <input id="login" name="login" type="text" class="form-input" placeholder="Digite o login ou email" required>
         </div>
         <div class="form-group password-group">
           <label for="password">Senha</label>
