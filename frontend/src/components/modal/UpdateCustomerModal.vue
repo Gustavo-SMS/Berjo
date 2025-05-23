@@ -129,7 +129,7 @@ const handleUpdateCustomer = async () => {
     }
 
     try {
-        const response = await fetchWithAuth("http://127.0.0.1:3333/customers", {
+        const response = await fetchWithAuth("/customers", {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -262,7 +262,7 @@ watch(() => props.customer, (newCustomer) => {
   editableDistrict.value = newCustomer.district || ''
   editableState.value = newCustomer.state || ''
   editableZip.value = newCustomer.zip || ''
-  editableDebt.value = newCustomer.debt || ''
+  editableDebt.value = newCustomer.debt || 0
   selectedRadio.value = (newCustomer.docNumber && newCustomer.docNumber.length === 11) ? 'cpf' : 'cnpj'
 }, { immediate: true })
 

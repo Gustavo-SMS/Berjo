@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import { useAuthStore } from '@/stores/authStore'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -69,24 +70,44 @@ const router = createRouter({
     }
   ]
 })
+router.beforeEach(async (to, from, next) => {
+  const authStore = useAuthStore()
 
-router.beforeEach((to, from, next) => {
-  const isAuthenticated = !!localStorage.getItem('userRole')
-  const userRole = localStorage.getItem('userRole')
-
-  if (to.meta.requiresAuth && !isAuthenticated) {
-    document.cookie = 'token=; Max-Age=0; path=/'
-    document.cookie = 'refreshToken=; Max-Age=0; path=/'
-    localStorage.removeItem('userRole')
-    localStorage.removeItem('customerId')
-    return next('/')
+  if (!authStore.accessToken) {
+    await authStore.loadFromStorage()
   }
 
-  if (to.meta.requiresAdmin && userRole !== 'ADMIN') {
+  const isAuthenticated = !!authStore.accessToken
+  const isAdmin = authStore.userRole === 'ADMIN'
+
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    return next('/login')
+  }
+
+  if (to.meta.requiresAdmin && !isAdmin) {
     return next('/')
   }
 
   next()
 })
+
+// router.beforeEach((to, from, next) => {
+//   const isAuthenticated = !!localStorage.getItem('userRole')
+//   const userRole = localStorage.getItem('userRole')
+
+//   if (to.meta.requiresAuth && !isAuthenticated) {
+//     document.cookie = 'token=; Max-Age=0; path=/'
+//     document.cookie = 'refreshToken=; Max-Age=0; path=/'
+//     localStorage.removeItem('userRole')
+//     localStorage.removeItem('customerId')
+//     return next('/')
+//   }
+
+//   if (to.meta.requiresAdmin && userRole !== 'ADMIN') {
+//     return next('/')
+//   }
+
+//   next()
+// })
 
 export default router

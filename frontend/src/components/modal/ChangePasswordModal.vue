@@ -104,7 +104,7 @@
     }
   
     try {
-      const response = await fetchWithAuth('http://127.0.0.1:3333/users/password', {
+      const response = await fetchWithAuth('/users/password', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'

@@ -33,7 +33,7 @@
                                 <option value="Em produção">Em produção</option>
                                 <option value="Concluido">Concluído</option>
                             </select>
-                            <button @click="changeStatus(order.id)" class="btn btn-success">Confirmar</button>
+                            <button @click="() => changeStatus(order.id)" class="btn btn-success">Confirmar</button>
                         </div>
 
                         <div v-else class="status-view">
@@ -112,7 +112,7 @@
     v-if="showModal"
     :show="showModal"
     message="Tem certeza que deseja excluir?"
-    :onConfirm="() => deleteOrder(orderToDeleteId)"
+    @confirm="() => deleteOrder(orderToDeleteId)"
     @close="showModal = false"
   />
 </template>
@@ -142,7 +142,7 @@ const currentPage = ref(1)
 const itemsPerPage = 2
 
 const getOrders = async (status, customerId) => {
-    let url = 'http://127.0.0.1:3333/orders/filter/'
+    let url = `/orders/filter/`
     
     if (authStore.userRole === 'CUSTOMER') {
         customerId = authStore.customerId
@@ -159,8 +159,7 @@ const getOrders = async (status, customerId) => {
     try {
         const response = await fetchWithAuth(url, {
             method: 'GET',
-            headers: { 'Content-type': 'application/json' },
-            credentials: 'include'
+            headers: { 'Content-type': 'application/json' }
         }, authStore, router)
 
         const data = await response.json()
@@ -191,12 +190,11 @@ const changeStatus = async (orderId) => {
     }
 
     const payload = { id: orderId, status: newStatus }
-
+    
     try {
-        const response = await fetchWithAuth(`http://127.0.0.1:3333/orders/status/`, {
+        const response = await fetchWithAuth(`/orders/status/`, {
             method: 'PUT',
             headers: { 'Content-type': 'application/json' },
-            credentials: 'include',
             body: JSON.stringify(payload)
         }, authStore, router)
 
@@ -225,10 +223,9 @@ const openDeleteModal = (id) => {
 
 const deleteOrder = async (orderId) => {
     try {
-        const response = await fetchWithAuth(`http://127.0.0.1:3333/orders/${orderId}`, {
+        const response = await fetchWithAuth(`/orders/${orderId}`, {
             method: 'DELETE',
-            headers: { 'Content-type': 'application/json' },
-            credentials: 'include'
+            headers: { 'Content-type': 'application/json' }
         }, authStore, router)
 
         if (!response.ok) {
@@ -242,6 +239,8 @@ const deleteOrder = async (orderId) => {
     } catch (error) {
         console.error(error.message)
         notificationStore.addNotification(error.message, 'error')
+    } finally {
+        showModal.value = false
     }
 }
 

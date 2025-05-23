@@ -52,7 +52,7 @@ const submitForm = async (event) => {
     const data = Object.fromEntries(formData)
     data.customerId = unlinkedCustomerId.value
     try {
-        const response = await fetchWithAuth('http://127.0.0.1:3333/register', {
+        const response = await fetchWithAuth(`/register`, {
         method: 'POST',
         headers: {
             'Content-type': 'application/json'

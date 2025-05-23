@@ -62,9 +62,8 @@ const authStore = useAuthStore()
 
 const doLogout = async () => {
   try {
-    const response = await fetchWithAuth('http://127.0.0.1:3333/logout', {
-      method: 'POST',
-      credentials: 'include'
+    const response = await fetchWithAuth('/logout', {
+      method: 'POST'
     }, authStore, router)
 
     if (!response.ok) {
@@ -83,6 +82,7 @@ const doLogout = async () => {
 <style scoped>
 .navbar {
   padding: 0.8rem 1rem;
+  margin-bottom: 5rem;
 }
 .nav-link {
   font-weight: 500;

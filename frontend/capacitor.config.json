@@ -1,0 +1,13 @@
+{
+  "appId": "com.gustavo.berjo",
+  "appName": "berjo",
+  "webDir": "dist",
+"server": {
+  "cleartext": true,
+  "hostname": "localhost",
+  "androidScheme": "http"
+},
+"android": {
+  "allowMixedContent": true
+}
+}

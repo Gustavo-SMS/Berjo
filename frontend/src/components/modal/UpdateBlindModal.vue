@@ -53,7 +53,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="price">Observações *</label>
+                        <label for="price">Observações</label>
                         <input v-model="editableObservation" type="text" name="observation" id="observation" class="form-input" min="0" step="0.01">
                     </div>
 
@@ -127,7 +127,7 @@ const handleUptadeBlind = async () => {
       }
     
      try {
-      const response = await fetchWithAuth(`http://127.0.0.1:3333/blinds`, {
+      const response = await fetchWithAuth(`/blinds`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

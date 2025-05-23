@@ -23,12 +23,11 @@ const customerNames = ref([])
 
 onMounted(async () => {
     try {
-        const response = await fetchWithAuth("http://127.0.0.1:3333/customers", {
+        const response = await fetchWithAuth("/customers", {
             method: 'GET',
             headers: {
                 'Content-type': 'application/json'
-        },
-            credentials: 'include'
+        }
         }, authStore, router)
     
         if (!response.ok) {

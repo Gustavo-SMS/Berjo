@@ -74,7 +74,7 @@
     }
   
     try {
-      const response = await fetchWithAuth('http://127.0.0.1:3333/users/login', {
+      const response = await fetchWithAuth('/users/login', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'

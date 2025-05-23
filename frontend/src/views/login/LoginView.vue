@@ -38,8 +38,9 @@
           <RecoverPasswordModal ref="recoverPasswordModal" />
         </div>
         
-        <button :disabled="!captchaToken" type="submit" class="btn-primary full-width">
-          Entrar
+        <button :disabled="!captchaToken || isLoading" type="submit" class="btn-primary full-width">
+          <span v-if="isLoading">Entrando...</span>
+          <span v-else>Entrar</span>
         </button>
       </form>
     </main>
@@ -52,6 +53,8 @@ import { useNotificationStore } from '@/stores/notificationStore'
 import { useAuthStore } from '@/stores/authStore'
 import RecoverPasswordModal from '@/components/modal/RecoverPasswordModal.vue'
 
+const apiUrl = import.meta.env.VITE_API_URL
+
 const authStore = useAuthStore()
 const notificationStore = useNotificationStore()
 const router = useRouter()
@@ -59,6 +62,8 @@ const router = useRouter()
 const loginForm = ref(null)
 
 const captchaToken = ref('')
+
+const isLoading = ref(false)
 
 onMounted(() => {
   window.onCaptchaVerified = (token) => {
@@ -79,54 +84,108 @@ onMounted(() => {
   }
 })
 
+// const submitForm = async () => {
+//     if (!captchaToken.value) {
+//       notificationStore.addNotification('Confirme o captcha para continuar.', 'error')
+//       return
+//     }
+
+//     const formData = new FormData(loginForm.value)
+//     const data = Object.fromEntries(formData)
+//     try {
+//       const response = await fetch(`${apiUrl}/login`, {
+//         method: 'POST',
+//         headers: {
+//             'Content-type': 'application/json'
+//         },
+//         credentials: 'include',
+//         body: JSON.stringify(data)
+//         })
+
+//       const result = await response.json()
+      
+//       if (!response.ok) {
+//         if (response.status === 403) {
+//           throw new Error('Verificação do captcha falhou. Tente novamente.')
+//         }
+//         throw new Error(result.error || result.msg || 'Erro ao logar')
+//       }
+
+//       const meRes = await fetch(`${apiUrl}/me`, {
+//         credentials: 'include'
+//       })
+
+//       const meData = await meRes.json()
+
+//       if (!meRes.ok) {
+//         throw new Error(meData.error || 'Erro ao obter dados do usuário')
+//       }
+        
+//       authStore.setUser(meData.role, meData.customerId)
+//       router.push('/orders')   
+//     } catch (error) {
+//       console.log(error.message)
+//       notificationStore.addNotification(error.message, 'error')
+
+//       if (window.grecaptcha) {
+//         window.grecaptcha.reset()
+//         captchaToken.value = ''
+//       }
+//     } 
+// }
+
 const submitForm = async () => {
-    if (!captchaToken.value) {
-      notificationStore.addNotification('Confirme o captcha para continuar.', 'error')
-      return
+  if (!captchaToken.value) {
+    notificationStore.addNotification('Confirme o captcha para continuar.', 'error')
+    return
+  }
+
+  isLoading.value = true
+
+  const formData = new FormData(loginForm.value)
+  const data = Object.fromEntries(formData)
+
+  try {
+    const response = await fetch(`${apiUrl}/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    })
+
+    const result = await response.json()
+
+    if (!response.ok) {
+      throw new Error(result.error || result.msg || 'Erro ao logar')
     }
 
-    const formData = new FormData(loginForm.value)
-    const data = Object.fromEntries(formData)
-    try {
-      const response = await fetch('http://127.0.0.1:3333/login', {
-        method: 'POST',
-        headers: {
-            'Content-type': 'application/json'
-        },
-        credentials: 'include',
-        body: JSON.stringify(data)
-        })
+    authStore.setTokens(result.accessToken, result.refreshToken)
 
-      const result = await response.json()
-      
-      if (!response.ok) {
-        if (response.status === 403) {
-          throw new Error('Verificação do captcha falhou. Tente novamente.')
-        }
-        throw new Error(result.error || result.msg || 'Erro ao logar')
+    const meRes = await fetch(`${apiUrl}/me`, {
+      headers: {
+        Authorization: `Bearer ${authStore.accessToken}`
       }
+    })
 
-      const meRes = await fetch('http://127.0.0.1:3333/me', {
-        credentials: 'include'
-      })
+    if (!meRes.ok) {
+      const errorData = await meRes.json()
+      throw new Error(errorData.error || 'Erro ao obter dados do usuário')
+    }
 
-      const meData = await meRes.json()
+    const meData = await meRes.json()
+    authStore.setUser(meData.role, meData.customerId)
 
-      if (!meRes.ok) {
-        throw new Error(meData.error || 'Erro ao obter dados do usuário')
-      }
-        
-      authStore.setUser(meData.role, meData.customerId)
-      router.push('/orders')   
-    } catch (error) {
-      console.log(error.message)
-      notificationStore.addNotification(error.message, 'error')
+    router.push('/orders')
+  } catch (error) {
+    console.log(error.message)
+    notificationStore.addNotification(error.message, 'error')
 
-      if (window.grecaptcha) {
-        window.grecaptcha.reset()
-        captchaToken.value = ''
-      }
-    } 
+    if (window.grecaptcha) {
+      window.grecaptcha.reset()
+      captchaToken.value = ''
+    }
+  } finally {
+    isLoading.value = false
+  }
 }
 
 const recoverPasswordModal = ref(null)

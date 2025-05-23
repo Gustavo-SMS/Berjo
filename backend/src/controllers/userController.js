@@ -166,6 +166,62 @@ async function validatePassword(password, hash) {
   }
 }
 
+// const validateLogin = async (req, res) => {
+//   const { login, password } = req.body
+
+//   const user = await validateUser(login)
+
+//   if (user.error) {
+//     return res.status(404).json({ error: user.error })
+//   }
+
+//   const checkPassword = await validatePassword(password, user.password)
+  
+//   if (!checkPassword) {
+//     return res.status(422).json({ error: 'Senha incorreta' })
+//   }
+  
+//   try {
+//     const payload = {
+//       id: user.id,
+//       role: user.role,
+//       customerId: user.customer?.id || null,
+//       jti: uuidv4()
+//     }
+
+//     const secret = process.env.JWT_SECRET
+//     const refreshSecret = process.env.JWT_REFRESH_SECRET
+
+//     const accessToken = jwt.sign(payload, secret, { expiresIn: '15m' })
+//     const refreshToken = jwt.sign(payload, refreshSecret, { expiresIn: '7d' })
+
+//     await prismaClient.user.update({
+//       where: { id: user.id },
+//       data: { refreshToken }
+//     })
+
+//     res.cookie('token', accessToken, {
+//       httpOnly: true,
+//       secure: false,
+//       sameSite: 'lax',
+//       maxAge: 15 * 60 * 1000 // 15min
+//     })
+
+//     res.cookie('refreshToken', refreshToken, {
+//       httpOnly: true,
+//       secure: false,
+//       sameSite: 'lax',
+//       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 dias
+//     })
+
+//     res.status(200).json({ msg: 'Autenticação realizada com sucesso' })
+//   } catch (err) {
+//     console.log(err)
+//     res.status(500).json({ error: 'Aconteceu um erro no servidor, tente novamente mais tarde!' })
+//   }
+// }
+
+
 const validateLogin = async (req, res) => {
   const { login, password } = req.body
 
@@ -176,11 +232,11 @@ const validateLogin = async (req, res) => {
   }
 
   const checkPassword = await validatePassword(password, user.password)
-  
+
   if (!checkPassword) {
     return res.status(422).json({ error: 'Senha incorreta' })
   }
-  
+
   try {
     const payload = {
       id: user.id,
@@ -200,23 +256,15 @@ const validateLogin = async (req, res) => {
       data: { refreshToken }
     })
 
-    res.cookie('token', accessToken, {
-      httpOnly: true,
-      secure: false,
-      sameSite: 'lax',
-      maxAge: 15 * 60 * 1000 // 15min
+    res.status(200).json({
+      msg: 'Autenticação realizada com sucesso',
+      accessToken,
+      refreshToken,
+      role: user.role,
+      customerId: user.customer?.id || null
     })
-
-    res.cookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      secure: false,
-      sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 dias
-    })
-
-    res.status(200).json({ msg: 'Autenticação realizada com sucesso' })
   } catch (err) {
-    console.log(err)
+    console.error(err)
     res.status(500).json({ error: 'Aconteceu um erro no servidor, tente novamente mais tarde!' })
   }
 }

@@ -101,7 +101,7 @@ const openDeleteModal = () => {
 
 const deleteCustomer = async () => {
   try {
-        const response = await fetchWithAuth(`http://127.0.0.1:3333/customers/${props.customer.id}`, {
+        const response = await fetchWithAuth(`/customers/${props.customer.id}`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
@@ -124,7 +124,7 @@ const deleteCustomer = async () => {
 
 const reactivateCustomer = async () => {
     try {
-        const response = await fetchWithAuth(`http://127.0.0.1:3333/customers/reactivate/${props.customer.id}`, {
+        const response = await fetchWithAuth(`/customers/reactivate/${props.customer.id}`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',

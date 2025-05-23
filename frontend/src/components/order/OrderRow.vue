@@ -114,7 +114,7 @@ const openDeleteModal = () => {
 
 const deleteBlind = async () => {
   try {
-        const response = await fetchWithAuth(`http://127.0.0.1:3333/blinds/${props.id}`, {
+        const response = await fetchWithAuth(`/blinds/${props.id}`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',

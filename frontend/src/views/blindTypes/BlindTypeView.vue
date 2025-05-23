@@ -83,12 +83,11 @@ const selectedOption = ref('type')
 
 const getBlindTypes = async () => {
     try {
-        const response = await fetchWithAuth("http://127.0.0.1:3333/blind_types", {
+        const response = await fetchWithAuth("/blind_types", {
             method: 'GET',
             headers: {
                 'Content-type': 'application/json'
             },
-            credentials: 'include'
         }, authStore, router)
 
         if (!response.ok) {

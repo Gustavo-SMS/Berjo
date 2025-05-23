@@ -60,7 +60,7 @@ const submitForm = async () => {
   }
 
     try {
-        const response = await fetchWithAuth('http://127.0.0.1:3333/blind_types', {
+        const response = await fetchWithAuth('/blind_types', {
         method: 'POST',
         headers: {
             'Content-type': 'application/json'

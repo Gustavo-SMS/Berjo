@@ -12,15 +12,13 @@
   
   const props = defineProps({
     show: Boolean,
-    message: String,
-    onConfirm: Function
+    message: String
   })
   
-  const emit = defineEmits(['close'])
+  const emit = defineEmits(['close', 'confirm'])
   
   const confirmAction = () => {
-    props.onConfirm()
-    emit('close')
+    emit('confirm')
   }
   
   const closeModal = () => {

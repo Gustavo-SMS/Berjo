@@ -6,6 +6,7 @@
           v-if="customer"
           :key="customer.id"
           :customer="customer"
+          :getCustomers="getCustomers"
           :canDelete="false"
       />
 
@@ -36,7 +37,7 @@ const notificationStore = useNotificationStore()
 
 const customer = ref(null)
 
-const getCustomer = async () => {
+const getCustomers = async () => {
   try {
     const response = await fetchWithAuth(`/customers/${authStore.customerId}`, {
       method: 'GET',
@@ -66,7 +67,7 @@ const openChangePasswordModal = () => {
   changePasswordModal.value?.showModal()
 }
 
-onMounted(getCustomer)
+onMounted(getCustomers)
 </script>
 
 <style scoped>
