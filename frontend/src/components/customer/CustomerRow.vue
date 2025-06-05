@@ -15,7 +15,7 @@
           :class="props.customer.isActive ? 'btn btn-danger' : 'btn btn-success'"
           type="button"
         >
-          {{ props.customer.isActive ? 'Excluir' : 'Reativar' }}
+          {{ props.customer.isActive ? 'Desativar' : 'Reativar' }}
         </button>
       </div>
     </div>
@@ -24,7 +24,7 @@
   <ConfirmationModal
     v-if="showModal"
     :show="showModal"
-    message="Tem certeza que deseja excluir este cliente?"
+    message="Tem certeza que deseja desativar este cliente?"
     :onConfirm="deleteCustomer"
     @close="showModal = false"
   />
@@ -115,6 +115,7 @@ const deleteCustomer = async () => {
 
         notificationStore.addNotification('Cliente desativado', 'success')
         
+        showModal.value = false
         props.getCustomers()
       } catch (error) {
         console.error('Erro ao excluir cliente:', error.message)

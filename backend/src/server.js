@@ -5,14 +5,17 @@ const cors = require('cors')
 
 const app = express()
 
+// app.use(cors({
+//     origin: [
+//         'http://127.0.0.1:5173',
+//         'capacitor://localhost',  
+//         'http://localhost',
+//         'http://192.168.0.2:5173',
+//         'https://localhost'
+//     ]
+// }))
 app.use(cors({
-    origin: [
-        'http://127.0.0.1:5173',
-        'capacitor://localhost',  
-        'http://localhost',
-        'http://192.168.0.2:5173',
-        'https://localhost'
-    ]
+  origin: true
 }))
 app.use(cookieParser())
 app.use(express.json())

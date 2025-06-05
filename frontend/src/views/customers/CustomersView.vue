@@ -2,10 +2,9 @@
   <div class="container">
     <div class="box">
       <div v-if="authStore.userRole === 'ADMIN'" class="search-bar">
-        <!-- <input type="text" id="searchByName" class="form-control" placeholder="Buscar por nome" />
-                <button @click="getByName" class="btn btn-primary">Buscar</button> -->
-        <input v-model="searchTerm" type="text" class="form-control" placeholder="Buscar por nome..." />
-        <select @change="getCustomers" v-model="isActive" name="isActive" id="isActive" class="form-control">
+        <input type="text" id="searchByName" class="form-control" placeholder="Buscar por nome" />
+        <button @click="getByName" class="btn btn-primary">Buscar</button>
+        <select v-model="isActive" name="isActive" id="isActive" class="form-control">
           <option :value=true>Ativos</option>
           <option :value=false>Inativos</option>
         </select>
@@ -60,7 +59,6 @@ const authStore = useAuthStore()
 const router = useRouter()
 
 const customers = ref([])
-const searchTerm = ref('')
 const isActive = ref(true)
 
 const currentPage = ref(1)
@@ -89,10 +87,11 @@ const getCustomers = async () => {
     const data = await response.json()
 
     if (!response.ok) {
+      customers.value = []
       throw new Error(data.error || 'Erro ao buscar clientes')
     }
 
-    customers.value = Array.isArray(data) ? data : [data]
+    customers.value = [...(Array.isArray(data) ? data : [data])]
     currentPage.value = 1
   } catch (error) {
     console.log(error.message)
@@ -101,19 +100,13 @@ const getCustomers = async () => {
 
 onMounted(getCustomers)
 
-const filteredCustomers = computed(() => {
-  return customers.value.filter((customer) =>
-    customer.name.toLowerCase().includes(searchTerm.value.toLowerCase())
-  )
-})
-
 const totalPages = computed(() =>
-  Math.ceil(filteredCustomers.value.length / itemsPerPage)
+  Math.ceil(customers.value.length / itemsPerPage)
 )
 
 const paginatedCustomers = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage
-  return filteredCustomers.value.slice(start, start + itemsPerPage)
+  return customers.value.slice(start, start + itemsPerPage)
 })
 
 const goToPage = (page) => {
@@ -122,39 +115,39 @@ const goToPage = (page) => {
   }
 }
 
-watch(searchTerm, () => {
-  currentPage.value = 1
+watch(isActive, () => {
+  getCustomers()
 })
 
-// const getByName = async (event) => {
-//     event.preventDefault()
+const getByName = async (event) => {
+    event.preventDefault()
 
-//     const input = document.querySelector('#searchByName')
+    const input = document.querySelector('#searchByName')
 
-//     if(!input.value) {
-//         return getCustomers()
-//     }
+    if(!input.value) {
+        return getCustomers()
+    }
 
-//     try {
-//         const response = await fetchWithAuth(`http://127.0.0.1:3333/customers/name/${input.value}`, {
-//             method: 'GET',
-//             headers: {
-//                 'Content-type': 'application/json'
-//             }
-//         }, authStore, router)
+    try {
+        const response = await fetchWithAuth(`http://127.0.0.1:3333/customers/name/${input.value}`, {
+            method: 'GET',
+            headers: {
+                'Content-type': 'application/json'
+            }
+        }, authStore, router)
 
-//         if (!response.ok) {
-//             const errorData = await response.json()
-//             throw new Error(errorData.error || 'Erro ao buscar cliente')
-//         }   
+        if (!response.ok) {
+            const errorData = await response.json()
+            throw new Error(errorData.error || 'Erro ao buscar cliente')
+        }   
 
-//         const data = await response.json()
-//         customers.value = Array.isArray(data) ? data : [data]
-//     } catch (error) {
-//         console.log(error.message)
-//         notificationStore.addNotification(error.message, 'error')
-//       }    
-// }
+        const data = await response.json()
+        customers.value = [...(Array.isArray(data) ? data : [data])]
+        currentPage.value = 1
+    } catch (error) {
+        console.log(error.message)
+      }    
+}
 </script>
 
 <style scoped>

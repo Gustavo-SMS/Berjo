@@ -97,6 +97,7 @@ const getBlindTypes = async () => {
 
         const data = await response.json()
         blindTypes.value = data
+        currentPage.value = 1
     } catch (error) {
         console.log(error.message)
         notificationStore.addNotification(error.message, 'error')
