@@ -6,8 +6,9 @@
                     v-model="searchTerm"
                     type="text"
                     class="form-control"
-                    placeholder="Buscar por nome..."
+                    placeholder="Buscar por nome"
                     />
+                    <button @click="getByCustomer" class="btn btn-primary">Buscar</button>
                 </div>
                 <div class="col-md-6 col-lg-4">
                     <select v-model="selectedStatus" name="selectStatus" id="selectStatus" class="form-select">
@@ -174,6 +175,36 @@ const getOrders = async (status, customerId) => {
     }
 }
 
+const getByCustomer = async () => {
+    const name = encodeURIComponent(searchTerm.value.trim())
+
+    if (!name) {
+        return getOrders(selectedStatus.value)
+    }
+
+    const url = `/orders/search?name=${name}&status=${selectedStatus.value}`
+
+    try {
+        const response = await fetchWithAuth(url, {
+            method: 'GET',
+            headers: {
+                'Content-type': 'application/json'
+            }
+        }, authStore, router)
+
+        const data = await response.json()
+
+        if (!response.ok) {
+            throw new Error(data.error || 'Erro ao buscar pedidos')
+        }   
+
+        orders.value = data
+        currentPage.value = 1
+    } catch (error) {
+        console.log(error.message)
+    } 
+}
+
 onMounted(() => getOrders('Em espera'))
 
 const editStatus = (orderId, currentStatus) => {
@@ -244,21 +275,13 @@ const deleteOrder = async (orderId) => {
     }
 }
 
-const filteredOrders = computed(() => {
-  return orders.value.filter((order) => {
-    const nameMatch = order.customer.name.toLowerCase().includes(searchTerm.value.toLowerCase())
-    const statusMatch = !selectedStatus.value || order.status === selectedStatus.value
-    return nameMatch && statusMatch
-  })
-})
-
 const totalPages = computed(() =>
-  Math.ceil(filteredOrders.value.length / itemsPerPage)
+  Math.ceil(orders.value.length / itemsPerPage)
 )
 
 const paginatedOrders = computed(() => {
     const start = (currentPage.value - 1) * itemsPerPage
-    return filteredOrders.value.slice(start, start + itemsPerPage)
+    return orders.value.slice(start, start + itemsPerPage)
 })
 
 const goToPage = (page) => {
@@ -268,12 +291,16 @@ const goToPage = (page) => {
 }
 
 watch(searchTerm, () => {
-    currentPage.value = 1
+  currentPage.value = 1
 })
 
 watch(selectedStatus, () => {
+  currentPage.value = 1
+  if (searchTerm.value.trim()) {
+    getByCustomer()
+  } else {
     getOrders(selectedStatus.value)
-    currentPage.value = 1
+  }
 })
 </script>
 

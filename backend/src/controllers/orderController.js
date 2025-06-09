@@ -118,6 +118,50 @@ const getOrdersByCustomer = async (req, res) => {
     }
 }
 
+const getOrdersByCustomerName = async (req, res) => {
+    const { name = '', status } = req.query
+
+    try {
+        const orders = await prismaClient.order.findMany({
+        where: {
+            customer: {
+                name: {
+                    contains: name
+                }
+            },
+            ...(status && { status })
+        },
+        include: {
+            customer: {
+                select: {
+                    name: true
+                }
+            },
+            blind: {
+                include: {
+                    type: {
+                        select: {
+                            id: true,
+                            type: true,
+                            collection: true,
+                            color: true
+                        }
+                    }
+                }
+            }
+        }
+        })
+
+        if (orders.length === 0) {
+            return res.status(404).json({ error: 'Nenhum pedido foi encontrado' })
+        }
+
+        return res.status(200).json(orders)
+    } catch (error) {
+        return res.status(500).json({ error: error.message })
+    }
+}
+
 const getOrdersByStatus = async (req, res) => {
     const status = req.params.status
 
@@ -433,6 +477,7 @@ module.exports = {
     getAll,
     getOne,
     getOrdersByCustomer,
+    getOrdersByCustomerName,
     getOrdersByStatus,
     createOrder,
     changeStatus,

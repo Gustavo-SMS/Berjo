@@ -40,15 +40,21 @@ const getTypes = async (req, res) => {
     }
 }
 
-const getByType = async (req, res) => {
-    const type = req.params.type
+const getWithFilter = async (req, res) => {
+    const { name = '', filter } = req.query
+    
+    if (!['type', 'collection'].includes(filter)) {
+        return res.status(400).json({ error: 'Filtro inválido. Use "type" ou "collection".' })
+    }
 
     try {
         const blindType = await prismaClient.blind_Type.findMany({
-            where: {
-                type,
-                isActive: true
-            }
+        where: {
+            [filter]: {
+                contains: name
+            },
+            isActive: true
+        }
         })
 
         if(blindType.length === 0) {
@@ -154,7 +160,7 @@ const deleteBlindType = async (req, res) => {
 module.exports = {
     getAll,
     getTypes,
-    getByType,
+    getWithFilter,
     getByCollection,
     createBlindType,
     updateBlindType,

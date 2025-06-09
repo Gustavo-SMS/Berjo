@@ -56,13 +56,15 @@ const getOne = async (req, res) => {
 }
 
 const getCustomerByName = async (req, res) => {
-    const name = req.params.name
+    const { name = '', isActive } = req.query
 
     try {
         const customers = await prismaClient.customer.findMany({
             where: {
-                name,
-                isActive: true
+                name: {
+                    contains: name,
+                },
+                isActive: isActive === 'true'
             },
             include: {
                 address: true

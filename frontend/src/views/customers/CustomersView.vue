@@ -2,7 +2,7 @@
   <div class="container">
     <div class="box">
       <div v-if="authStore.userRole === 'ADMIN'" class="search-bar">
-        <input type="text" id="searchByName" class="form-control" placeholder="Buscar por nome" />
+        <input v-model="searchTerm" type="text" id="searchByName" class="form-control" placeholder="Buscar por nome" />
         <button @click="getByName" class="btn btn-primary">Buscar</button>
         <select v-model="isActive" name="isActive" id="isActive" class="form-control">
           <option :value=true>Ativos</option>
@@ -59,6 +59,7 @@ const authStore = useAuthStore()
 const router = useRouter()
 
 const customers = ref([])
+const searchTerm = ref('')
 const isActive = ref(true)
 
 const currentPage = ref(1)
@@ -115,39 +116,43 @@ const goToPage = (page) => {
   }
 }
 
-watch(isActive, () => {
-  getCustomers()
-})
+const getByName = async () => {
+  const name = encodeURIComponent(searchTerm.value.trim())
 
-const getByName = async (event) => {
-    event.preventDefault()
+  if (!name) {
+    return getCustomers()
+  }
 
-    const input = document.querySelector('#searchByName')
-
-    if(!input.value) {
-        return getCustomers()
-    }
+  const url = `${apiUrl}/customers/search?name=${name}&isActive=${isActive.value}`
 
     try {
-        const response = await fetchWithAuth(`http://127.0.0.1:3333/customers/name/${input.value}`, {
+        const response = await fetchWithAuth(url, {
             method: 'GET',
             headers: {
                 'Content-type': 'application/json'
             }
         }, authStore, router)
 
+        const data = await response.json()
+
         if (!response.ok) {
-            const errorData = await response.json()
-            throw new Error(errorData.error || 'Erro ao buscar cliente')
+            throw new Error(data.error || 'Erro ao buscar cliente')
         }   
 
-        const data = await response.json()
         customers.value = [...(Array.isArray(data) ? data : [data])]
         currentPage.value = 1
     } catch (error) {
         console.log(error.message)
       }    
 }
+
+watch(isActive, () => {
+  if (searchTerm.value.trim()) {
+    getByName()
+  } else {
+    getCustomers()
+  }
+})
 </script>
 
 <style scoped>
