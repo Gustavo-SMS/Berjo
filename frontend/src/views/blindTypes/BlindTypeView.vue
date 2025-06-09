@@ -1,15 +1,10 @@
 <template>
     <div class="container">
         <div class="search-section d-flex align-items-center justify-content-start gap-2 mb-3">
-            <input v-model="searchTerm" type="text" id="searchByType" class="form-input" placeholder="Buscar por tipo">
-            <button @click="getWithFilter" class="btn-secondary">Buscar</button>
-            <!-- <input
-                v-model="searchTerm"
-                type="text"
-                class="form-control w-auto"
-                style="min-width: 250px"
-                placeholder="Buscar"
-            /> -->
+          <div class="input-group" style="max-width: 350px">
+            <input v-model="searchTerm" type="text" id="searchByType" class="form-control" placeholder="Buscar por tipo">
+            <button @click="getWithFilter" class="btn btn-secondary">Buscar</button>
+          </div>
             <select v-model="selectedOption" class="form-select w-auto" style="min-width: 150px">
               <option value="type">Tipo</option>
               <option value="collection">Coleção</option>
@@ -166,31 +161,6 @@ watch(searchTerm, () => {
   gap: 1rem;
   margin-bottom: 1.5rem;
   flex-wrap: wrap;
-}
-
-.form-input {
-  padding: 0.75rem;
-  font-size: 1rem;
-  border: 1px solid var(--color-border);
-  border-radius: 4px;
-  background-color: var(--color-surface);
-  color: var(--color-text);
-  min-width: 200px;
-}
-
-.btn-secondary {
-  background-color: var(--color-secondary);
-  color: #fff;
-  padding: 0.75rem 1rem;
-  font-weight: bold;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-.btn-secondary:hover {
-  background-color: var(--color-secondary-dark);
 }
 
 .header-row {

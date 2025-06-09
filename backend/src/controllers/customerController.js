@@ -86,6 +86,7 @@ const getUnlinkedCustomers = async (req, res) => {
         const customers = await prismaClient.customer.findMany({
             where: {
                 user: null,
+                isActive: true
             },
             select: {
                 id: true,

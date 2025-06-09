@@ -2,13 +2,10 @@
         <div class="container-lg px-3 mt-5">
             <div v-if="authStore.userRole === 'ADMIN'" class="row g-3 align-items-center mb-4">
                 <div class="col-md-6 col-lg-4">
-                    <input
-                    v-model="searchTerm"
-                    type="text"
-                    class="form-control"
-                    placeholder="Buscar por nome"
-                    />
-                    <button @click="getByCustomer" class="btn btn-primary">Buscar</button>
+                    <div class="input-group">
+                        <input v-model="searchTerm" type="text" class="form-control" placeholder="Buscar por nome"/>
+                        <button @click="getByCustomer" class="btn btn-secondary">Buscar</button>
+                    </div>
                 </div>
                 <div class="col-md-6 col-lg-4">
                     <select v-model="selectedStatus" name="selectStatus" id="selectStatus" class="form-select">

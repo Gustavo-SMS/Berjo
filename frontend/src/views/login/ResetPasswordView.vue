@@ -5,12 +5,44 @@
   
         <div class="form-group">
           <label for="newPassword">Nova Senha</label>
-          <input id="newPassword" type="password" v-model="newPassword" class="form-input" placeholder="Digite a nova senha" required />
+          <div class="password-wrapper">
+            <input
+              :type="showNewPassword ? 'text' : 'password'"
+              class="form-input"
+              placeholder="Digite a nova senha"
+              v-model="newPassword"
+              required
+            >
+            <button
+              type="button"
+              class="toggle-password"
+              @click="toggleNewPassword"
+              :aria-label="showNewPassword ? 'Ocultar senha' : 'Mostrar senha'"
+            >
+              <i :class="showNewPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+            </button>
+          </div>
         </div>
   
         <div class="form-group">
           <label for="confirmPassword">Confirmar Senha</label>
-          <input id="confirmPassword" type="password" v-model="confirmPassword" class="form-input" placeholder="Confirme a nova senha" required />
+          <div class="password-wrapper">
+            <input
+              :type="showConfirmPassword ? 'text' : 'password'"
+              class="form-input"
+              placeholder="Confirme a nova senha"
+              v-model="confirmPassword"
+              required
+            >
+            <button
+              type="button"
+              class="toggle-password"
+              @click="toggleConfirmPassword"
+              :aria-label="showConfirmPassword ? 'Ocultar senha' : 'Mostrar senha'"
+            >
+              <i :class="showConfirmPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+            </button>
+          </div>
         </div>
   
         <button class="btn-primary full-width" type="submit">Redefinir</button>
@@ -68,7 +100,17 @@ const apiUrl = import.meta.env.VITE_API_URL
       notificationStore.addNotification(err.message, 'error')
     }
   }
-  </script>
+
+const showNewPassword = ref(false)
+const showConfirmPassword = ref(false)
+
+const toggleNewPassword = () => {
+  showNewPassword.value = !showNewPassword.value
+}
+const toggleConfirmPassword = () => {
+  showConfirmPassword.value = !showConfirmPassword.value
+}
+</script>
   
 <style scoped>
 .reset-container {
@@ -133,6 +175,27 @@ const apiUrl = import.meta.env.VITE_API_URL
 
 .full-width {
   width: 100%;
+}
+
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding-right: 2.5rem;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 0.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: var(--color-text);
 }
 </style>
   

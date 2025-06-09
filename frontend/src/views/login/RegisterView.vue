@@ -12,12 +12,46 @@
 
             <div class="form-group">
                 <label for="password">Senha</label>
-                <input id="password" name="password" type="password" class="form-input" placeholder="Digite a senha" required>
+                <div class="password-wrapper">
+                  <input
+                    id="password"
+                    name="password"
+                    :type="showPassword ? 'text' : 'password'"
+                    class="form-input"
+                    placeholder="Digite a senha"
+                    required
+                  >
+                  <button
+                    type="button"
+                    class="toggle-password"
+                    @click="togglePassword"
+                    :aria-label="showPassword ? 'Ocultar senha' : 'Mostrar senha'"
+                  >
+                    <i :class="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+                  </button>
+                </div>  
             </div>
 
             <div class="form-group">
                 <label for="confirmPassword">Confirmar Senha</label>
-                <input id="confirmPassword" name="confirmPassword" type="password" class="form-input" placeholder="Confirme a senha" required>
+                <div class="password-wrapper">
+                  <input
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    :type="showConfirmPassword ? 'text' : 'password'"
+                    class="form-input"
+                    placeholder="Confirme a nova senha"
+                    required
+                  >
+                  <button
+                    type="button"
+                    class="toggle-password"
+                    @click="toggleConfirmPassword"
+                    :aria-label="showConfirmPassword ? 'Ocultar senha' : 'Mostrar senha'"
+                  >
+                    <i :class="showConfirmPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+                  </button>
+                </div>
             </div>
 
             <button class="btn-primary full-width" type="submit" @click="submitForm">Entrar</button>
@@ -74,6 +108,16 @@ const submitForm = async (event) => {
     }
 }
 
+const showPassword = ref(false)
+const showConfirmPassword = ref(false)
+
+const togglePassword = () => {
+  showPassword.value = !showPassword.value
+}
+
+const toggleConfirmPassword = () => {
+  showConfirmPassword.value = !showConfirmPassword.value
+}
 </script>
 
 <style scoped>
@@ -139,5 +183,26 @@ const submitForm = async (event) => {
 
 .full-width {
   width: 100%;
+}
+
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding-right: 2.5rem;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 0.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: var(--color-text);
 }
 </style>

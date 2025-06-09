@@ -1,15 +1,22 @@
 <template>
   <div class="container">
     <div class="box">
-      <div v-if="authStore.userRole === 'ADMIN'" class="search-bar">
-        <input v-model="searchTerm" type="text" id="searchByName" class="form-control" placeholder="Buscar por nome" />
-        <button @click="getByName" class="btn btn-primary">Buscar</button>
-        <select v-model="isActive" name="isActive" id="isActive" class="form-control">
-          <option :value=true>Ativos</option>
-          <option :value=false>Inativos</option>
-        </select>
-      </div>
+      <div class="search-bar row g-2 align-items-center">
+        <div class="col-md-6">
+          <div class="input-group">
+            <input v-model="searchTerm" type="text" id="searchByName" class="form-control" placeholder="Buscar por nome"/>
+            <button @click="getByName" class="btn btn-secondary">Buscar</button>
+          </div>
+        </div>
 
+        <div class="col-md-3">
+          <select v-model="isActive" name="isActive" id="isActive" class="form-select">
+            <option :value="true">Ativos</option>
+            <option :value="false">Inativos</option>
+          </select>
+        </div>
+      </div>
+      
       <div v-if="customers.length === 0" class="order-card text-center">
         <p class="mb-0">Nenhum cliente encontrado.</p>
       </div>
