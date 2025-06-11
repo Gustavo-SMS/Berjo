@@ -71,9 +71,9 @@
                         <input v-model="editableDebt" type="number" name="debt" id="debt" class="form-control" min="0" step="0.01" required>
                     </div>
             
-                    <div class="col-12">
-                        <button type="submit" class="btn btn-primary w-100">Salvar alterações</button>
-                        <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">Cancelar</button>
+                    <div class="col-12 d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Salvar alterações</button>
+                        <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancelar</button>
                     </div>
                 </form>
             </div>
@@ -278,5 +278,20 @@ defineExpose({ showModal })
   text-align: center;
   margin-bottom: 1.5rem;
   color: var(--color-text);
+}
+
+.btn-primary {
+  background-color: var(--color-primary);
+  color: #fff;
+  /* padding: 0.75rem; */
+  font-weight: bold;
+  border: none;
+  /* border-radius: 4px; */
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-dark);
 }
 </style>

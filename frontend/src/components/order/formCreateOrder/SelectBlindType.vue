@@ -27,7 +27,7 @@ const fetchBlindCollections = async (type) => {
     if (!type) return
 
     try {
-        const response = await fetchWithAuth(`/blind_types/type/${type}`, {
+        const response = await fetchWithAuth(`/blind_types/search?name=${type}`, {
                 method: 'GET',
                 headers: {
                     'Content-type': 'application/json'

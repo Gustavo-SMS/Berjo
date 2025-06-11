@@ -1,25 +1,26 @@
 <template>
     <main class="register-container">
-        <form class="register-form" @submit.prevent="submitForm">
+        <form class="register-form" @submit.prevent="submitForm" novalidate>
             <h1 class="register-title">Cadastre o usuário</h1>
 
             <SelectUnlinkedCustomers @selectedOption="selectedUnlinkedCustomer" :refresh-key="refreshKey"/>
 
             <div class="form-group">
-                <label for="login">Login</label>
-                <input id="login" name="login" type="text" class="form-input" placeholder="Digite o login" required>
+                <label for="login">Login*</label>
+                <input v-model="login" id="login" name="login" type="text" class="form-input" placeholder="Digite o login" :class="{ 'input-error': loginError }">
             </div>
 
             <div class="form-group">
-                <label for="password">Senha</label>
+                <label for="password">Senha*</label>
                 <div class="password-wrapper">
                   <input
+                    v-model="password"
                     id="password"
                     name="password"
                     :type="showPassword ? 'text' : 'password'"
                     class="form-input"
                     placeholder="Digite a senha"
-                    required
+                    :class="{ 'input-error': passwordError }"
                   >
                   <button
                     type="button"
@@ -33,15 +34,16 @@
             </div>
 
             <div class="form-group">
-                <label for="confirmPassword">Confirmar Senha</label>
+                <label for="confirmPassword">Confirmar Senha*</label>
                 <div class="password-wrapper">
                   <input
+                    v-model="confirmPassword"
                     id="confirmPassword"
                     name="confirmPassword"
                     :type="showConfirmPassword ? 'text' : 'password'"
                     class="form-input"
                     placeholder="Confirme a nova senha"
-                    required
+                    :class="{ 'input-error': confirmPasswordError }"
                   >
                   <button
                     type="button"
@@ -54,7 +56,7 @@
                 </div>
             </div>
 
-            <button class="btn-primary full-width" type="submit" @click="submitForm">Entrar</button>
+            <button class="btn-primary full-width" type="submit">Entrar</button>
         </form>
     </main>
 </template>
@@ -74,17 +76,24 @@ const authStore = useAuthStore()
 const unlinkedCustomerId = ref('')
 const refreshKey = ref(0)
 
+const login = ref('')
+const password = ref('')
+const confirmPassword = ref('')
+
 const selectedUnlinkedCustomer = (selectedCustomerId) => {
     unlinkedCustomerId.value = selectedCustomerId
 }
 
-const submitForm = async (event) => {
-    event.preventDefault()
+const submitForm = async () => {
+  if (!validateForm()) return
 
-    const form = document.querySelector('form')
-    const formData = new FormData(form)
-    const data = Object.fromEntries(formData)
-    data.customerId = unlinkedCustomerId.value
+  const data = {
+    login: login.value,
+    password: password.value,
+    confirmPassword: confirmPassword.value,
+    customerId: unlinkedCustomerId.value
+  }
+  
     try {
         const response = await fetchWithAuth(`/register`, {
         method: 'POST',
@@ -101,11 +110,53 @@ const submitForm = async (event) => {
         
         notificationStore.addNotification('Cliente cadastrado com sucesso!', 'success')
         refreshKey.value++
-        form.reset()
+        resetForm()
     } catch (error) {
         console.log(error.message)
         notificationStore.addNotification(error.message, 'error')
     }
+}
+
+const loginError = ref(false)
+const passwordError = ref(false)
+const confirmPasswordError = ref(false)
+const customerError = ref(false)
+
+const validateForm = () => {
+  loginError.value = !login.value.trim()
+  passwordError.value = !password.value.trim()
+  confirmPasswordError.value = password.value !== confirmPassword.value
+  customerError.value = !unlinkedCustomerId.value
+
+  const errors = []
+
+  if (!login.value.trim()) {
+    errors.push('Login é obrigatório')
+  }
+
+  if (!password.value.trim()) {
+    errors.push('Senha é obrigatória')
+  }
+
+  if (password.value !== confirmPassword.value) {
+    errors.push('As senhas não coincidem')
+  }
+
+  if (!unlinkedCustomerId.value) {
+    errors.push('É necessário selecionar um cliente')
+  }
+
+  if (errors.length > 0) {
+    errors.forEach(err => notificationStore.addNotification(err, 'error'))
+  }
+
+  return !(loginError.value || passwordError.value || confirmPasswordError.value || customerError.value)
+}
+
+const resetForm = () => {
+  login.value = ''
+  password.value = ''
+  confirmPassword.value = ''
 }
 
 const showPassword = ref(false)
@@ -204,5 +255,11 @@ const toggleConfirmPassword = () => {
   cursor: pointer;
   font-size: 1.2rem;
   color: var(--color-text);
+}
+
+.input-error {
+  border: 1px solid rgba(255, 0, 0, 0.5);
+  box-shadow: 0 0 4px rgba(255, 0, 0, 0.3);
+  transition: border 0.3s, box-shadow 0.3s;
 }
 </style>

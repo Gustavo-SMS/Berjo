@@ -41,7 +41,7 @@ const getTypes = async (req, res) => {
 }
 
 const getWithFilter = async (req, res) => {
-    const { name = '', filter } = req.query
+    const { name = '', filter = 'type' } = req.query
     
     if (!['type', 'collection'].includes(filter)) {
         return res.status(400).json({ error: 'Filtro inválido. Use "type" ou "collection".' })

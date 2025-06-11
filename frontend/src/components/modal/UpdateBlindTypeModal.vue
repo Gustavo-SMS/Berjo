@@ -32,9 +32,9 @@
                         <input v-model="editablePrice" type="number" name="price" id="price" class="form-input" min="0" step="0.01" required>
                     </div>
 
-                    <div class="col-12">
-                        <button type="submit" class="btn btn-primary w-100">Salvar alterações</button>
-                        <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">Cancelar</button>
+                    <div class="col-12 d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Salvar</button>
+                        <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancelar</button>
                     </div>
                 </form>
             </div>
@@ -184,10 +184,10 @@ label {
 .btn-primary {
   background-color: var(--color-primary);
   color: #fff;
-  padding: 0.75rem;
+  /* padding: 0.75rem; */
   font-weight: bold;
   border: none;
-  border-radius: 4px;
+  /* border-radius: 4px; */
   cursor: pointer;
   transition: background 0.3s;
 }
