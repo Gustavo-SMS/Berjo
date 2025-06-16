@@ -48,7 +48,7 @@
           <p class="mb-0">{{ editableBlind_price }}</p>
         </div>
 
-        <div class="col-6 col-md-1">
+        <div class="col-6 col-md-1" v-if="props.status !== 'Concluido' && !(authStore.userRole === 'CUSTOMER' && props.status !== 'Em espera')">
           <label class="form-label fw-semibold">Ações</label>
           <div class="dropdown">
             <button
@@ -63,7 +63,7 @@
               <li>
                 <button class="dropdown-item" @click="openUpdateBlindModal">Editar</button>
               </li>
-              <li v-if="authStore.userRole === 'ADMIN'">
+              <li>
                 <button class="dropdown-item text-danger" @click="openDeleteModal">Excluir</button>
               </li>
             </ul>

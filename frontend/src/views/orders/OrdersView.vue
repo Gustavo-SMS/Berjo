@@ -1,7 +1,7 @@
 <template>
         <div class="container-lg px-3 mt-5">
-            <div v-if="authStore.userRole === 'ADMIN'" class="row g-3 align-items-center mb-4">
-                <div class="col-md-6 col-lg-4">
+            <div class="row g-3 align-items-center mb-4">
+                <div v-if="authStore.userRole === 'ADMIN'" class="col-md-6 col-lg-4">
                     <div class="input-group">
                         <input v-model="searchTerm" type="text" class="form-control" placeholder="Buscar por nome"/>
                         <button @click="getByCustomer" class="btn btn-secondary">Buscar</button>
@@ -37,7 +37,7 @@
                         <div v-else class="status-view">
                             <span class="badge bg-secondary badge-status">{{ order.status }}</span>
                             <button
-                            v-if="authStore.userRole === 'ADMIN'"
+                            v-if="authStore.userRole === 'ADMIN' && selectedStatus !== 'Concluido'"
                             @click="editStatus(order.id, order.status)"
                             class="btn btn-outline-primary"
                             >
@@ -50,7 +50,7 @@
                         <span class="fw-bold">Total: R$ {{ order.total_price }}</span>
 
                         <button
-                            v-if="authStore.userRole === 'ADMIN' || (authStore.userRole === 'CUSTOMER' && order.status === 'Em espera')"
+                            v-if="(authStore.userRole === 'ADMIN' && order.status !== 'Concluido') || (authStore.userRole === 'CUSTOMER' && order.status === 'Em espera')"
                             @click="() => openDeleteModal(order.id)"
                             class="btn btn-danger"
                         >
@@ -166,8 +166,9 @@ const getOrders = async (status, customerId) => {
             throw new Error(data.error || 'Erro ao buscar pedidos')
         }
 
-        orders.value = data
+        orders.value = Array.isArray(data) ? data : []
     } catch (error) {
+        orders.value = []
         console.error(error.message)
     }
 }
@@ -195,9 +196,10 @@ const getByCustomer = async () => {
             throw new Error(data.error || 'Erro ao buscar pedidos')
         }   
 
-        orders.value = data
+        orders.value = Array.isArray(data) ? data : []
         currentPage.value = 1
     } catch (error) {
+        orders.value = []
         console.log(error.message)
     } 
 }
