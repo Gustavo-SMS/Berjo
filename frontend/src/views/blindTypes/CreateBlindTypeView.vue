@@ -86,7 +86,7 @@ const submitForm = async () => {
 <style scoped>
 .container {
   max-width: 600px;
-  margin: 0 auto;
+  margin: 3rem auto;
   padding: 2rem 1rem;
   background-color: var(--color-background);
   border-radius: 8px;

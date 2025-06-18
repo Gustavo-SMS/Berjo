@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container mt-5">
             <form @submit.prevent="submitForm">
                 <div v-if="authStore.userRole === 'ADMIN'" class="mb-4">
                     <label for="selectCustomer" class="form-label">Cliente</label>

@@ -202,7 +202,7 @@ const togglePassword = () => {
 <style scoped>
 .login-container {
   max-width: 400px;
-  margin: 0 auto;
+  margin: 3rem auto;
   padding: 2rem 1rem;
   background-color: var(--color-background);
   border-radius: 8px;

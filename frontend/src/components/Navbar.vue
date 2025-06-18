@@ -38,12 +38,20 @@
           </li>
           </ul>
 
-          <div v-if="authStore.userRole" class="d-flex align-items-center ms-auto gap-2">
-            <RouterLink to="/customerProfile" class="btn btn-outline-primary">Perfil</RouterLink>
-            <button @click="doLogout" class="btn btn-outline-danger">Sair</button>
-          </div>
-          <div v-else class="d-flex align-items-center ms-auto">
-            <RouterLink to="/login" class="btn btn-primary">Login</RouterLink>
+          <div v-if="authStore.userRole" class="dropdown ms-auto">
+            <button
+              class="btn d-flex align-items-center"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <i class="bi bi-person-circle me-1" style="font-size: 1.5rem;"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><RouterLink class="dropdown-item" to="/customerProfile">Perfil</RouterLink></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><button class="dropdown-item text-danger" @click="doLogout">Sair</button></li>
+            </ul>
           </div>
           
         </div>
@@ -81,8 +89,7 @@ const doLogout = async () => {
 
 <style scoped>
 .navbar {
-  padding: 0.8rem 1rem;
-  margin-bottom: 5rem;
+  padding: 0.5rem 0.8rem;
 }
 .nav-link {
   font-weight: 500;

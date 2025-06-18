@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container mt-3">
     <div class="box">
       <div class="search-bar row g-2 align-items-center">
         <div class="col-md-6">
