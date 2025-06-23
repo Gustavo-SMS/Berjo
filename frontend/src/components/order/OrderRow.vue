@@ -18,11 +18,9 @@
         </div>
 
         <div class="col-6 col-md-1">
-          <div class="col-6 col-md-1">
             <label class="form-label fw-semibold label-full">Largura</label>
             <label class="form-label fw-semibold label-short">Larg.</label>
             <p class="mb-0">{{ width }}</p>
-          </div>
         </div>
 
         <div class="col-6 col-md-1">
@@ -31,11 +29,9 @@
         </div>
 
         <div class="col-6 col-md-1">
-          <div class="col-6 col-md-1">
             <label class="form-label fw-semibold label-full">Comando</label>
             <label class="form-label fw-semibold label-short">Cmd.</label>
             <p class="mb-0">{{ command_height }}</p>
-          </div>
         </div>
 
         <div class="col-6 col-md-1">

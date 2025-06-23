@@ -20,6 +20,7 @@
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
     "nodemailer": "^6.9.16",
+    "pdfmake": "^0.2.20",
     "uuid": "^10.0.0"
   },
   "devDependencies": {

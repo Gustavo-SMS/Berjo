@@ -68,4 +68,7 @@ router.post('/blind_types', authenticateToken.authenticateToken, blindTypeMiddle
 router.put('/blind_types', authenticateToken.authenticateToken, blindTypeController.updateBlindType)
 router.delete('/blind_types/:id', authenticateToken.authenticateToken, blindTypeController.deleteBlindType)
 
+router.get('/report/by-period', orderController.generateReportByPeriod)
+router.get('/report/by-customer', customerController.generateReportByCustomer)
+
 module.exports = router

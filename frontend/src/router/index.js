@@ -42,7 +42,7 @@ const router = createRouter({
       path: '/customers',
       name: 'customers',
       component: () => import('../views/customers/CustomersView.vue'),
-      meta: { requiresAuth: true }
+      meta: { requiresAuth: true, requiresAdmin: true }
     },
     {
       path: '/createOrder',
@@ -66,6 +66,12 @@ const router = createRouter({
       path: '/createBlindTypes',
       name: 'createBlindTypes',
       component: () => import('../views/blindTypes/CreateBlindTypeView.vue'),
+      meta: { requiresAuth: true, requiresAdmin: true }
+    },
+    {
+      path: '/reports',
+      name: 'reports',
+      component: () => import('../views/ReportsView.vue'),
       meta: { requiresAuth: true, requiresAdmin: true }
     }
   ]

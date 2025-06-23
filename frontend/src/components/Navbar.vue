@@ -49,6 +49,7 @@
             </button>
             <ul class="dropdown-menu dropdown-menu-end">
               <li><RouterLink class="dropdown-item" to="/customerProfile">Perfil</RouterLink></li>
+              <li><RouterLink class="dropdown-item" to="/reports">Relatórios</RouterLink></li>
               <li><hr class="dropdown-divider"></li>
               <li><button class="dropdown-item text-danger" @click="doLogout">Sair</button></li>
             </ul>

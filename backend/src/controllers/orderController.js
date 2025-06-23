@@ -2,6 +2,7 @@ const { prismaClient } = require('../database/prismaClient')
 const { sendEmail, generateHtmlTable } = require('../services/nodemailer')
 const { calculateTotalPrice } = require("../utils/priceCalculator")
 const customerController = require('./customerController')
+const generateReportPDF = require('../utils/reportGenerator')
 
 const getAll = async (req, res) => {
     try {
@@ -472,6 +473,85 @@ const deleteOrder = async (req, res) => {
     }
 }
 
+async function generateReportByPeriod(req, res) {
+  const { startDate, endDate } = req.query
+
+  if (!startDate || !endDate) {
+    return res.status(400).json({ error: 'Informe data inicial e data final no formato ISO' })
+  }
+
+    const start = new Date(`${startDate}T00:00:00`)
+    const end = new Date(`${endDate}T23:59:59`)
+
+  try {
+    const orders = await prismaClient.order.findMany({
+      where: {
+        created_at: {
+          gte: start,
+          lte: end,
+        },
+      },
+      include: {
+        customer: true,
+        blind: {
+          include: {
+            type: true
+          }
+        },
+      },
+      orderBy: { created_at: 'asc' }
+    })
+
+    const content = [
+      { text: `Relatório de Pedidos por Período`, style: 'header' },
+      { text: `Período: ${start.toLocaleDateString()} até ${end.toLocaleDateString()}`, margin: [0, 0, 0, 10] }
+    ]
+
+    if (orders.length === 0) {
+      content.push({ text: 'Nenhum pedido encontrado no período selecionado.' })
+    } else {
+      orders.forEach((order, index) => {
+        content.push({ text: `Pedido ${index + 1}`, style: 'subheader' })
+        content.push({ text: `Cliente: ${order.customer.name}` })
+        content.push({ text: `Status: ${order.status}` })
+        content.push({ text: `Data: ${new Date(order.created_at).toLocaleDateString()}` })
+        content.push({ text: `Total: R$ ${order.total_price.toFixed(2)}\n` })
+
+        const blindsTable = [
+          ['Modelo', 'Tipo', 'Coleção', 'Cor', 'Medidas', 'Qtd', 'Valor']
+        ]
+
+        order.blind.forEach(b => {
+          blindsTable.push([
+            b.model,
+            b.type.type,
+            b.type.collection,
+            b.type.color,
+            `${b.width}x${b.height}cm`,
+            b.quantity.toString(),
+            `R$ ${b.blind_price.toFixed(2)}`
+          ])
+        })
+
+        if (blindsTable.length > 1) {
+          content.push({
+            table: {
+              widths: ['*', '*', '*', '*', 'auto', 'auto', 'auto'],
+              body: blindsTable
+            },
+            margin: [0, 0, 0, 10]
+          })
+        }
+      })
+    }
+
+    generateReportPDF({ content }, res, 'relatorio-pedidos-periodo.pdf')
+
+  } catch (error) {
+    console.error('Erro ao gerar relatório:', error)
+    res.status(500).json({ error: 'Erro interno ao gerar relatório' })
+  }
+}
 
 module.exports = {
     getAll,
@@ -484,5 +564,6 @@ module.exports = {
     updateOrder,
     deleteOrder,
     getOrdersByFilter,
-    updateTotalPrice
+    updateTotalPrice,
+    generateReportByPeriod
 }

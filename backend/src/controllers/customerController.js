@@ -1,4 +1,5 @@
 const { prismaClient } = require('../database/prismaClient')
+const generateReportPDF = require('../utils/reportGenerator')
 
 const getAll = async (req, res) => {
     try {
@@ -64,16 +65,14 @@ const getCustomerByName = async (req, res) => {
                 name: {
                     contains: name,
                 },
+                ...(isActive !== undefined && {
                 isActive: isActive === 'true'
+                })
             },
             include: {
                 address: true
             }
         })
-
-        if (customers.length === 0) {
-            return res.status(404).json({ error: 'Cliente não foi encontrado' })
-        }
 
         return res.status(200).json(customers)
     } catch (error) {
@@ -266,6 +265,85 @@ const reactivateCustomer = async (req, res) => {
     }
 }
 
+const generateReportByCustomer = async (req, res) => {
+  const { customerId } = req.query
+
+  const customer = await prismaClient.customer.findUnique({
+    where: { id: customerId },
+    include: {
+      address: true,
+      orders: {
+        include: {
+          blind: {
+            include: { type: true }
+          }
+        },
+        orderBy: { created_at: 'desc' }
+      }
+    }
+  })
+
+  if (!customer) return res.status(404).json({ error: 'Cliente não encontrado' })
+
+  const content = [
+    { text: `Relatório de Pedidos - ${customer.name}`, style: 'header' },
+    { text: `Documento: ${customer.docNumber}` },
+    { text: `Telefone: ${customer.phone}` },
+    { text: `Email: ${customer.email}` },
+    { text: `Criado em: ${new Date(customer.created_at).toLocaleDateString()}` },
+  ]
+
+  if (customer.address) {
+    const a = customer.address
+    content.push({
+      text: `Endereço: ${a.street}, ${a.house_number || ''} ${a.complement || ''} - ${a.district}, ${a.city} - ${a.state}, CEP: ${a.zip}`
+    })
+  }
+
+  content.push({ text: '\n' })
+
+  if (customer.orders.length === 0) {
+    content.push({ text: 'Este cliente ainda não possui pedidos.' })
+  } else {
+    customer.orders.forEach((order, i) => {
+      content.push({ text: `Pedido ${i + 1}`, style: 'subheader' })
+      content.push({ text: `Data: ${new Date(order.created_at).toLocaleDateString()}` })
+      content.push({ text: `Status: ${order.status}` })
+      content.push({ text: `Total: R$ ${order.total_price.toFixed(2)}\n` })
+
+      const blindsTable = [
+        [
+          'Qtd', 'Tipo', 'Coleção', 'Cor', 'Medidas', 'Modelo', 'Valor'
+        ]
+      ]
+
+      order.blind.forEach(b => {
+        blindsTable.push([
+            b.quantity,
+            b.type.type,
+            b.type.collection,
+            b.type.color,
+            `${b.width}x${b.height}cm`,
+            b.model,
+          `R$ ${b.blind_price.toFixed(2)}`
+        ])
+      })
+
+      if (blindsTable.length > 1) {
+        content.push({
+          table: {
+            widths: ['*', '*', '*', '*', 'auto', 'auto', 'auto'],
+            body: blindsTable
+          },
+          margin: [0, 0, 0, 10]
+        })
+      }
+    })
+  }
+
+  generateReportPDF({ content }, res, `relatorio_cliente_${customer.name}.pdf`)
+}
+
 module.exports = {
     getAll,
     getOne,
@@ -276,5 +354,6 @@ module.exports = {
     updateCustomer,
     updateDebt,
     deleteCustomer,
-    reactivateCustomer
+    reactivateCustomer,
+    generateReportByCustomer
 }
