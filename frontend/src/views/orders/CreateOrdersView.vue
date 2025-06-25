@@ -124,7 +124,7 @@ const submitForm = async () => {
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem 1rem;
-  background-color: var(--color-background);
+  background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
   overflow-x: auto;

@@ -1,6 +1,7 @@
 <template>
     <div class="container mt-3">
         <div class="form-wrapper shadow-sm">
+            <h1 class="register-title">Cadastre o cliente</h1>
             <form @submit.prevent="submitForm" class="row g-4">
                 <div class="col-12 col-md-6">
                     <label for="name" class="form-label">Nome *</label>
@@ -225,6 +226,12 @@ watch(selectedRadio, () => {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.register-title {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: var(--color-text);
 }
 
 .form-wrapper {

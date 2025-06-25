@@ -73,7 +73,7 @@
             
                     <div class="col-12 d-grid gap-2">
                         <button type="submit" class="btn btn-primary">Salvar alterações</button>
-                        <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">Cancelar</button>
                     </div>
                 </form>
             </div>

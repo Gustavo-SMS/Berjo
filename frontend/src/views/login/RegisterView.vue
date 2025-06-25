@@ -176,7 +176,7 @@ const toggleConfirmPassword = () => {
   max-width: 500px;
   margin: 3rem auto;
   padding: 2rem 1rem;
-  background-color: var(--color-background);
+  background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }

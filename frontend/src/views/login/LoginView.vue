@@ -32,7 +32,7 @@
         <div class="g-recaptcha"></div>
 
         <div class="login-actions">
-          <button class="btn-secondary" type="button" @click="openRecoverPasswordModal">
+          <button class="btn" type="button" @click="openRecoverPasswordModal">
             Esqueci minha senha
           </button>
           <RecoverPasswordModal ref="recoverPasswordModal" />

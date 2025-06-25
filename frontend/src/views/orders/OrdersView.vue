@@ -35,11 +35,11 @@
                         </div>
 
                         <div v-else class="status-view">
-                            <span class="badge bg-secondary badge-status">{{ order.status }}</span>
+                            <span :class="['badge-status', statusClass(order.status)]">{{ order.status }}</span>
                             <button
                             v-if="authStore.userRole === 'ADMIN' && selectedStatus !== 'Concluido'"
                             @click="editStatus(order.id, order.status)"
-                            class="btn btn-outline-primary"
+                            class="btn btn-primary"
                             >
                             Mudar Status
                             </button>
@@ -274,6 +274,20 @@ const deleteOrder = async (orderId) => {
     }
 }
 
+const statusClass = (status) => {
+  switch (status) {
+    case 'Em espera':
+      return 'badge-espera'
+    case 'Em produção':
+      return 'badge-producao'
+    case 'Concluido':
+    case 'Concluído':
+      return 'badge-concluido'
+    default:
+      return 'bg-secondary'
+  }
+}
+
 const totalPages = computed(() =>
   Math.ceil(orders.value.length / itemsPerPage)
 )
@@ -350,6 +364,13 @@ watch(selectedStatus, () => {
   margin: 0;
 }
 
+.status-edit,
+.status-view {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .badge-status {
   font-size: 1rem;
   padding: 0.375rem 0.75rem;
@@ -358,12 +379,21 @@ watch(selectedStatus, () => {
   align-items: center;
   margin-right: 0.5rem;
   height: calc(1rem * 1.5 + 0.75rem);
+  border-radius: var(--border-radius);
+  font-weight: 500;
+  color: white;
 }
 
-.status-edit,
-.status-view {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+.badge-espera {
+  background-color: var(--color-accent);
+  color: var(--color-text);
+}
+
+.badge-producao {
+  background-color: var(--color-info);
+}
+
+.badge-concluido {
+  background-color: #28a745;
 }
 </style>

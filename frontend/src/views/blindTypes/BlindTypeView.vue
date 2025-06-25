@@ -70,7 +70,7 @@ const blindTypes = ref([])
 const searchTerm = ref('')
 
 const currentPage = ref(1)
-const itemsPerPage = 2
+const itemsPerPage = 3
 
 const selectedOption = ref('type')
 
@@ -150,7 +150,7 @@ watch(searchTerm, () => {
   max-width: 1000px;
   margin: 3rem auto;
   padding: 2rem 1rem;
-  background-color: var(--color-background);
+  background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
   overflow-x: auto;
