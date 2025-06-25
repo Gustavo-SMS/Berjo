@@ -54,7 +54,12 @@
               <li><button class="dropdown-item text-danger" @click="doLogout">Sair</button></li>
             </ul>
           </div>
-          
+
+          <div v-else class="ms-auto">
+            <RouterLink class="btn btn-primary" to="/login">
+              Login
+            </RouterLink>
+          </div>
         </div>
       </div>
     </nav>
