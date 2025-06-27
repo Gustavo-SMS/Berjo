@@ -42,6 +42,16 @@
                         :loading="loading"
                     />
               </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Data inicial</label>
+                  <input type="date" v-model="customerPeriod.startDate" class="form-control" :max="today" required />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Data final</label>
+                  <input type="date" v-model="customerPeriod.endDate" class="form-control" :max="today" required />
+                </div>
+              </div>
               <div class="d-grid">
                 <button type="submit" class="btn btn-primary">Gerar PDF</button>
               </div>
@@ -65,9 +75,16 @@ import 'vue-select/dist/vue-select.css'
 const router = useRouter()
 const authStore = useAuthStore()
 
+const apiUrl = import.meta.env.VITE_API_URL
+
 const today = new Date().toISOString().split('T')[0]
 
 const period = ref({
+  startDate: '',
+  endDate: ''
+})
+
+const customerPeriod = ref({
   startDate: '',
   endDate: ''
 })
@@ -95,18 +112,18 @@ async function searchCustomers(searchTerm) {
     loading.value = false
   }
 }
-const baseUrl = import.meta.env.VITE_API_URL
 const generateByPeriod = () => {
   const { startDate, endDate } = period.value
   if (startDate && endDate) {
-    const url = `${baseUrl}/report/by-period?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}`
+    const url = `${apiUrl}/report/by-period?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}`
     window.open(url, '_blank')
   }
 }
 
 const generateByCustomer = () => {
-  if (selectedCustomer.value) {
-    const url = `${baseUrl}/report/by-customer?customerId=${encodeURIComponent(selectedCustomer.value.id)}`
+  const { startDate, endDate } = customerPeriod.value
+  if (selectedCustomer.value && startDate && endDate) {
+    const url = `${apiUrl}/report/by-customer?customerId=${encodeURIComponent(selectedCustomer.value.id)}&startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}`
     window.open(url, '_blank')
   }
 }

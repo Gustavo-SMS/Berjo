@@ -266,22 +266,36 @@ const reactivateCustomer = async (req, res) => {
 }
 
 const generateReportByCustomer = async (req, res) => {
-  const { customerId } = req.query
+  const { customerId, startDate, endDate } = req.query
 
-  const customer = await prismaClient.customer.findUnique({
-    where: { id: customerId },
-    include: {
-      address: true,
-      orders: {
-        include: {
-          blind: {
-            include: { type: true }
-          }
-        },
-        orderBy: { created_at: 'desc' }
+  if (!customerId || !startDate || !endDate) {
+    return res.status(400).json({ error: 'Parâmetros obrigatórios ausentes: customerId, startDate, endDate' })
+  }
+
+  const start = new Date(`${startDate}T00:00:00`)
+  const end = new Date(`${endDate}T23:59:59.999`)
+
+  try {
+    const customer = await prismaClient.customer.findUnique({
+      where: { id: customerId },
+      include: {
+        address: true,
+        orders: {
+          where: {
+            created_at: {
+              gte: start,
+              lte: end
+            }
+          },
+          include: {
+            blind: {
+              include: { type: true }
+            }
+          },
+          orderBy: { created_at: 'desc' }
+        }
       }
-    }
-  })
+    })
 
   if (!customer) return res.status(404).json({ error: 'Cliente não encontrado' })
 
@@ -291,6 +305,7 @@ const generateReportByCustomer = async (req, res) => {
     { text: `Telefone: ${customer.phone}` },
     { text: `Email: ${customer.email}` },
     { text: `Criado em: ${new Date(customer.created_at).toLocaleDateString()}` },
+    { text: `Período: ${start.toLocaleDateString()} até ${end.toLocaleDateString()}`, margin: [0, 10, 0, 10] }
   ]
 
   if (customer.address) {
@@ -323,7 +338,7 @@ const generateReportByCustomer = async (req, res) => {
             b.type.type,
             b.type.collection,
             b.type.color,
-            `${b.width}x${b.height}cm`,
+            `${b.width}x${b.height}`,
             b.model,
           `R$ ${b.blind_price.toFixed(2)}`
         ])
@@ -342,6 +357,11 @@ const generateReportByCustomer = async (req, res) => {
   }
 
   generateReportPDF({ content }, res, `relatorio_cliente_${customer.name}.pdf`)
+
+  } catch (error) {
+    console.error('Erro ao gerar relatório do cliente:', error)
+    res.status(500).json({ error: 'Erro interno ao gerar relatório' })
+  }
 }
 
 module.exports = {
