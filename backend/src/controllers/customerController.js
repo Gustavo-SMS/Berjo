@@ -19,6 +19,9 @@ const getAll = async (req, res) => {
             },
             include: {
               address: true
+            },
+            orderBy: {
+                name: 'asc'
             }
           })
 
@@ -71,6 +74,9 @@ const getCustomerByName = async (req, res) => {
             },
             include: {
                 address: true
+            },
+            orderBy: {
+                name: 'asc'
             }
         })
 
@@ -107,6 +113,9 @@ const getInactiveCustomers = async (req, res) => {
             },
             include: {
                 address: true
+            },
+            orderBy: {
+                name: 'asc'
             }
         })
 
@@ -116,27 +125,41 @@ const getInactiveCustomers = async (req, res) => {
     }
 }
 
-const createCustomer = async (req, res) => {
-    const { name, email, phone, docNumber, street, house_number, complement, city, district, state, zip } = req.body
-    
-    const checkUniqueData = await prismaClient.customer.findFirst({
+const checkUniqueData = async (email, docNumber, id = null) => {
+
+    const customerExist = await prismaClient.customer.findFirst({
         where: {
+        AND: [
+            {
             OR: [
                 { email },
                 { docNumber }
             ]
+            },
+            id ? {
+            NOT: {
+                id
+            }
+            } : {}
+        ]
         }
     })
 
-    if(checkUniqueData) {
-        if(email === checkUniqueData.email) {
-            return res.status(409).json({ error: 'Email já cadastrado'})
-        } else if(docNumber === checkUniqueData.docNumber) {
-            return res.status(409).json({ error: 'CPF/CNPJ já cadastrado'})
+    if(customerExist) {
+        if(email && email === customerExist.email) {
+            throw new Error('Email já cadastrado')
+        } else if(docNumber && docNumber === customerExist.docNumber) {
+            throw new Error('CPF/CNPJ já cadastrado')
         }
     }
+} 
+
+const createCustomer = async (req, res) => {
+    const { name, email, phone, docNumber, street, house_number, complement, city, district, state, zip } = req.body
     
     try {
+        await checkUniqueData(email, docNumber)
+
         const customer = await prismaClient.customer.create({
             data: {
                 name,
@@ -167,6 +190,8 @@ const updateCustomer = async (req, res) => {
     const { id, name, email, docNumber, phone, street, house_number, complement, city, district, state, zip, debt } = req.body
  
     try {
+        await checkUniqueData(email, docNumber, id)
+
         const customer = prismaClient.customer.update({
             where: {
                 id

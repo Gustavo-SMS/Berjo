@@ -70,7 +70,7 @@
   
   const handleChangeLogin = async () => {
     if (newLogin.value !== confirmLogin.value) {
-      return notificationStore.addNotification('Os e-mails não coincidem.', 'error')
+      return notificationStore.addNotification('Os logins não coincidem.', 'error')
     }
   
     try {
