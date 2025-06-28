@@ -150,7 +150,10 @@ const getOrdersByCustomerName = async (req, res) => {
                     }
                 }
             }
-        }
+        },
+            orderBy: {
+                created_at: 'asc'
+            }
         })
 
         if (orders.length === 0) {
@@ -190,6 +193,9 @@ const getOrdersByStatus = async (req, res) => {
                     }
 
                 },
+            },
+            orderBy: {
+                created_at: 'asc'
             }
         })
 
@@ -207,6 +213,9 @@ const getOrdersByFilter = async (req, res) => {
     const { status, customerId } = req.query
 
     try {
+        const isCompleted = status === 'Concluido'
+        const limit = 30
+
         const orders = await prismaClient.order.findMany({
             where: {
                 AND: [
@@ -233,7 +242,11 @@ const getOrdersByFilter = async (req, res) => {
                     }
 
                 },
-            }
+            },
+            orderBy: {
+                created_at: 'desc'
+            },
+            ...(isCompleted && { take: limit })
         })
 
         if (orders.length === 0) {

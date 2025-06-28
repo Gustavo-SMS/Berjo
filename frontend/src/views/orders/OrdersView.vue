@@ -23,6 +23,7 @@
             <div v-else v-for="order in paginatedOrders" :key="order.id" class="order-card">
                 <div class="order-header">
                     <div class="order-title-status">
+                        <h5 class="order-client-name">{{ new Date(order.created_at).toLocaleDateString('pt-BR') }}</h5>
                         <h5 class="order-client-name">Cliente: {{ order.customer.name }}</h5>
 
                         <div v-if="editingOrderId === order.id" class="status-edit">
