@@ -5,7 +5,12 @@
 
             <div class="form-group">
                 <label for="type">Tipo *</label>
-                <input v-model="type" type="text" name="type" id="type" class="form-input" required>
+                <select class="form-input" v-model="type" required>
+                <option value="" disabled></option>
+                <option v-for="option in typeOptions" :key="option" :value="option">
+                    {{ option }}
+                </option>
+            </select>
             </div>
                         
             <div class="form-group">
@@ -34,7 +39,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useNotificationStore } from '@/stores/notificationStore'
 import { fetchWithAuth } from '@/utils/api'
 import { useRouter } from 'vue-router'
@@ -81,6 +86,7 @@ const submitForm = async () => {
     }
 }
 
+const typeOptions = ['Persiana vertical', 'PH 25mm', 'Rolo', 'Romana']
 </script>
 
 <style scoped>

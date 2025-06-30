@@ -87,10 +87,34 @@ const getByCollection = async (req, res) => {
     }
 }
 
+const checkIfBlindTypeExist = async (type, collection, color) => {
+    const blindTypeExist = await prismaClient.blind_Type.findFirst({
+        where: {
+            AND: [
+                {
+                    type
+                },
+                {
+                    collection
+                },
+                {
+                    color
+                }
+            ]
+        }
+    })
+
+    if(blindTypeExist) {
+        throw new Error('Tipo já existe')
+    }
+}
+
 const createBlindType = async (req, res) => {
     const { type, collection, color, max_width, price } = req.body
 
     try {
+        await checkIfBlindTypeExist(type, collection, color)
+
         const blindType = await prismaClient.blind_Type.create({
             data: {
                 type,

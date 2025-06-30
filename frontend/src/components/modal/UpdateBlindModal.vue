@@ -104,14 +104,19 @@ const selectedBlindTypeId = (event, arrayBlindTypes) => {
 }
 
 const modelOptions = computed(() => {
-    const typeMap = {
+    if (!editableType.value) return []
+
+    const defaultOptions = ['Dir', 'Esq']
+
+    const extraOptionsMap  = {
         'Vertical': ['Lateral', 'Central', 'Invertida'],
-        'Horizontal': ['Dir', 'Esq'],
-        'Rolo': ['Dir', 'Esq', 'Duplex'],
-        'Romana': ['Dir', 'Esq', 'Duplex'],
-        'Double Vision': ['Dir', 'Esq', 'Duplex'],
+        'Horizontal': ['Duplex'],
+        'Rolo': ['Duplex'],
+        'Romana': ['Duplex'],
+        'Double Vision': ['Duplex'],
     }
-    return typeMap[editableType.value] || []
+    const extra = extraOptionsMap[editableType.value] || []
+    return [...defaultOptions, ...extra]
 })
   
 const handleUptadeBlind = async () => {
