@@ -1,53 +1,54 @@
 <template>
-    <select @change="$emit('selectedOption', $event, customerNames)" class="form-select w-25 mb-3" aria-label="Selecione um cliente">
-        <option v-for="(customer, index) in customerNames" :key="index" :value="customer.id">
-            {{ customer.name }}
-        </option>
-    </select>
+    <v-select
+        v-model="selectedCustomer"
+        :options="customers"
+        :filterable="false"
+        :placeholder="'Buscar cliente...'"
+        label="name"
+        @search="searchCustomers"
+        :loading="loading"
+    />
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useNotificationStore } from '@/stores/notificationStore'
-import { fetchWithAuth } from '@/utils/api'
-import { useAuthStore } from '@/stores/authStore'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/authStore'
+import { fetchWithAuth } from '@/utils/api'
+import vSelect from 'vue-select'
+import 'vue-select/dist/vue-select.css'
 
-const authStore = useAuthStore()
+const props = defineProps(['isActive'])
+
 const router = useRouter()
-const notificationStore = useNotificationStore()
+const authStore = useAuthStore()
 
-defineEmits(['selectedOption']) 
+const selectedCustomer = defineModel()
+const customers = ref([])
 
-const customerNames = ref([])
+const isActive = ref('')
 
-onMounted(async () => {
+const loading = ref(false)
+
+async function searchCustomers(searchTerm) {
+    if (!searchTerm) return
+
+    loading.value = true
+    isActive.value = props.isActive
+
     try {
-        const response = await fetchWithAuth("/customers", {
-            method: 'GET',
-            headers: {
-                'Content-type': 'application/json'
-        }
-        }, authStore, router)
-    
-        if (!response.ok) {
-            throw new Error('Erro ao buscar clientes')
-        }
-        
-        const customers = await response.json()
+        const res = await fetchWithAuth(`/customers/search?name=${encodeURIComponent(searchTerm)}&isActive=${isActive.value}`, {
+                method: 'GET',
+                headers: { 'Content-type': 'application/json' }
+            }, authStore, router)
 
-        customerNames.value = [
-            { id: '', name: '' },
-            ...customers.map(customer => ({
-                id: customer.id,
-                name: customer.name
-            }))
-        ]
-    } catch (error) {
-        console.log(error.message)
-        notificationStore.addNotification(error.message, 'error')
+        const data = await res.json()
+
+        customers.value = Array.isArray(data) ? data : []
+    } catch (err) {
+        console.error('Erro ao buscar cliente:', err)
+    } finally {
+        loading.value = false
     }
-})
-
-
+}
 </script>

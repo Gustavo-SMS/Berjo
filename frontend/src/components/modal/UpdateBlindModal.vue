@@ -14,7 +14,7 @@
                                 
                     <div class="form-group">
                         <label for="collection">Tipo *</label>
-                        <SelectType :key="editableType" :typeValue="editableType" @selectedOption="selectedType"/>
+                        <SelectType :key="editableType" :typeValue="editableType" @selectedOption="selectedType" class="form-input" />
                     </div>
                         
                     <div class="form-group">
@@ -24,6 +24,7 @@
                             :typeValue="editableType"
                             :collection="editableCollection"
                             @selectedOption="selectedBlindTypeId" 
+                            class="form-input"
                         />
                     </div>
 
@@ -44,7 +45,7 @@
 
                     <div class="form-group">
                         <label for="price">Modelo *</label>
-                        <select v-if="modelOptions.length" class="form-control" v-model="editableModel">
+                        <select v-if="modelOptions.length" class="form-input" v-model="editableModel">
                             <option value="" disabled></option>
                             <option v-for="option in modelOptions" :key="option" :value="option">
                                 {{ option }}

@@ -5,7 +5,7 @@
                     <label for="selectCustomer" class="form-label">Cliente</label>
                     <div class="row">
                         <div class="col-12 col-sm-6 col-md-4 col-lg-4">
-                            <SelectCustomers id="selectCustomer" class="w-100" @selectedOption="selectedCustomerId" />
+                            <SelectCustomers id="selectCustomer" v-model="selectedCustomer" :isActive="true" />
                         </div>
                     </div>
                 </div>
@@ -84,18 +84,15 @@ function deleteRow(id) {
   }
 }
 
-function selectedCustomerId(event, arrayNomes) {
-    customerId.value = arrayNomes[event.target.selectedIndex].id
-}
-
+const selectedCustomer = ref(null)
 const submitForm = async () => {
     const blinds = orderRows.value.map(({ id, ...rest }) => rest)
 
     const data = {
-        customer: authStore.userRole === 'ADMIN' ? customerId.value : authStore.customerId,
+        customer: authStore.userRole === 'ADMIN' ? selectedCustomer.value.id : authStore.customerId,
         blinds
     }
-    
+
     try {
         const response = await fetchWithAuth(`/orders`, {
             method: 'POST',

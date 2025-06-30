@@ -9,7 +9,7 @@
 
                     <div class="form-group">
                         <label for="type">Tipo *</label>
-                        <input v-model="editableType" type="text" name="type" id="type" class="form-input" required>
+                        <SelectType :key="editableType" :typeValue="editableType" @selectedOption="selectedType" class="form-input" />
                     </div>
                                 
                     <div class="form-group">
@@ -50,6 +50,7 @@ import { useNotificationStore } from '@/stores/notificationStore'
 import { fetchWithAuth } from '@/utils/api'
 import { useAuthStore } from '@/stores/authStore'
 import { useRouter } from 'vue-router'
+import SelectType from '@/components/order/formCreateOrder/SelectType.vue'
   
 const authStore = useAuthStore()
 const router = useRouter()
@@ -62,6 +63,10 @@ const editableCollection = ref('')
 const editableColor = ref('')
 const editableMaxWidth = ref('')
 const editablePrice = ref('')
+
+const selectedType = (event, arrayBlindTypes) => {
+    editableType.value = arrayBlindTypes[event.target.selectedIndex] || null
+}
   
 const handleUptadeBlindType = async () => {
     const data = {

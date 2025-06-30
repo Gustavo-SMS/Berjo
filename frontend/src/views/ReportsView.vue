@@ -32,15 +32,7 @@
             <form @submit.prevent="generateByCustomer">
               <div class="mb-3">
                 <label class="form-label">Nome do Cliente</label>
-                   <v-select
-                        v-model="selectedCustomer"
-                        :options="customers"
-                        :filterable="false"
-                        :placeholder="'Buscar cliente...'"
-                        label="name"
-                        @search="searchCustomers"
-                        :loading="loading"
-                    />
+                <SelectCustomers v-model="selectedCustomer" />
               </div>
               <div class="row">
                 <div class="col-md-6 mb-3">
@@ -71,11 +63,14 @@ import { useAuthStore } from '@/stores/authStore'
 import { fetchWithAuth } from '@/utils/api'
 import vSelect from 'vue-select'
 import 'vue-select/dist/vue-select.css'
+import SelectCustomers from '@/components/order/formCreateOrder/SelectCustomers.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
 
 const apiUrl = import.meta.env.VITE_API_URL
+
+const selectedCustomer = ref(null)
 
 const today = new Date().toISOString().split('T')[0]
 
@@ -89,29 +84,6 @@ const customerPeriod = ref({
   endDate: ''
 })
 
-const selectedCustomer = ref(null)
-const customers = ref([])
-const loading = ref(false)
-
-async function searchCustomers(searchTerm) {
-  if (!searchTerm) return
-
-  loading.value = true
-  try {
-    const res = await fetchWithAuth(`/customers/search?name=${encodeURIComponent(searchTerm)}`, {
-            method: 'GET',
-            headers: { 'Content-type': 'application/json' }
-        }, authStore, router)
-
-    const data = await res.json()
-
-    customers.value = Array.isArray(data) ? data : []
-  } catch (err) {
-    console.error('Erro ao buscar cliente:', err)
-  } finally {
-    loading.value = false
-  }
-}
 const generateByPeriod = () => {
   const { startDate, endDate } = period.value
   if (startDate && endDate) {
