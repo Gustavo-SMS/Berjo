@@ -5,7 +5,7 @@
 
         <h2 class="mb-4">Relatórios</h2>
 
-        <div class="card shadow-sm rounded-4 mb-4">
+        <div v-if="authStore.userRole && authStore.userRole === 'ADMIN'" class="card shadow-sm rounded-4 mb-4">
           <div class="card-body">
             <h5 class="card-title">Pedidos por Período</h5>
             <form @submit.prevent="generateByPeriod">
@@ -28,9 +28,10 @@
 
         <div class="card shadow-sm rounded-4">
           <div class="card-body">
-            <h5 class="card-title">Pedidos por Cliente</h5>
+            <h5 v-if="authStore.userRole && authStore.userRole === 'ADMIN'" class="card-title">Pedidos por Cliente</h5>
+            <h5 v-else class="card-title">Pedidos por período</h5>
             <form @submit.prevent="generateByCustomer">
-              <div class="mb-3">
+              <div v-if="authStore.userRole && authStore.userRole === 'ADMIN'" class="mb-3">
                 <label class="form-label">Nome do Cliente</label>
                 <SelectCustomers v-model="selectedCustomer" />
               </div>
@@ -94,8 +95,11 @@ const generateByPeriod = () => {
 
 const generateByCustomer = () => {
   const { startDate, endDate } = customerPeriod.value
-  if (selectedCustomer.value && startDate && endDate) {
-    const url = `${apiUrl}/report/by-customer?customerId=${encodeURIComponent(selectedCustomer.value.id)}&startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}`
+
+  const customerId = authStore.userRole === 'ADMIN' ? selectedCustomer.value.id : authStore.customerId
+
+  if (customerId && startDate && endDate) {
+    const url = `${apiUrl}/report/by-customer?customerId=${encodeURIComponent(customerId)}&startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}`
     window.open(url, '_blank')
   }
 }
