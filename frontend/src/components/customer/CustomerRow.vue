@@ -11,11 +11,19 @@
         <UpdateCustomerModal ref="updateCustomerModal" :customer="customerData" />
         <button
           v-if="authStore.userRole === 'ADMIN' && canDelete"
-          @click="props.customer.isActive ? openDeleteModal() : reactivateCustomer()"
+          @click="props.customer.isActive ? openDeactivateModal() : reactivateCustomer()"
           :class="props.customer.isActive ? 'btn btn-danger' : 'btn btn-reactivate'"
           type="button"
         >
           {{ props.customer.isActive ? 'Desativar' : 'Reativar' }}
+        </button>
+        <button
+          v-if="authStore.userRole === 'ADMIN' && canDelete && !props.customer.isActive"
+          @click="openDeleteModal()"
+          class="btn btn-danger"
+          type="button"
+        >
+          Excluir
         </button>
       </div>
     </div>
@@ -25,8 +33,16 @@
     v-if="showModal"
     :show="showModal"
     message="Tem certeza que deseja desativar este cliente?"
-    :onConfirm="deleteCustomer"
+    :onConfirm="deactivateCustomer"
     @close="showModal = false"
+  />
+
+  <DeleteConfirmationModal
+    v-if="showDeleteModal"
+    :show="showDeleteModal"
+    message="Tem certeza que deseja excluir este cliente? Todos os dados relacionados a esse cliente serão excluídos!"
+    :onConfirm="deleteCustomer"
+    @close="showDeleteModal = false"
   />
 </template>
                         
@@ -34,6 +50,7 @@
 import { ref, nextTick, computed } from 'vue'
 import ConfirmationModal from '@/components/modal/ConfirmationModal.vue'
 import UpdateCustomerModal from '@/components/modal/UpdateCustomerModal.vue'
+import DeleteConfirmationModal from '@/components/modal/DeleteConfirmationModal.vue'
 import { useNotificationStore } from '@/stores/notificationStore'
 import { useAuthStore } from '@/stores/authStore'
 import { fetchWithAuth } from '@/utils/api'
@@ -95,14 +112,14 @@ function formatCEP(cep) {
 
 const showModal = ref(false)
 
-const openDeleteModal = () => {
+const openDeactivateModal = () => {
   showModal.value = true
 }
 
-const deleteCustomer = async () => {
+const deactivateCustomer = async () => {
   try {
         const response = await fetchWithAuth(`/customers/${props.customer.id}`, {
-          method: 'DELETE',
+          method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
           }
@@ -110,7 +127,7 @@ const deleteCustomer = async () => {
 
         if (!response.ok) {
             const errorData = await response.json()
-            throw new Error(errorData.error || 'Erro ao excluir cliente')
+            throw new Error(errorData.error || 'Erro ao desativar cliente')
         }
 
         notificationStore.addNotification('Cliente desativado', 'success')
@@ -118,7 +135,7 @@ const deleteCustomer = async () => {
         showModal.value = false
         props.getCustomers()
       } catch (error) {
-        console.error('Erro ao excluir cliente:', error.message)
+        console.error('Erro ao desativar cliente:', error.message)
         notificationStore.addNotification(error.message, 'error')
       }
 }
@@ -140,6 +157,36 @@ const reactivateCustomer = async () => {
         props.getCustomers()
       } catch (error) {
         console.error('Erro ao reativar cliente:', error.message)
+        notificationStore.addNotification(error.message, 'error')
+      }
+}
+
+const showDeleteModal = ref(false)
+
+const openDeleteModal = () => {
+  showDeleteModal.value = true
+}
+
+const deleteCustomer = async () => {
+  try {
+        const response = await fetchWithAuth(`/customers/${props.customer.id}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        },authStore, router)
+
+        if (!response.ok) {
+            const errorData = await response.json()
+            throw new Error(errorData.error || 'Erro ao excluir cliente')
+        }
+
+        notificationStore.addNotification('Cliente foi excluído', 'success')
+        
+        showModal.value = false
+        props.getCustomers()
+      } catch (error) {
+        console.error('Erro ao excluir cliente:', error.message)
         notificationStore.addNotification(error.message, 'error')
       }
 }

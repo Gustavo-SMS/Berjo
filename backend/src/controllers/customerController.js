@@ -257,7 +257,7 @@ const updateDebt = async (customerId, totalPrice, newTotalPrice) => {
     }
 }
 
-const deleteCustomer = async (req, res) => {
+const deactivateCustomer = async (req, res) => {
     const id = req.params.id
     try {
         const customer = await prismaClient.customer.update({
@@ -288,6 +288,62 @@ const reactivateCustomer = async (req, res) => {
         })
 
         return res.status(200).json(customer)
+    } catch (error) {
+        return res.status(500).json({ error: error.message })
+    }
+}
+
+const deleteCustomer = async (req, res) => {
+    const customerId = req.params.id
+
+    try {
+        const customer = await prismaClient.customer.findUnique({
+            where: { id: customerId },
+        })
+
+        if (!customer) {
+            throw new Error('Cliente não encontrado.');
+        }
+
+        if (customer.isActive) {
+            throw new Error('Cliente ainda está ativo. Desative antes de excluir permanentemente.');
+        }
+        
+        const result = await prismaClient.$transaction(async (tx) => {
+            await tx.blind.deleteMany({
+                where: {
+                    order: {
+                        customer_id: customer.id,
+                    },
+                },
+            })
+
+            await tx.order.deleteMany({
+                where: {
+                    customer_id: customer.id,
+                },
+            })
+
+            await tx.address.deleteMany({
+                where: {
+                    customer_id: customer.id,
+                },
+            })
+
+            await tx.user.deleteMany({
+                where: {
+                    customerId: customer.id,
+                },
+            })
+
+            return await tx.customer.delete({
+                where: {
+                    id: customer.id,
+                },
+            })
+        })
+
+        return res.status(201).json(result)
     } catch (error) {
         return res.status(500).json({ error: error.message })
     }
@@ -401,7 +457,8 @@ module.exports = {
     createCustomer,
     updateCustomer,
     updateDebt,
-    deleteCustomer,
+    deactivateCustomer,
     reactivateCustomer,
+    deleteCustomer,
     generateReportByCustomer
 }

@@ -42,6 +42,7 @@ router.get('/customers/:id', authenticateToken.authenticateToken, customerContro
 router.post('/customers', authenticateToken.authenticateToken, customerMiddleware.validateCustomerData, customerController.createCustomer)
 router.put('/customers', authenticateToken.authenticateToken, customerController.updateCustomer)
 router.patch('/customers/reactivate/:id', authenticateToken.authenticateToken, customerController.reactivateCustomer)
+router.patch('/customers/:id', authenticateToken.authenticateToken, customerController.deactivateCustomer)
 router.delete('/customers/:id', authenticateToken.authenticateToken, customerController.deleteCustomer)
 
 router.get('/orders', authenticateToken.authenticateToken, orderController.getAll)
