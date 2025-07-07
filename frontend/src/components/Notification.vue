@@ -22,7 +22,7 @@ const { notifications } = storeToRefs(notificationStore)
     display: flex;
     flex-direction: column;
     gap: 10px;
-    z-index: 1000;
+    z-index: 2000;
 }
 .notification {
     padding: 10px 20px;

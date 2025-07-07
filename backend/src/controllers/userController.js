@@ -166,62 +166,6 @@ async function validatePassword(password, hash) {
   }
 }
 
-// const validateLogin = async (req, res) => {
-//   const { login, password } = req.body
-
-//   const user = await validateUser(login)
-
-//   if (user.error) {
-//     return res.status(404).json({ error: user.error })
-//   }
-
-//   const checkPassword = await validatePassword(password, user.password)
-  
-//   if (!checkPassword) {
-//     return res.status(422).json({ error: 'Senha incorreta' })
-//   }
-  
-//   try {
-//     const payload = {
-//       id: user.id,
-//       role: user.role,
-//       customerId: user.customer?.id || null,
-//       jti: uuidv4()
-//     }
-
-//     const secret = process.env.JWT_SECRET
-//     const refreshSecret = process.env.JWT_REFRESH_SECRET
-
-//     const accessToken = jwt.sign(payload, secret, { expiresIn: '15m' })
-//     const refreshToken = jwt.sign(payload, refreshSecret, { expiresIn: '7d' })
-
-//     await prismaClient.user.update({
-//       where: { id: user.id },
-//       data: { refreshToken }
-//     })
-
-//     res.cookie('token', accessToken, {
-//       httpOnly: true,
-//       secure: false,
-//       sameSite: 'lax',
-//       maxAge: 15 * 60 * 1000 // 15min
-//     })
-
-//     res.cookie('refreshToken', refreshToken, {
-//       httpOnly: true,
-//       secure: false,
-//       sameSite: 'lax',
-//       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 dias
-//     })
-
-//     res.status(200).json({ msg: 'Autenticação realizada com sucesso' })
-//   } catch (err) {
-//     console.log(err)
-//     res.status(500).json({ error: 'Aconteceu um erro no servidor, tente novamente mais tarde!' })
-//   }
-// }
-
-
 const validateLogin = async (req, res) => {
   const { login, password } = req.body
 
@@ -270,37 +214,47 @@ const validateLogin = async (req, res) => {
 }
 
 const recoverPassword = async (req, res) => {
-  const { email } = req.body
+  try {
+    const { email } = req.body
+    
+    const customer = await prismaClient.customer.findUnique({
+      where: { email },
+      include: { user: true }
+    })
 
-  const customer = await prismaClient.customer.findUnique({
-    where: { email },
-    include: { user: true }
-  })
-
-  if (!customer || !customer.user) {
-    return res.status(404).json({ error: 'Usuário não encontrado' })
-  }
-
-  const token = crypto.randomBytes(32).toString('hex');
-  const expiration = new Date(Date.now() + 60 * 60 * 1000) // 1 hora
-
-  await prismaClient.user.update({
-    where: { id: customer.user.id },
-    data: {
-      passwordResetToken: token,
-      passwordResetExpires: expiration,
+    if (!customer || !customer.user) {
+      return res.status(404).json({ error: 'Usuário não encontrado' })
     }
-  })
 
-  const link = `http://127.0.0.1:5173/resetPassword?token=${token}`
+    const token = crypto.randomBytes(32).toString('hex');
+    const expiration = new Date(Date.now() + 60 * 60 * 1000) // 1 hora
 
-  await sendEmail({
-    to: email,
-    subject: 'Recuperação de Senha',
-    html: `<p>Clique no link abaixo para redefinir sua senha:</p><a href="${link}">${link}</a>`
-  })
+    await prismaClient.user.update({
+      where: { id: customer.user.id },
+      data: {
+        passwordResetToken: token,
+        passwordResetExpires: expiration,
+      }
+    })
 
-  return res.status(200).json({ msg: 'Link de recuperação enviado para o e-mail.' })
+    const link = `http://127.0.0.1:5173/resetPassword?token=${token}`
+
+    try {
+      await sendEmail({
+        to: email,
+        subject: 'Recuperação de Senha',
+        html: `<p>Clique no link abaixo para redefinir sua senha:</p><a href="${link}">${link}</a>`
+      })
+    } catch (error) {
+        console.error('Erro ao enviar e-mail:', emailErr)
+        return res.status(500).json({ error: 'Erro ao enviar o e-mail de recuperação.' })
+    }
+
+    return res.status(200).json({ msg: 'Link de recuperação enviado para o e-mail.' })
+  } catch (err) {
+    console.error('Erro em recoverPassword:', err)
+    return res.status(500).json({ error: 'Erro interno ao tentar recuperar a senha.' })
+  }
 }
 
 const resetPassword = async (req, res) => {

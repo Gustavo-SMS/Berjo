@@ -27,7 +27,20 @@ const validateLoginData = async (req, res, next) => {
     }
 }
 
+const validatePassword = async (req, res, next) => {
+    try {
+        const { newPassword } = req.body
+        const passwordSchema = userSchema.extract('password')
+        await passwordSchema.validateAsync(newPassword)
+        next()
+    }
+    catch (e) {
+        return res.status(500).json({ error: e.message })
+    }
+}
+
 module.exports = {
     validateUserData,
-    validateLoginData
+    validateLoginData,
+    validatePassword
 }

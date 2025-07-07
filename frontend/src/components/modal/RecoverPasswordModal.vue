@@ -50,15 +50,26 @@
         })
       }, authStore, router)
   
+      const contentType = response.headers.get('content-type') || ''
+
+      let data = {}
+      if (contentType.includes('application/json')) {
+        data = await response.json()
+      } else {
+        const text = await response.text()
+        throw new Error(text || 'Erro desconhecido do servidor')
+      }
+
       if (!response.ok) {
-        const data = await response.json()
         throw new Error(data.error || data.msg || 'Erro ao recuperar senha')
       }
   
-      notificationStore.addNotification('Senha enviada com sucesso!', 'success')
+      notificationStore.addNotification('Link de recuperação enviado!', 'success')
       resetFields()
       hideModal()
     } catch (err) {
+      const message = err.message.includes('Failed to fetch') ? 'Servidor indisponível. Tente novamente mais tarde.' : err.message
+      console.log(err.message)
       notificationStore.addNotification(err.message, 'error')
     }
   }

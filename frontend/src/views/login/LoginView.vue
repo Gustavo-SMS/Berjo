@@ -84,56 +84,6 @@ onMounted(() => {
   }
 })
 
-// const submitForm = async () => {
-//     if (!captchaToken.value) {
-//       notificationStore.addNotification('Confirme o captcha para continuar.', 'error')
-//       return
-//     }
-
-//     const formData = new FormData(loginForm.value)
-//     const data = Object.fromEntries(formData)
-//     try {
-//       const response = await fetch(`${apiUrl}/login`, {
-//         method: 'POST',
-//         headers: {
-//             'Content-type': 'application/json'
-//         },
-//         credentials: 'include',
-//         body: JSON.stringify(data)
-//         })
-
-//       const result = await response.json()
-      
-//       if (!response.ok) {
-//         if (response.status === 403) {
-//           throw new Error('Verificação do captcha falhou. Tente novamente.')
-//         }
-//         throw new Error(result.error || result.msg || 'Erro ao logar')
-//       }
-
-//       const meRes = await fetch(`${apiUrl}/me`, {
-//         credentials: 'include'
-//       })
-
-//       const meData = await meRes.json()
-
-//       if (!meRes.ok) {
-//         throw new Error(meData.error || 'Erro ao obter dados do usuário')
-//       }
-        
-//       authStore.setUser(meData.role, meData.customerId)
-//       router.push('/orders')   
-//     } catch (error) {
-//       console.log(error.message)
-//       notificationStore.addNotification(error.message, 'error')
-
-//       if (window.grecaptcha) {
-//         window.grecaptcha.reset()
-//         captchaToken.value = ''
-//       }
-//     } 
-// }
-
 const submitForm = async () => {
   if (!captchaToken.value) {
     notificationStore.addNotification('Confirme o captcha para continuar.', 'error')

@@ -251,10 +251,8 @@ label {
 .btn-primary {
   background-color: var(--color-primary);
   color: #fff;
-  /* padding: 0.75rem; */
   font-weight: bold;
   border: none;
-  /* border-radius: 4px; */
   cursor: pointer;
   transition: background 0.3s;
 }
