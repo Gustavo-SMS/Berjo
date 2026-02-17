@@ -1,6 +1,9 @@
 <template>
-  <div class="container mt-3">
-    <div class="box">
+
+  <div class="container-page">
+    <div class="page-header">
+      <h1>Perfil</h1>
+    </div>
 
       <CustomerRow
           v-if="customer"
@@ -11,14 +14,14 @@
       />
 
       <div class="d-flex flex-column flex-md-row gap-2 mt-4">
-        <button class="btn btn-warning w-100" @click="openChangePasswordModal">Alterar senha</button>
+        <button class="btn btn-primary w-100" @click="openChangePasswordModal">Alterar senha</button>
         <ChangePasswordModal ref="changePasswordModal" />
 
-        <button class="btn btn-warning w-100" @click="openChangeLoginModal">Alterar login</button>
+        <button class="btn btn-primary w-100" @click="openChangeLoginModal">Alterar login</button>
         <ChangeLoginModal ref="changeLoginModal" />
       </div>
-    </div>
-  </div>
+      
+ </div>
 </template>
 
 <script setup>
@@ -71,43 +74,5 @@ onMounted(getCustomers)
 </script>
 
 <style scoped>
-.container {
-  width: 100vw;
-  min-height: 100vh;
-  padding: 2rem 1rem;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  background-color: var(--color-background, #f8f9fa);
-}
 
-.box {
-  width: 100%;
-  max-width: 1200px;
-  background-color: var(--color-surface, #ffffff);
-  padding: 1rem;
-  border-radius: 0.5rem;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.box > *:not(:last-child) {
-  margin-bottom: 1rem;
-}
-
-.search-bar {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
-}
-
-@media (max-width: 768px) {
-  .search-bar {
-    flex-direction: column;
-  }
-
-  .search-bar input,
-  .search-bar button {
-    width: 100%;
-  }
-}
 </style>

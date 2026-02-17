@@ -1,5 +1,6 @@
 <template>
     <v-select
+        class="vselect-custom"
         v-model="selectedCustomer"
         :options="customers"
         :filterable="false"

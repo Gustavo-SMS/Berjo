@@ -1,8 +1,11 @@
 <template>
-    <div class="container mt-3">
-        <div class="form-wrapper shadow-sm">
-            <h1 class="register-title">Cadastre o cliente</h1>
-            <form @submit.prevent="submitForm" class="row g-4">
+    <div class="container mt-5 card">
+        <div class="form-wrapper p-2">
+            <div class="page-header">
+                <h1>Clientes</h1>
+            </div>
+            
+            <form @submit.prevent="submitForm" class="row g-4 dark-input">
                 <div class="col-12 col-md-6">
                     <label for="name" class="form-label">Nome *</label>
                     <input v-model="name" type="text" name="name" id="name" class="form-control" required>
@@ -222,41 +225,6 @@ watch(selectedRadio, () => {
 </script>
 
 <style scoped>
-.container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.register-title {
-  text-align: center;
-  margin-bottom: 1.5rem;
-  color: var(--color-text);
-}
-
-.form-wrapper {
-  background-color: var(--color-surface);
-  padding: 2rem;
-  border-radius: 8px;
-  width: 100%;
-  max-width: 800px;
-}
-
-.btn-primary {
-  background-color: var(--color-primary);
-  color: #fff;
-  padding: 0.75rem;
-  font-weight: bold;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-.btn-primary:hover {
-  background-color: var(--color-primary-dark);
-}
-
 #cpf {
     margin-right: 5px;
 }

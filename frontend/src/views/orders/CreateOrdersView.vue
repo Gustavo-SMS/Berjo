@@ -1,40 +1,56 @@
 <template>
-    <div class="container mt-5">
-            <form @submit.prevent="submitForm">
-                <div v-if="authStore.userRole === 'ADMIN'" class="mb-4">
-                    <label for="selectCustomer" class="form-label">Cliente</label>
-                    <div class="row">
-                        <div class="col-12 col-sm-6 col-md-4 col-lg-4">
-                            <SelectCustomers id="selectCustomer" v-model="selectedCustomer" :isActive="true" />
-                        </div>
-                    </div>
-                </div>
+  <main class="page-content">
+    <div class="card">
+      <div class="card-body">
 
-                <CreateOrderRow 
-                    v-for="row in orderRows" 
-                    :key="row.id" 
-                    :row="row"
-                    :rowId="row.id"
-                    :canDelete="orderRows.length > 1"
-                    @updateRow="updateRow(row.id, $event.field, $event.value)"
-                    @selectedBlindTypeId="selectedBlindTypeId(index, $event.field, $event.value)"
-                    @deleteRow="deleteRow"
-                />
+        <div class="page-header">
+          <h1>Criar Pedido</h1>
+        </div>
 
-                <div class="row mt-4">
-                    <div class="col-12 col-md-6 mb-3 mb-md-0">
-                        <button @click="addRow" type="button" class="btn btn-secondary w-100">
-                            Adicionar linha
-                        </button>
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <button type="submit" class="btn btn-primary w-100">
-                            Enviar
-                        </button>
-                    </div>
-                </div>
-            </form>
+        <form @submit.prevent="submitForm">
+
+          <div v-if="authStore.userRole === 'ADMIN'" class="mb-4">
+            <label class="form-label">Cliente</label>
+            <div style="max-width: 420px">
+              <SelectCustomers
+                v-model="selectedCustomer"
+                :isActive="true"
+              />
+            </div>
+          </div>
+
+          <CreateOrderRow 
+            v-for="row in orderRows" 
+            :key="row.id" 
+            :row="row"
+            :rowId="row.id"
+            :canDelete="orderRows.length > 1"
+            @updateRow="updateRow(row.id, $event.field, $event.value)"
+            @deleteRow="deleteRow"
+          />
+
+          <div class="d-flex gap-3 mt-4 flex-wrap">
+            <button
+              @click="addRow"
+              type="button"
+              class="btn btn-secondary flex-fill"
+            >
+              Adicionar linha
+            </button>
+
+            <button
+              type="submit"
+              class="btn btn-primary flex-fill"
+            >
+              Enviar
+            </button>
+          </div>
+
+        </form>
+
+      </div>
     </div>
+  </main>
 </template>
 
 <script setup>
@@ -117,13 +133,8 @@ const submitForm = async () => {
 </script>
 
 <style scoped>
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem 1rem;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  overflow-x: auto;
+select,
+:deep(.select-customers) {
+  max-width: 420px;
 }
 </style>

@@ -1,59 +1,75 @@
 <template>
-    <div class="container">
-        <div class="search-section d-flex align-items-center justify-content-start gap-2 mb-3">
-          <div class="input-group" style="max-width: 350px">
-            <input v-model="searchTerm" type="text" id="searchByType" class="form-control" placeholder="Buscar por tipo">
-            <button @click="getWithFilter" class="btn btn-secondary">Buscar</button>
-          </div>
-            <select v-model="selectedOption" class="form-select w-auto" style="min-width: 150px">
+  <main class="page-content">
+    <div class="card">
+      <div class="card-body">
+        <div class="page-header d-flex justify-content-between align-items-center flex-wrap gap-3">
+          <h1>Tipos de persiana</h1>
+        </div>
+
+          <div class="d-flex align-items-center gap-2 flex-wrap">
+            <div class="input-group dark-input" style="max-width: 350px">
+              <input
+                v-model="searchTerm"
+                type="text"
+                class="form-control"
+                placeholder="Buscar"
+              />
+              <button @click="getWithFilter" class="btn btn-outline-gold">
+                Buscar
+              </button>
+            </div>
+
+            <select v-model="selectedOption" class="form-select w-auto dark-select">
               <option value="type">Tipo</option>
               <option value="collection">Coleção</option>
             </select>
-        </div>
+          </div>
 
-        <div class="header-row">
-            <span>Tipo</span>
-            <span>Coleção</span>
-            <span>Cor</span>
-            <span>Largura Máx.</span>
-            <span>Preço</span>
-            <span>Ações</span>
+        <div class="list-header d-none d-md-grid">
+          <span>Tipo</span>
+          <span>Coleção</span>
+          <span>Cor</span>
+          <span>Largura Máx.</span>
+          <span>Preço</span>
+          <span>Ações</span>
         </div>
 
         <BlindTypeRow
-            v-for="blindType in paginatedBlindTypes" 
-            :key="blindType.id"
-            :blindType="blindType"
-            :getBlindTypes="getBlindTypes"
+          v-for="blindType in paginatedBlindTypes"
+          :key="blindType.id"
+          :blindType="blindType"
+          :getBlindTypes="getBlindTypes"
         />
-        
-        <nav v-if="totalPages > 1" class="mt-3">
-              <ul class="pagination justify-content-center">
-                <li class="page-item" :class="{ disabled: currentPage === 1 }">
-                  <button class="page-link" @click="goToPage(currentPage - 1)" :disabled="currentPage === 1">
-                    Anterior
-                  </button>
-                </li>
 
-                <li
-                  v-for="page in totalPages"
-                  :key="page"
-                  class="page-item"
-                  :class="{ active: currentPage === page }"
-                >
-                  <button class="page-link" @click="goToPage(page)">
-                    {{ page }}
-                  </button>
-                </li>
+        <nav v-if="totalPages > 1" class="pagination-wrapper">
+          <ul class="pagination pagination-dark">
+            <li class="page-item" :class="{ disabled: currentPage === 1 }">
+              <button class="page-link" @click="goToPage(currentPage - 1)">
+                Anterior
+              </button>
+            </li>
 
-                <li class="page-item" :class="{ disabled: currentPage === totalPages }">
-                  <button class="page-link" @click="goToPage(currentPage + 1)" :disabled="currentPage === totalPages">
-                    Próxima
-                  </button>
-                </li>
-              </ul>
-            </nav>
+            <li
+              v-for="page in totalPages"
+              :key="page"
+              class="page-item"
+              :class="{ active: currentPage === page }"
+            >
+              <button class="page-link" @click="goToPage(page)">
+                {{ page }}
+              </button>
+            </li>
+
+            <li class="page-item" :class="{ disabled: currentPage === totalPages }">
+              <button class="page-link" @click="goToPage(currentPage + 1)">
+                Próxima
+              </button>
+            </li>
+          </ul>
+        </nav>
+      </div>
     </div>
+  </main>
 </template>
 
 <script setup>
@@ -146,38 +162,13 @@ watch(searchTerm, () => {
 </script>
 
 <style scoped>
-.container {
-  max-width: 1000px;
-  margin: 3rem auto;
-  padding: 2rem 1rem;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  overflow-x: auto;
-}
-
-.search-section {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-  flex-wrap: wrap;
-}
-
-.header-row {
+.list-header {
   display: grid;
   grid-template-columns: 2fr 2fr 1fr 2fr 1fr 2fr;
   gap: 1rem;
-  padding: 0.75rem;
-  font-weight: bold;
-  background-color: var(--color-surface);
-  border-bottom: 2px solid var(--color-border);
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  border-bottom: 1px solid var(--color-border);
   margin-bottom: 1rem;
-  color: var(--color-text);
-}
-
-@media (max-width: 768px) {
-  .header-row {
-    display: none;
-  }
 }
 </style>

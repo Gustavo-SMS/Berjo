@@ -1,42 +1,76 @@
 <template>
-    <div class="container">
-        <form class="form" @submit.prevent="submitForm">
-            <h1 class="form-title">Cadastrar Tipo de Persiana</h1>
+  <main class="page-content">
+    <div class="card register-card">
+      <div class="card-body">
+        <div class="page-header">
+          <h1>Cadastrar tipo de persiana</h1>
+        </div>
 
-            <div class="form-group">
-                <label for="type">Tipo *</label>
-                <select class="form-input" v-model="type" required>
-                <option value="" disabled></option>
-                <option v-for="option in typeOptions" :key="option" :value="option">
-                    {{ option }}
-                </option>
+        <form @submit.prevent="submitForm" novalidate class="dark-input">
+          <div class="mb-3">
+            <label class="form-label">Tipo *</label>
+            <select class="form-select dark-select" v-model="type" required>
+              <option value="" disabled></option>
+              <option
+                v-for="option in typeOptions"
+                :key="option"
+                :value="option"
+              >
+                {{ option }}
+              </option>
             </select>
-            </div>
-                        
-            <div class="form-group">
-                <label for="collection">Coleção *</label>
-                <input v-model="collection" type="text" name="collection" id="collection" class="form-input" required>
-            </div>
-                
-            <div class="form-group">
-                <label for="color">Cor *</label>
-                <input v-model="color" type="text" name="color" id="color" class="form-input" required>
-            </div>
+          </div>
 
-            <div class="form-group">
-                <label for="max_width">Largura máx.</label>
-                <input v-model="maxWidth" type="number" name="max_width" id="max_width" class="form-input" min="0">
-            </div>
+          <div class="mb-3">
+            <label class="form-label">Coleção *</label>
+            <input
+              v-model="collection"
+              type="text"
+              class="form-control"
+              required
+            />
+          </div>
 
-            <div class="form-group">
-                <label for="price">Preço *</label>
-                <input v-model="price" type="number" name="price" id="price" class="form-input" min="0" required>
-            </div>
+          <div class="mb-3">
+            <label class="form-label">Cor *</label>
+            <input
+              v-model="color"
+              type="text"
+              class="form-control"
+              required
+            />
+          </div>
 
-            <button type="submit" class="btn btn-primary">Cadastrar</button>
+          <div class="mb-3">
+            <label class="form-label">Largura máx.</label>
+            <input
+              v-model="maxWidth"
+              type="number"
+              class="form-control"
+              min="0"
+            />
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label">Preço *</label>
+            <input
+              v-model="price"
+              type="number"
+              class="form-control"
+              min="0"
+              required
+            />
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100">
+            Cadastrar
+          </button>
         </form>
+      </div>
     </div>
+  </main>
 </template>
+
 
 <script setup>
 import { ref, computed } from 'vue'
@@ -90,63 +124,8 @@ const typeOptions = ['Persiana vertical', 'PH 25mm', 'Rolo', 'Romana']
 </script>
 
 <style scoped>
-.container {
-  max-width: 600px;
-  margin: 3rem auto;
-  padding: 2rem 1rem;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-}
-
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-.form-title {
-  text-align: center;
-  margin-bottom: 1.5rem;
-  color: var(--color-text);
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-}
-
-label {
-  font-weight: 500;
-  margin-bottom: 0.5rem;
-  color: var(--color-text);
-}
-
-.form-input {
-  padding: 0.75rem;
-  font-size: 1rem;
-  border: 1px solid var(--color-border);
-  border-radius: 4px;
-  background-color: var(--color-surface);
-  color: var(--color-text);
-}
-
-.form-input:focus {
-  outline: 2px solid var(--color-primary);
-}
-
-.btn-primary {
-  background-color: var(--color-primary);
-  color: #fff;
-  padding: 0.75rem;
-  font-weight: bold;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-.btn-primary:hover {
-  background-color: var(--color-primary-dark);
+.register-card {
+  max-width: 520px;
+  margin: 0 auto;
 }
 </style>

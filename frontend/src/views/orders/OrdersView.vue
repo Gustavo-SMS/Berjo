@@ -1,120 +1,133 @@
 <template>
-        <div class="container-lg px-3 mt-5">
-            <div class="row g-3 align-items-center mb-4">
-                <div v-if="authStore.userRole === 'ADMIN'" class="col-md-6 col-lg-4">
-                    <div class="input-group">
-                        <input v-model="searchTerm" type="text" class="form-control" placeholder="Buscar por nome"/>
-                        <button @click="getByCustomer" class="btn btn-secondary">Buscar</button>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-4">
-                    <select v-model="selectedStatus" name="selectStatus" id="selectStatus" class="form-select">
-                        <option value="Em espera">Em espera</option>
-                        <option value="Em produção">Em produção</option>
-                        <option value="Concluido">Concluido</option>
-                    </select>
-                </div>
-            </div>
+  <main class="page-content">
+    <div class="card">
+      <div class="card-body">
 
-            <div v-if="paginatedOrders.length === 0" class="order-card text-center">
-                <p class="mb-0">Nenhum pedido encontrado.</p>
-            </div>
-
-            <div v-else v-for="order in paginatedOrders" :key="order.id" class="order-card">
-                <div class="order-header">
-                    <div class="order-title-status">
-                        <h5 class="order-client-name">{{ new Date(order.created_at).toLocaleDateString('pt-BR') }}</h5>
-                        <h5 class="order-client-name">Cliente: {{ order.customer.name }}</h5>
-
-                        <div v-if="editingOrderId === order.id" class="status-edit">
-                            <select v-model="statusMap[order.id]" class="form-select">
-                                <option value="Em espera">Em espera</option>
-                                <option value="Em produção">Em produção</option>
-                                <option value="Concluido">Concluído</option>
-                            </select>
-                            <button @click="() => changeStatus(order.id)" class="btn btn-success">Confirmar</button>
-                        </div>
-
-                        <div v-else class="status-view">
-                            <span :class="['badge-status', statusClass(order.status)]">{{ order.status }}</span>
-                            <button
-                            v-if="authStore.userRole === 'ADMIN' && selectedStatus !== 'Concluido'"
-                            @click="editStatus(order.id, order.status)"
-                            class="btn btn-primary"
-                            >
-                            Mudar Status
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="order-actions">
-                        <span class="fw-bold">Total: R$ {{ order.total_price }}</span>
-
-                        <button
-                            v-if="(authStore.userRole === 'ADMIN' && order.status !== 'Concluido') || (authStore.userRole === 'CUSTOMER' && order.status === 'Em espera')"
-                            @click="() => openDeleteModal(order.id)"
-                            class="btn btn-danger"
-                        >
-                            Excluir
-                        </button>
-                    </div>
-                </div>
-
-                <OrderRow 
-                    v-for="blind in order.blind" 
-                    :key="blind.id"
-                    :id="blind.id"
-                    :quantity="blind.quantity"
-                    :type="blind.type.type"
-                    :collection="blind.type.collection"
-                    :blindTypeId="blind.type.id"
-                    :color="blind.type.color"
-                    :width="blind.width"
-                    :height="blind.height"
-                    :command_height="blind.command_height"
-                    :model="blind.model"
-                    :blind_price="blind.blind_price"
-                    :observation="blind.observation"
-                    :status="order.status"
-                    :getOrders="getOrders"
-                />
-            </div>
-
-            <nav v-if="totalPages > 1" class="mt-3">
-              <ul class="pagination justify-content-center">
-                <li class="page-item" :class="{ disabled: currentPage === 1 }">
-                  <button class="page-link" @click="goToPage(currentPage - 1)" :disabled="currentPage === 1">
-                    Anterior
-                  </button>
-                </li>
-
-                <li
-                  v-for="page in totalPages"
-                  :key="page"
-                  class="page-item"
-                  :class="{ active: currentPage === page }"
-                >
-                  <button class="page-link" @click="goToPage(page)">
-                    {{ page }}
-                  </button>
-                </li>
-
-                <li class="page-item" :class="{ disabled: currentPage === totalPages }">
-                  <button class="page-link" @click="goToPage(currentPage + 1)" :disabled="currentPage === totalPages">
-                    Próxima
-                  </button>
-                </li>
-              </ul>
-            </nav>
+        <div class="page-header d-flex justify-content-between align-items-center flex-wrap gap-3">
+          <h1>Pedidos</h1>
         </div>
+
+          <div class="d-flex align-items-center gap-2 flex-wrap">
+            <div v-if="authStore.userRole === 'ADMIN'" class="input-group dark-input" style="max-width: 350px">
+              <input
+                v-model="searchTerm"
+                type="text"
+                class="form-control"
+                placeholder="Buscar por nome"
+              />
+              <button @click="getByCustomer" class="btn btn-outline-gold">Buscar</button>
+            </div>
+
+            <select v-model="selectedStatus" class="form-select w-auto dark-select">
+              <option value="Em espera">Em espera</option>
+              <option value="Em produção">Em produção</option>
+              <option value="Concluido">Concluido</option>
+            </select>
+          </div>
+
+        <div v-if="paginatedOrders.length === 0" class="empty-state">
+          Nenhum pedido encontrado.
+        </div>
+
+        <div
+          v-else
+          v-for="order in paginatedOrders"
+          :key="order.id"
+          class="order-card"
+        >
+          <div class="order-header">
+            <div class="order-title-status">
+              <h5>{{ new Date(order.created_at).toLocaleDateString('pt-BR') }}</h5>
+              <h5>Cliente: {{ order.customer.name }}</h5>
+
+              <div v-if="editingOrderId === order.id" class="status-edit">
+                <select v-model="statusMap[order.id]" class="form-select">
+                  <option value="Em espera">Em espera</option>
+                  <option value="Em produção">Em produção</option>
+                  <option value="Concluido">Concluído</option>
+                </select>
+                <button @click="() => changeStatus(order.id)" class="btn btn-success">
+                  Confirmar
+                </button>
+              </div>
+
+              <div v-else class="status-view">
+                <span :class="['badge-status', statusClass(order.status)]">
+                  {{ order.status }}
+                </span>
+
+                <button
+                  v-if="authStore.userRole === 'ADMIN' && selectedStatus !== 'Concluido'"
+                  @click="editStatus(order.id, order.status)"
+                  class="btn btn-primary"
+                >
+                  Mudar Status
+                </button>
+              </div>
+            </div>
+
+            <div class="order-actions">
+              <span class="fw-bold">Total: R$ {{ order.total_price }}</span>
+
+              <button
+                v-if="(authStore.userRole === 'ADMIN' && order.status !== 'Concluido') ||
+                       (authStore.userRole === 'CUSTOMER' && order.status === 'Em espera')"
+                @click="() => openDeleteModal(order.id)"
+                class="btn btn-danger"
+              >
+                Excluir
+              </button>
+            </div>
+          </div>
+
+          <OrderRow
+            v-for="blind in order.blind"
+            :key="blind.id"
+            v-bind="blindProps(blind, order.status)"
+            :getOrders="getOrders"
+          />
+        </div>
+
+        <nav v-if="totalPages > 1" class="pagination-wrapper">
+        <ul class="pagination pagination-dark">
+            <li class="page-item" :class="{ disabled: currentPage === 1 }">
+            <button class="page-link" @click="goToPage(currentPage - 1)">
+                Anterior
+            </button>
+            </li>
+
+            <li
+            v-for="page in totalPages"
+            :key="page"
+            class="page-item"
+            :class="{ active: currentPage === page }"
+            >
+            <button class="page-link" @click="goToPage(page)">
+                {{ page }}
+            </button>
+            </li>
+
+            <li class="page-item" :class="{ disabled: currentPage === totalPages }">
+            <button class="page-link" @click="goToPage(currentPage + 1)">
+                Próxima
+            </button>
+            </li>
+        </ul>
+        </nav>
+
+      </div>
+    </div>
+
     <ConfirmationModal
-    v-if="showModal"
-    :show="showModal"
-    message="Tem certeza que deseja excluir?"
-    @confirm="() => deleteOrder(orderToDeleteId)"
-    @close="showModal = false"
-  />
+      v-if="showModal"
+      :show="showModal"
+      message="Tem certeza que deseja excluir?"
+      @confirm="() => deleteOrder(orderToDeleteId)"
+      @close="showModal = false"
+    />
+  </main>
 </template>
+
 
 <script setup>
 import OrderRow from '@/components/order/OrderRow.vue'
@@ -316,41 +329,39 @@ watch(selectedStatus, () => {
     getOrders(selectedStatus.value)
   }
 })
+
+const blindProps = (blind, status) => ({
+  id: blind.id,
+  quantity: blind.quantity,
+  type: blind.type.type,
+  collection: blind.type.collection,
+  blindTypeId: blind.type.id,
+  color: blind.type.color,
+  width: blind.width,
+  height: blind.height,
+  command_height: blind.command_height,
+  model: blind.model,
+  blind_price: blind.blind_price,
+  observation: blind.observation,
+  status
+})
 </script>
 
 <style scoped>
 .order-card {
-  background-color: var(--color-surface);
-  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
   padding: 1.5rem;
-  margin-bottom: 2.5rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  margin-bottom: 2rem;
+  background: var(--color-surface);
 }
 
 .order-header {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  align-items: center;
   gap: 1rem;
   margin-bottom: 1rem;
-}
-
-.order-actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 1rem;
-}
-
-.order-table-header {
-  display: grid;
-  grid-template-columns: 0.5fr 1.5fr 1.5fr 1fr 1fr 1fr 1fr 1fr 1fr;
-  gap: 0.5rem;
-  padding: 0.5rem 0;
-  font-weight: bold;
-  border-bottom: 2px solid var(--color-border);
-  color: var(--color-text);
 }
 
 .order-title-status {
@@ -358,43 +369,17 @@ watch(selectedStatus, () => {
   flex-wrap: wrap;
   align-items: center;
   gap: 1rem;
-  flex: 1;
 }
 
-.order-client-name {
-  margin: 0;
-}
-
-.status-edit,
-.status-view {
+.order-actions {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 1rem;
 }
 
-.badge-status {
-  font-size: 1rem;
-  padding: 0.375rem 0.75rem;
-  line-height: 1.5;
-  display: inline-flex;
-  align-items: center;
-  margin-right: 0.5rem;
-  height: calc(1rem * 1.5 + 0.75rem);
-  border-radius: var(--border-radius);
-  font-weight: 500;
-  color: white;
-}
-
-.badge-espera {
-  background-color: var(--color-accent);
-  color: var(--color-text);
-}
-
-.badge-producao {
-  background-color: var(--color-info);
-}
-
-.badge-concluido {
-  background-color: #28a745;
+.empty-state {
+  text-align: center;
+  padding: 2rem;
+  opacity: 0.7;
 }
 </style>

@@ -1,50 +1,69 @@
 <template>
-    <main class="login-container">
-      <form ref="loginForm" @submit.prevent="submitForm" class="login-form">
-        <h1 class="login-title">Faça Login</h1>
-        
-        <div class="form-group">
-          <label for="login">Login</label>
-          <input id="login" name="login" type="text" class="form-input" placeholder="Digite o login ou email" required>
+  <main class="page-content">
+    <div class="card login-card">
+      <div class="card-body">
+        <div class="page-header">
+          <h1>Faça login</h1>
         </div>
-        <div class="form-group password-group">
-          <label for="password">Senha</label>
-          <div class="password-wrapper">
+
+        <form ref="loginForm" @submit.prevent="submitForm" class="dark-input">
+          <div class="mb-3">
+            <label for="login" class="form-label">Login</label>
             <input
-              id="password"
-              name="password"
-              :type="showPassword ? 'text' : 'password'"
-              class="form-input"
-              placeholder="Digite a senha"
+              id="login"
+              name="login"
+              type="text"
+              class="form-control"
+              placeholder="Digite o login ou email"
               required
-            >
-            <button
-              type="button"
-              class="toggle-password"
-              @click="togglePassword"
-              :aria-label="showPassword ? 'Ocultar senha' : 'Mostrar senha'"
-            >
-              <i :class="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
-            </button>
+            />
           </div>
-        </div>
 
-        <div class="g-recaptcha"></div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Senha</label>
+            <div class="password-wrapper">
+              <input
+                id="password"
+                name="password"
+                :type="showPassword ? 'text' : 'password'"
+                class="form-control"
+                placeholder="Digite a senha"
+                required
+              />
+              <button
+                type="button"
+                class="toggle-password"
+                @click="togglePassword"
+                :aria-label="showPassword ? 'Ocultar senha' : 'Mostrar senha'"
+              >
+                <i :class="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+              </button>
+            </div>
+          </div>
 
-        <div class="login-actions">
-          <button class="btn" type="button" @click="openRecoverPasswordModal">
-            Esqueci minha senha
+          <div data-theme="dark" class="g-recaptcha mb-3" ></div>
+
+          <div class="login-actions mb-3">
+            <a type="button" class="action-link" @click="openRecoverPasswordModal">
+              Esqueci minha senha
+            </a>
+            <RecoverPasswordModal ref="recoverPasswordModal" />
+          </div>
+
+          <button
+            type="submit"
+            class="btn btn-primary w-100"
+            :disabled="!captchaToken || isLoading"
+          >
+            <span v-if="isLoading">Entrando…</span>
+            <span v-else>Entrar</span>
           </button>
-          <RecoverPasswordModal ref="recoverPasswordModal" />
-        </div>
-        
-        <button :disabled="!captchaToken || isLoading" type="submit" class="btn-primary full-width">
-          <span v-if="isLoading">Entrando...</span>
-          <span v-else>Entrar</span>
-        </button>
-      </form>
-    </main>
+        </form>
+      </div>
+    </div>
+  </main>
 </template>
+
 
 <script setup>
 import { ref, onMounted } from 'vue'
@@ -78,7 +97,7 @@ onMounted(() => {
       window.grecaptcha.render(document.querySelector('.g-recaptcha'), {
         sitekey: '6LecWiIrAAAAAOdnwqNgm9EyzsZsdLLZ_dU6P3g5',
         callback: 'onCaptchaVerified',
-        'expired-callback': 'onCaptchaExpired'
+        'expired-callback': 'onCaptchaExpired',
       })
     })
   }
@@ -150,109 +169,18 @@ const togglePassword = () => {
 </script>
 
 <style scoped>
-.login-container {
-  max-width: 400px;
-  margin: 3rem auto;
-  padding: 2rem 1rem;
-  background-color: var(--color-background);
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-}
-
-.login-title {
-  text-align: center;
-  margin-bottom: 1.5rem;
-  color: var(--color-text);
-}
-
-.login-form {
+.page-content {
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  justify-content: center;
+  padding: 2.5rem 1rem;
 }
 
-.form-group {
-  display: flex;
-  flex-direction: column;
-}
-
-.form-group label {
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-  color: var(--color-text);
-}
-
-.form-input {
-  padding: 0.75rem;
-  border: 1px solid var(--color-border);
-  border-radius: 4px;
-  background-color: var(--color-surface);
-  color: var(--color-text);
-  font-size: 1rem;
-}
-
-.form-input:focus {
-  outline: 2px solid var(--color-primary);
-}
-
-.login-actions {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.btn-primary {
-  background-color: var(--color-primary);
-  color: white;
-  padding: 0.75rem;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background-color 0.3s;
-}
-
-.btn-primary:disabled {
-  background-color: var(--color-disabled);
-  cursor: not-allowed;
-}
-
-.btn-secondary {
-  background-color: transparent;
-  color: var(--color-primary);
-  border: none;
-  padding: 0.5rem;
-  font-size: 0.9rem;
-  cursor: pointer;
-  text-decoration: underline;
-}
-
-.btn-secondary:hover {
-  color: var(--color-primary-dark);
-}
-
-.full-width {
+.login-card {
   width: 100%;
+  max-width: 420px;
 }
 
-.password-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.password-wrapper input {
-  width: 100%;
-  padding-right: 2.5rem;
-}
-
-.toggle-password {
-  position: absolute;
-  right: 0.5rem;
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 1.2rem;
-  color: var(--color-text);
+button:disabled {
+  background-color: var(--text-muted);
 }
 </style>

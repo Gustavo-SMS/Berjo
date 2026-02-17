@@ -1,65 +1,80 @@
 <template>
-    <main class="register-container">
-        <form class="register-form" @submit.prevent="submitForm" novalidate>
-            <h1 class="register-title">Cadastre o usuário</h1>
+  <main class="page-content">
+    <div class="card register-card">
+      <div class="card-body">
+        <div class="page-header">
+          <h1>Cadastrar usuário</h1>
+        </div>
 
-            <SelectUnlinkedCustomers @selectedOption="selectedUnlinkedCustomer" :refresh-key="refreshKey"/>
+        <form @submit.prevent="submitForm" class="dark-input" novalidate>
+          <SelectUnlinkedCustomers
+            class="dark-select mb-3"
+            @selectedOption="selectedUnlinkedCustomer"
+            :refresh-key="refreshKey"
+          />
 
-            <div class="form-group">
-                <label for="login">Login*</label>
-                <input v-model="login" id="login" name="login" type="text" class="form-input" placeholder="Digite o login" :class="{ 'input-error': loginError }">
+          <div class="mb-3">
+            <label for="login" class="form-label">Login *</label>
+            <input
+              v-model="login"
+              id="login"
+              type="text"
+              class="form-control"
+              :class="{ 'is-invalid': loginError }"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="password" class="form-label">Senha *</label>
+            <div class="password-wrapper">
+              <input
+                v-model="password"
+                id="password"
+                :type="showPassword ? 'text' : 'password'"
+                class="form-control"
+                :class="{ 'is-invalid': passwordError }"
+              />
+              <button
+                type="button"
+                class="toggle-password"
+                @click="togglePassword"
+              >
+                <i :class="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+              </button>
             </div>
+          </div>
 
-            <div class="form-group">
-                <label for="password">Senha*</label>
-                <div class="password-wrapper">
-                  <input
-                    v-model="password"
-                    id="password"
-                    name="password"
-                    :type="showPassword ? 'text' : 'password'"
-                    class="form-input"
-                    placeholder="Digite a senha"
-                    :class="{ 'input-error': passwordError }"
-                  >
-                  <button
-                    type="button"
-                    class="toggle-password"
-                    @click="togglePassword"
-                    :aria-label="showPassword ? 'Ocultar senha' : 'Mostrar senha'"
-                  >
-                    <i :class="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
-                  </button>
-                </div>  
+          <div class="mb-4">
+            <label for="confirmPassword" class="form-label">
+              Confirmar senha *
+            </label>
+            <div class="password-wrapper">
+              <input
+                v-model="confirmPassword"
+                id="confirmPassword"
+                :type="showConfirmPassword ? 'text' : 'password'"
+                class="form-control"
+                :class="{ 'is-invalid': confirmPasswordError }"
+              />
+              <button
+                type="button"
+                class="toggle-password"
+                @click="toggleConfirmPassword"
+              >
+                <i :class="showConfirmPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+              </button>
             </div>
+          </div>
 
-            <div class="form-group">
-                <label for="confirmPassword">Confirmar Senha*</label>
-                <div class="password-wrapper">
-                  <input
-                    v-model="confirmPassword"
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    :type="showConfirmPassword ? 'text' : 'password'"
-                    class="form-input"
-                    placeholder="Confirme a nova senha"
-                    :class="{ 'input-error': confirmPasswordError }"
-                  >
-                  <button
-                    type="button"
-                    class="toggle-password"
-                    @click="toggleConfirmPassword"
-                    :aria-label="showConfirmPassword ? 'Ocultar senha' : 'Mostrar senha'"
-                  >
-                    <i :class="showConfirmPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
-                  </button>
-                </div>
-            </div>
-
-            <button class="btn-primary full-width" type="submit">Entrar</button>
+          <button type="submit" class="btn btn-primary w-100">
+            Cadastrar usuário
+          </button>
         </form>
-    </main>
+      </div>
+    </div>
+  </main>
 </template>
+
 
 <script setup>
 import { ref } from 'vue'
@@ -172,94 +187,18 @@ const toggleConfirmPassword = () => {
 </script>
 
 <style scoped>
-.register-container {
-  max-width: 500px;
-  margin: 3rem auto;
-  padding: 2rem 1rem;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
-.register-title {
-  text-align: center;
-  margin-bottom: 1.5rem;
-  color: var(--color-text);
-}
-
-.register-form {
+.page-content {
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  justify-content: center;
+  padding: 2rem;
 }
 
-.form-group {
-  display: flex;
-  flex-direction: column;
-}
-
-.form-group label {
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-  color: var(--color-text);
-}
-
-.form-input {
-  padding: 0.75rem;
-  border: 1px solid var(--color-border);
-  border-radius: 4px;
-  background-color: var(--color-surface);
-  color: var(--color-text);
-  font-size: 1rem;
-}
-
-.form-input:focus {
-  outline: 2px solid var(--color-primary);
-}
-
-.btn-primary {
-  background-color: var(--color-primary);
-  color: white;
-  padding: 0.75rem;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background-color 0.3s;
-}
-
-.btn-primary:hover {
-  background-color: var(--color-primary-dark);
-}
-
-.full-width {
+.register-card {
   width: 100%;
+  max-width: 520px;
 }
 
 .password-wrapper {
   position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.password-wrapper input {
-  width: 100%;
-  padding-right: 2.5rem;
-}
-
-.toggle-password {
-  position: absolute;
-  right: 0.5rem;
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 1.2rem;
-  color: var(--color-text);
-}
-
-.input-error {
-  border: 1px solid rgba(255, 0, 0, 0.5);
-  box-shadow: 0 0 4px rgba(255, 0, 0, 0.3);
-  transition: border 0.3s, box-shadow 0.3s;
 }
 </style>
