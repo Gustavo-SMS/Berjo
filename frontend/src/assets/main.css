@@ -129,7 +129,7 @@ body {
    BADGES DE STATUS
 ===================== */
 
-.badge-status {
+/* .badge-status {
   padding: 0.4rem 0.75rem;
   border-radius: 999px;
   font-size: 0.7rem;
@@ -146,7 +146,7 @@ body {
 .badge-status.inactive {
   background-color: rgba(192, 57, 43, 0.15);
   color: var(--color-danger);
-}
+} */
 
 /* =====================
    BOTÕES
@@ -182,6 +182,10 @@ body {
 .btn-danger {
   background-color: var(--color-danger);
   border: none;
+  border-radius: var(--border-radius-sm);
+}
+
+.btn-success {
   border-radius: var(--border-radius-sm);
 }
 
@@ -223,6 +227,10 @@ body {
   font-size: 0.9rem;
 }
 
+.form-select {
+  height: 38px;
+}
+
 .form-control:focus,
 .form-select:focus {
   border-color: var(--color-gold);
@@ -244,10 +252,29 @@ body {
   border-color: #d4af37;
 }
 
-.dark-select,
+.dark-select {
+  background-color: #141414;
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  color: #f1f1f1;
+}
+
 .vselect-custom .vs__dropdown-toggle {
   background-color: #141414;
   border: 1px solid rgba(212, 175, 55, 0.25);
+  color: #f1f1f1;
+}
+
+.vselect-custom .vs__dropdown-menu {
+  background-color: #141414;
+  border: 1px solid rgba(212, 175, 55, 0.25);
+}
+
+.vselect-custom .vs__dropdown-option {
+  color: #f1f1f1;
+}
+
+.vselect-custom .vs__dropdown-option--highlight {
+  background-color: rgba(212, 175, 55, 0.2);
   color: #f1f1f1;
 }
 

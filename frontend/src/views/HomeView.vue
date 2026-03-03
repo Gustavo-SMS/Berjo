@@ -107,7 +107,8 @@ const scrollToSection = (id) => {
   background-image: url('@/assets/img/banner-homepage.png');
   background-size: cover;
   background-position: center;
-  min-height: calc(100vh - 63px);
+  /* min-height: calc(100vh - 63px); */
+  min-height: 100vh;
   padding-top: 70px;
 }
 

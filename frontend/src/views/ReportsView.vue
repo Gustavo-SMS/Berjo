@@ -8,7 +8,7 @@
         <div v-if="authStore.userRole && authStore.userRole === 'ADMIN'" class="card shadow-sm rounded-4 mb-4">
           <div class="card-body">
             <h5 class="card-title">Pedidos por Período</h5>
-            <form @submit.prevent="generateByPeriod">
+            <form @submit.prevent="generateByPeriod" class="dark-input">
               <div class="row">
                 <div class="col-md-6 mb-3">
                   <label class="form-label">Data inicial</label>
@@ -30,7 +30,7 @@
           <div class="card-body">
             <h5 v-if="authStore.userRole && authStore.userRole === 'ADMIN'" class="card-title">Pedidos por Cliente</h5>
             <h5 v-else class="card-title">Pedidos por período</h5>
-            <form @submit.prevent="generateByCustomer">
+            <form @submit.prevent="generateByCustomer" class="dark-input">
               <div v-if="authStore.userRole && authStore.userRole === 'ADMIN'" class="mb-3">
                 <label class="form-label">Nome do Cliente</label>
                 <SelectCustomers v-model="selectedCustomer" />

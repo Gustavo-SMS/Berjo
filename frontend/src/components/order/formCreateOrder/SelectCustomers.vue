@@ -12,7 +12,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore'
 import { fetchWithAuth } from '@/utils/api'
@@ -24,21 +24,23 @@ const props = defineProps(['isActive'])
 const router = useRouter()
 const authStore = useAuthStore()
 
-const selectedCustomer = defineModel()
+const selectedCustomer = ref(null)
 const customers = ref([])
-
-const isActive = ref('')
 
 const loading = ref(false)
 
 async function searchCustomers(searchTerm) {
-    if (!searchTerm) return
-
     loading.value = true
-    isActive.value = props.isActive
 
     try {
-        const res = await fetchWithAuth(`/customers/search?name=${encodeURIComponent(searchTerm)}&isActive=${isActive.value}`, {
+        const nameQuery = searchTerm
+            ? `name=${encodeURIComponent(searchTerm)}`
+            : ''
+        const activeQuery = `isActive=${props.isActive}`
+
+        const url = `/customers/search?${nameQuery}&${activeQuery}`
+
+        const res = await fetchWithAuth(url, {
                 method: 'GET',
                 headers: { 'Content-type': 'application/json' }
             }, authStore, router)
@@ -52,4 +54,8 @@ async function searchCustomers(searchTerm) {
         loading.value = false
     }
 }
+
+onMounted(() => {
+  searchCustomers('')
+})
 </script>

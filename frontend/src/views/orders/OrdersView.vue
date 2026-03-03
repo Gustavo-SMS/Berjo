@@ -41,7 +41,7 @@
               <h5>Cliente: {{ order.customer.name }}</h5>
 
               <div v-if="editingOrderId === order.id" class="status-edit">
-                <select v-model="statusMap[order.id]" class="form-select">
+                <select v-model="statusMap[order.id]" class="form-select dark-select">
                   <option value="Em espera">Em espera</option>
                   <option value="Em produção">Em produção</option>
                   <option value="Concluido">Concluído</option>
@@ -381,5 +381,82 @@ const blindProps = (blind, status) => ({
   text-align: center;
   padding: 2rem;
   opacity: 0.7;
+}
+
+.status-view {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.status-edit {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: nowrap;
+}
+
+.status-edit .form-select {
+  width: auto;
+  min-width: 120px;
+  max-width: 200px;
+  padding: 0.5rem 0.75rem;
+}
+
+.status-edit {
+  padding: 0.5rem 1rem;
+  white-space: nowrap;
+}
+
+.badge-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.badge-status:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.badge-espera {
+  background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+  color: #000;
+  border-color: #ff9800;
+}
+
+.badge-espera:hover {
+  background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+}
+
+.badge-producao {
+  background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+  color: #fff;
+  border-color: #1976d2;
+}
+
+.badge-producao:hover {
+  background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+}
+
+.badge-concluido {
+  background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%);
+  color: #fff;
+  border-color: #388e3c;
+}
+
+.badge-concluido:hover {
+  background: linear-gradient(135deg, #388e3c 0%, #2e7d32 100%);
 }
 </style>

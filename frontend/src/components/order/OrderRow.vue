@@ -48,16 +48,16 @@
           <label class="form-label fw-semibold">Ações</label>
           <div class="dropdown">
             <button
-              class="btn"
+              class="btn btn-outline-gold"
               type="button"
               data-bs-toggle="dropdown"
               aria-expanded="false"
             >
               ⋮
             </button>
-            <ul class="dropdown-menu">
+            <ul class="dropdown-menu dark-select">
               <li>
-                <button class="dropdown-item" @click="openUpdateBlindModal">Editar</button>
+                <button class="dropdown-item btn-action-edit" @click="openUpdateBlindModal">Editar</button>
               </li>
               <li>
                 <button class="dropdown-item text-danger" @click="openDeleteModal">Excluir</button>
@@ -181,4 +181,16 @@ watch(() => props.blind_price, (newVal) => {
   }
 }
 
+.btn-action-edit {
+  color: #fff;
+}
+
+.dropdown-item {
+  transition: all 0.2s ease;
+}
+
+.dropdown-item:hover {
+  background-color: rgba(212, 175, 55, 0.2);
+  color: #f1f1f1;
+}
 </style>
