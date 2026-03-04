@@ -164,7 +164,7 @@ watch(() => props.blind_price, (newVal) => {
 }
 
 .label-full {
-  display: block;
+  display: inline;
 }
 
 .label-short {
@@ -177,7 +177,7 @@ watch(() => props.blind_price, (newVal) => {
   }
 
   .label-short {
-    display: block;
+    display: inline;
   }
 }
 

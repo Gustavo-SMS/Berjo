@@ -150,10 +150,6 @@ const goToPage = (page) => {
     currentPage.value = page
   }
 }
-// navigate to create customer view
-const goToCreateCustomer = () => {
-  router.push('/createCustomer')
-}
 
 const getByName = async () => {
   const name = encodeURIComponent(searchTerm.value.trim())

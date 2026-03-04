@@ -121,7 +121,8 @@ const submitForm = async () => {
       body: JSON.stringify(data)
     })
 
-    const result = await response.json()
+    const text = await response.text()
+    const result = text ? JSON.parse(text) : {}
 
     if (!response.ok) {
       throw new Error(result.error || result.msg || 'Erro ao logar')
@@ -135,12 +136,13 @@ const submitForm = async () => {
       }
     })
 
+    const meText = await meRes.text()
+    const meData = meText ? JSON.parse(meText) : {}
+
     if (!meRes.ok) {
-      const errorData = await meRes.json()
-      throw new Error(errorData.error || 'Erro ao obter dados do usuário')
+      throw new Error(meData.error || 'Erro ao obter dados do usuário')
     }
 
-    const meData = await meRes.json()
     authStore.setUser(meData.role, meData.customerId)
 
     router.push('/orders')
