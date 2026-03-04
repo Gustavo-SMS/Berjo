@@ -6,6 +6,7 @@
         <p class="lead">Persianas sob medida direto da fábrica</p>
         <button @click="scrollToSection('modelos')" class="btn btn-primary btn-lg mt-3">Ver Modelos</button>
       </div>
+      <RouterLink v-if="!authStore.userRole" to="/login" class="btn btn-primary login-btn">Entrar</RouterLink>
     </section>
 
     <section id="modelos" class="full-section d-flex align-items-center bg-white modelos-section">
@@ -45,7 +46,11 @@
 </template>
 
 <script setup>
+import { RouterLink } from 'vue-router'
+import { useAuthStore } from '@/stores/authStore'
 import { ref, onMounted, onUnmounted } from 'vue'
+
+const authStore = useAuthStore()
 
 const verticalImg = new URL('@/assets/img/persiana-vertical.jpg', import.meta.url).href
 const horizontalImg = new URL('@/assets/img/persiana-horizontal.webp', import.meta.url).href
@@ -141,5 +146,13 @@ section {
 html, body {
   max-width: 100vw;
   overflow-x: hidden;
+}
+
+.login-btn {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 1100;
+  padding: 0.45rem 0.75rem;
 }
 </style>
