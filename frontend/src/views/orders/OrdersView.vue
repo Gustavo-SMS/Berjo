@@ -7,7 +7,7 @@
           <h1>Pedidos</h1>
         </div>
 
-          <div class="d-flex align-items-center gap-2 flex-wrap">
+          <div class="d-flex align-items-center gap-2 flex-wrap mb-4">
             <div v-if="authStore.userRole === 'ADMIN'" class="input-group dark-input" style="max-width: 350px">
               <input
                 v-model="searchTerm"
@@ -23,6 +23,12 @@
               <option value="Em produção">Em produção</option>
               <option value="Concluido">Concluido</option>
             </select>
+
+            <div v-if="authStore.userRole === 'ADMIN'" class="ms-auto">
+              <RouterLink to="/createOrder" class="btn btn-primary">
+                Adicionar pedido
+              </RouterLink>
+            </div>
           </div>
 
         <div v-if="paginatedOrders.length === 0" class="empty-state">

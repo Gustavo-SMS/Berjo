@@ -6,7 +6,7 @@
           <h1>Tipos de persiana</h1>
         </div>
 
-          <div class="d-flex align-items-center gap-2 flex-wrap">
+          <div class="d-flex align-items-center gap-2 flex-wrap mb-4">
             <div class="input-group dark-input" style="max-width: 350px">
               <input
                 v-model="searchTerm"
@@ -23,6 +23,12 @@
               <option value="type">Tipo</option>
               <option value="collection">Coleção</option>
             </select>
+
+            <div v-if="authStore.userRole === 'ADMIN'" class="ms-auto">
+              <RouterLink to="/createBlindTypes" class="btn btn-primary">
+                Adicionar tipo
+              </RouterLink>
+            </div>
           </div>
 
         <div class="list-header d-none d-md-grid">

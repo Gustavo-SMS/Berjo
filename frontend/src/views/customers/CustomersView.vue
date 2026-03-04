@@ -29,6 +29,12 @@
           <option :value="false">Inativos</option>
         </select>
       </div>
+
+      <div v-if="authStore.userRole === 'ADMIN'" class="col-auto ms-auto">
+        <RouterLink :to="'/createCustomer'" class="btn btn-primary">
+          Adicionar cliente
+        </RouterLink>
+      </div>
     </div>
 
     <div v-if="customers.length === 0" class="empty-state">
@@ -143,6 +149,10 @@ const goToPage = (page) => {
   if (page >= 1 && page <= totalPages.value) {
     currentPage.value = page
   }
+}
+// navigate to create customer view
+const goToCreateCustomer = () => {
+  router.push('/createCustomer')
 }
 
 const getByName = async () => {
