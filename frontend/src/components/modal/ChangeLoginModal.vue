@@ -1,22 +1,22 @@
 <template>
     <div class="modal fade" ref="loginModal" tabindex="-1">
       <div class="modal-dialog">
-        <div class="modal-content">
+        <div class="modal-content card">
           <form @submit.prevent="handleChangeLogin">
             <div class="modal-header">
               <h5 class="modal-title">Alterar Login</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
   
-            <div class="modal-body">
+            <div class="modal-body dark-input">
               <div class="mb-3">
                 <label class="form-label">Novo login</label>
-                <input type="text" class="form-control" v-model="newLogin" required />
+                <input type="text" class="form-control" v-model="newLogin" placeholder="Digite o novo login" required />
               </div>
   
               <div class="mb-3">
                 <label class="form-label">Confirmar novo login</label>
-                <input type="text" class="form-control" v-model="confirmLogin" required />
+                <input type="text" class="form-control" v-model="confirmLogin" placeholder="Confirme o novo login" required />
               </div>
   
               <div class="mb-3">
@@ -44,7 +44,7 @@
             </div>
   
             <div class="modal-footer">
-              <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
               <button type="submit" class="btn btn-primary">Salvar</button>
             </div>
           </form>

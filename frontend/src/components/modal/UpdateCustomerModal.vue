@@ -1,11 +1,15 @@
 <template>
   <div class="modal fade" ref="customerModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
-      <div class="modal-content">
+      <div class="modal-content card">
+
+        <div class="modal-header">
+          <h5 class="modal-title">Editar cliente</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
 
             <div class="form-wrapper shadow-sm">
-                <form id="modalForm" @submit.prevent="handleUpdateCustomer" class="row g-4">
-                    <h3 class="form-title">Editar cliente</h3>
+                <form id="modalForm" @submit.prevent="handleUpdateCustomer" class="row g-4 dark-input">
 
                     <div class="col-12 col-md-6">
                         <label for="name" class="form-label">Nome *</label>
@@ -73,7 +77,7 @@
             
                     <div class="col-12 d-grid gap-2">
                         <button type="submit" class="btn btn-primary">Salvar alterações</button>
-                        <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
                     </div>
                 </form>
             </div>
@@ -278,18 +282,5 @@ defineExpose({ showModal })
   text-align: center;
   margin-bottom: 1.5rem;
   color: var(--color-text);
-}
-
-.btn-primary {
-  background-color: var(--color-primary);
-  color: #fff;
-  font-weight: bold;
-  border: none;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-.btn-primary:hover {
-  background-color: var(--color-primary-dark);
 }
 </style>

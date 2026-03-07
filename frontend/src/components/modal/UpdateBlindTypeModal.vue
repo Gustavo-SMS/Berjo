@@ -1,47 +1,85 @@
 <template>
-    <div class="modal fade" ref="blindTypeModal" tabindex="-1">
-      <div class="modal-dialog">
-        <div class="modal-content">
-  
-            <div class="container">
-                <form class="form" @submit.prevent="handleUptadeBlindType">
-                    <h3 class="form-title">Editar tipo de persiana</h3>
+  <div class="modal fade" ref="blindTypeModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content dark-modal">
 
-                    <div class="form-group">
-                        <label for="type">Tipo *</label>
-                        <SelectType :key="editableType" :typeValue="editableType" @selectedOption="selectedType" class="form-input" />
-                    </div>
-                                
-                    <div class="form-group">
-                        <label for="collection">Coleção *</label>
-                        <input v-model="editableCollection" type="text" name="collection" id="collection" class="form-input" required>
-                    </div>
-                        
-                    <div class="form-group">
-                        <label for="color">Cor *</label>
-                        <input v-model="editableColor" type="text" name="color" id="color" class="form-input" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="max_width">Largura máx.</label>
-                        <input v-model="editableMaxWidth" type="number" name="max_width" id="max_width" class="form-input" min="0" step="0.01">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="price">Preço *</label>
-                        <input v-model="editablePrice" type="number" name="price" id="price" class="form-input" min="0" step="0.01" required>
-                    </div>
-
-                    <div class="col-12 d-grid gap-2">
-                        <button type="submit" class="btn btn-primary">Salvar</button>
-                        <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">Cancelar</button>
-                    </div>
-                </form>
-            </div>
-            
+        <div class="modal-header">
+          <h5 class="modal-title">Editar tipo de persiana</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
         </div>
+
+        <div class="modal-body">
+          <form class="dark-input w-100 d-flex flex-column gap-3" @submit.prevent="handleUptadeBlindType">
+
+            <div class="w-100">
+              <label class="form-label">Tipo *</label>
+              <SelectType
+                :key="editableType"
+                :typeValue="editableType"
+                @selectedOption="selectedType"
+                class="form-control"
+              />
+            </div>
+
+            <div class="w-100">
+              <label class="form-label">Coleção *</label>
+              <input
+                v-model="editableCollection"
+                type="text"
+                class="form-control"
+                required
+              >
+            </div>
+
+            <div class="w-100">
+              <label class="form-label">Cor *</label>
+              <input
+                v-model="editableColor"
+                type="text"
+                class="form-control"
+                required
+              >
+            </div>
+
+            <div class="w-100">
+              <label class="form-label">Largura máx.</label>
+              <input
+                v-model="editableMaxWidth"
+                type="number"
+                class="form-control"
+                min="0"
+                step="0.01"
+              >
+            </div>
+
+            <div class="w-100">
+              <label class="form-label">Preço *</label>
+              <input
+                v-model="editablePrice"
+                type="number"
+                class="form-control"
+                min="0"
+                step="0.01"
+                required
+              >
+            </div>
+
+            <div class="d-flex w-100 gap-3 mt-3">
+              <button type="submit" class="btn btn-primary w-100">
+                Salvar
+              </button>
+
+              <button type="button" class="btn btn-danger w-100" data-bs-dismiss="modal">
+                Cancelar
+              </button>
+            </div>
+
+          </form>
+        </div>
+
       </div>
     </div>
+  </div>
 </template>
    
 <script setup>
@@ -139,63 +177,3 @@ watch(() => props.blindType, (newBlindType) => {
   
 defineExpose({ showModal })
 </script>
-  
-<style scoped>
-.container {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 2rem 1rem;
-  background-color: var(--color-background);
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-}
-
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-.form-title {
-  text-align: center;
-  margin-bottom: 1.5rem;
-  color: var(--color-text);
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-}
-
-label {
-  font-weight: 500;
-  margin-bottom: 0.5rem;
-  color: var(--color-text);
-}
-
-.form-input {
-  padding: 0.75rem;
-  font-size: 1rem;
-  border: 1px solid var(--color-border);
-  border-radius: 4px;
-  background-color: var(--color-surface);
-  color: var(--color-text);
-}
-
-.form-input:focus {
-  outline: 2px solid var(--color-primary);
-}
-
-.btn-primary {
-  background-color: var(--color-primary);
-  color: #fff;
-  font-weight: bold;
-  border: none;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-.btn-primary:hover {
-  background-color: var(--color-primary-dark);
-}
-</style>

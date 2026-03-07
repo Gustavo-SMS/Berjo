@@ -30,9 +30,12 @@
         </select>
       </div>
 
-      <div v-if="authStore.userRole === 'ADMIN'" class="col-auto ms-auto">
+      <div v-if="authStore.userRole === 'ADMIN'" class="col-auto ms-auto d-flex gap-2">
         <RouterLink :to="'/createCustomer'" class="btn btn-primary">
           Adicionar cliente
+        </RouterLink>
+        <RouterLink :to="'/register'" class="btn btn-primary">
+          Cadastrar usuário
         </RouterLink>
       </div>
     </div>

@@ -1,51 +1,55 @@
 <template>
     <div class="modal fade" ref="blindModal" tabindex="-1">
       <div class="modal-dialog">
-        <div class="modal-content">
-  
-            <div class="container">
-                <form class="form" @submit.prevent="handleUptadeBlind">
-                    <h3 class="form-title">Editar persiana</h3>
+        <div class="modal-content card">
 
-                    <div class="form-group">
+          <div class="modal-header">
+            <h5 class="modal-title">Editar persiana</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+  
+            <div class="modal-body">
+                <form class="dark-input w-100 d-flex flex-column gap-3" @submit.prevent="handleUptadeBlind">
+
+                    <div class="w-100">
                         <label for="type">Qtde *</label>
-                        <input v-model="editableQuantity" type="number" name="type" id="type" class="form-input" required>
+                        <input v-model="editableQuantity" type="number" name="type" id="type" class="form-control" required>
                     </div>
                                 
-                    <div class="form-group">
+                    <div class="w-100">
                         <label for="collection">Tipo *</label>
-                        <SelectType :key="editableType" :typeValue="editableType" @selectedOption="selectedType" class="form-input" />
+                        <SelectType :key="editableType" :typeValue="editableType" @selectedOption="selectedType" class="form-control" />
                     </div>
                         
-                    <div class="form-group">
+                    <div class="w-100">
                         <label for="color">Coleção - Cor *</label>
                         <SelectBlindType 
                             :key="editableType"
                             :typeValue="editableType"
                             :collection="editableCollection"
                             @selectedOption="selectedBlindTypeId" 
-                            class="form-input"
+                            class="form-control"
                         />
                     </div>
 
-                    <div class="form-group">
+                    <div class="w-100">
                         <label for="max_width">Largura</label>
-                        <input v-model="editableWidth" type="number" name="max_width" id="max_width" class="form-input" min="0" step="0.01">
+                        <input v-model="editableWidth" type="number" name="max_width" id="max_width" class="form-control" min="0" step="0.01">
                     </div>
 
-                    <div class="form-group">
+                    <div class="w-100">
                         <label for="price">Altura *</label>
-                        <input v-model="editableHeight" type="number" name="price" id="price" class="form-input" min="0" step="0.01" required>
+                        <input v-model="editableHeight" type="number" name="price" id="price" class="form-control" min="0" step="0.01" required>
                     </div>
 
-                    <div class="form-group">
+                    <div class="w-100">
                         <label for="price">Alt. comando *</label>
-                        <input v-model="editableCommand_height" type="number" name="price" id="price" class="form-input" min="0" step="0.01" required>
+                        <input v-model="editableCommand_height" type="number" name="price" id="price" class="form-control" min="0" step="0.01" required>
                     </div>
 
-                    <div class="form-group">
+                    <div class="w-100">
                         <label for="price">Modelo *</label>
-                        <select v-if="modelOptions.length" class="form-input" v-model="editableModel">
+                        <select v-if="modelOptions.length" class="form-control" v-model="editableModel">
                             <option value="" disabled></option>
                             <option v-for="option in modelOptions" :key="option" :value="option">
                                 {{ option }}
@@ -53,14 +57,14 @@
                         </select>
                     </div>
 
-                    <div class="form-group">
+                    <div class="w-100">
                         <label for="price">Observações</label>
-                        <input v-model="editableObservation" type="text" name="observation" id="observation" class="form-input" min="0" step="0.01">
+                        <input v-model="editableObservation" type="text" name="observation" id="observation" class="form-control" min="0" step="0.01">
                     </div>
 
                     <div class="col-12 d-grid gap-2">
                         <button type="submit" class="btn btn-primary">Salvar alterações</button>
-                        <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
                     </div>
                 </form>
             </div>
@@ -202,62 +206,3 @@ watch(() => props.blind, (newBlind) => {
 defineExpose({ showModal })
 </script>
   
-<style scoped>
-.container {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 2rem 1rem;
-  background-color: var(--color-background);
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-}
-
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-.form-title {
-  text-align: center;
-  margin-bottom: 1.5rem;
-  color: var(--color-text);
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-}
-
-label {
-  font-weight: 500;
-  margin-bottom: 0.5rem;
-  color: var(--color-text);
-}
-
-.form-input {
-  padding: 0.75rem;
-  font-size: 1rem;
-  border: 1px solid var(--color-border);
-  border-radius: 4px;
-  background-color: var(--color-surface);
-  color: var(--color-text);
-}
-
-.form-input:focus {
-  outline: 2px solid var(--color-primary);
-}
-
-.btn-primary {
-  background-color: var(--color-primary);
-  color: #fff;
-  font-weight: bold;
-  border: none;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-.btn-primary:hover {
-  background-color: var(--color-primary-dark);
-}
-</style>

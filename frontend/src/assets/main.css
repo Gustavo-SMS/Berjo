@@ -371,6 +371,39 @@ input[type="number"] {
   background-color: rgba(212, 175, 55, 0.2);
 }
 
+/* ===== MODAL ===== */
+
+.dark-modal {
+  background-color: #111111;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 16px;
+  color: var(--color-text);
+}
+
+.modal-header,
+.modal-footer {
+  border-color: rgba(212, 175, 55, 0.2);
+}
+
+.modal-title {
+  color: #d4af37;
+  font-weight: 600;
+}
+
+.modal-body {
+  padding: 2rem;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.modal-actions .btn {
+  flex: 1;
+}
+
 /* =====================
    RESPONSIVIDADE
 ===================== */
