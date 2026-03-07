@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt")
 const jwt = require('jsonwebtoken')
 const crypto = require('crypto')
 const { sendEmail } = require('../services/nodemailer')
+const resetPasswordTemplate = require('../utils/resetPasswordTemplate')
 
 const validateCurrentPassword = async (userId, currentPassword) => {
   const user = await prismaClient.user.findUnique({ where: { id: userId } })
@@ -223,7 +224,7 @@ const recoverPassword = async (req, res) => {
     })
 
     if (!customer || !customer.user) {
-      return res.status(404).json({ error: 'Usuário não encontrado' })
+      return res.status(200).json({ error: 'Link enviado para o email informado' })
     }
 
     const token = crypto.randomBytes(32).toString('hex');
@@ -237,16 +238,16 @@ const recoverPassword = async (req, res) => {
       }
     })
 
-    const link = `http://127.0.0.1:5173/resetPassword?token=${token}`
+    const link = `${process.env.FRONTEND_URL}/resetPassword?token=${token}`
 
     try {
       await sendEmail({
         to: email,
         subject: 'Recuperação de Senha',
-        html: `<p>Clique no link abaixo para redefinir sua senha:</p><a href="${link}">${link}</a>`
+        html: resetPasswordTemplate(link)
       })
     } catch (error) {
-        console.error('Erro ao enviar e-mail:', emailErr)
+        console.error('Erro ao enviar e-mail:', error)
         return res.status(500).json({ error: 'Erro ao enviar o e-mail de recuperação.' })
     }
 
