@@ -19,10 +19,14 @@
               </button>
             </div>
 
-            <select v-model="selectedOption" class="form-select w-auto dark-select">
-              <option value="type">Tipo</option>
-              <option value="collection">Coleção</option>
-            </select>
+            <v-select
+              v-model="selectedOption"
+              :options="statusOptions"
+              label="label"
+              :reduce="option => option.value"
+              :clearable="false"
+              class="vselect-custom"
+            />
 
             <div v-if="authStore.userRole === 'ADMIN'" class="ms-auto">
               <RouterLink to="/createBlindTypes" class="btn btn-primary">
@@ -84,6 +88,8 @@ import { fetchWithAuth } from '@/utils/api'
 import BlindTypeRow from '@/components/blindType/BlindTypeRow.vue'
 import { useAuthStore } from '@/stores/authStore'
 import { useRouter } from 'vue-router'
+import vSelect from 'vue-select'
+import 'vue-select/dist/vue-select.css'
 
 const authStore = useAuthStore()
 const router = useRouter()
@@ -95,6 +101,11 @@ const currentPage = ref(1)
 const itemsPerPage = 3
 
 const selectedOption = ref('type')
+
+const statusOptions = [
+  { label: 'Tipo', value: 'type' },
+  { label: 'Coleção', value: 'collection' }
+]
 
 const getBlindTypes = async () => {
     try {

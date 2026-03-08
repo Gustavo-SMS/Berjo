@@ -18,11 +18,14 @@
               <button @click="getByCustomer" class="btn btn-outline-gold">Buscar</button>
             </div>
 
-            <select v-model="selectedStatus" class="form-select w-auto dark-select">
-              <option value="Em espera">Em espera</option>
-              <option value="Em produção">Em produção</option>
-              <option value="Concluido">Concluido</option>
-            </select>
+            <v-select
+              v-model="selectedStatus"
+              :options="statusOptions"
+              label="label"
+              :reduce="option => option.value"
+              :clearable="false"
+              class="vselect-custom"
+            />
 
             <div v-if="authStore.userRole === 'ADMIN'" class="ms-auto">
               <RouterLink to="/createOrder" class="btn btn-primary">
@@ -143,6 +146,8 @@ import { useNotificationStore } from '@/stores/notificationStore'
 import { fetchWithAuth } from '@/utils/api'
 import { useAuthStore } from '@/stores/authStore'
 import { useRouter } from 'vue-router'
+import vSelect from 'vue-select'
+import 'vue-select/dist/vue-select.css'
 
 const authStore = useAuthStore()
 const router = useRouter()
@@ -158,6 +163,12 @@ const searchTerm = ref('')
 
 const currentPage = ref(1)
 const itemsPerPage = 2
+
+const statusOptions = [
+  { label: 'Em espera', value: 'Em espera' },
+  { label: 'Em produção', value: 'Em produção' },
+  { label: 'Concluído', value: 'Concluído' }
+]
 
 const getOrders = async (status, customerId) => {
     let url = `/orders/filter/`

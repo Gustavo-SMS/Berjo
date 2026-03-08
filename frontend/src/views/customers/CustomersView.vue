@@ -21,13 +21,14 @@
       </div>
 
       <div class="col-md-3 col-lg-2">
-        <select
+        <v-select
           v-model="isActive"
-          class="form-select dark-select"
-        >
-          <option :value="true">Ativos</option>
-          <option :value="false">Inativos</option>
-        </select>
+          :options="statusOptions"
+          label="label"
+          :reduce="option => option.value"
+          :clearable="false"
+          class="vselect-custom"
+        />
       </div>
 
       <div v-if="authStore.userRole === 'ADMIN'" class="col-auto ms-auto d-flex gap-2">
@@ -90,6 +91,8 @@ import CustomerRow from '@/components/customer/CustomerRow.vue'
 import { useAuthStore } from '@/stores/authStore'
 import { useRouter } from 'vue-router'
 import { fetchWithAuth } from '@/utils/api'
+import vSelect from 'vue-select'
+import 'vue-select/dist/vue-select.css'
 
 const apiUrl = import.meta.env.VITE_API_URL
 
@@ -102,6 +105,11 @@ const isActive = ref(true)
 
 const currentPage = ref(1)
 const itemsPerPage = 2
+
+const statusOptions = [
+  { label: 'Ativos', value: true },
+  { label: 'Inativos', value: false }
+]
 
 const getCustomers = async () => {
   let url = `${apiUrl}/customers`

@@ -225,6 +225,7 @@ body {
   border-radius: var(--border-radius-sm);
   border: 1px solid #ddd;
   font-size: 0.9rem;
+  width: 100%;
 }
 
 .form-select {
@@ -258,10 +259,18 @@ body {
   color: #f1f1f1;
 }
 
+.vselect-custom {
+  min-width: 160px;
+}
+
 .vselect-custom .vs__dropdown-toggle {
   background-color: #141414;
   border: 1px solid rgba(212, 175, 55, 0.25);
   color: #f1f1f1;
+  width: 100%;
+  min-height: 38px;
+  display: flex;
+  align-items: center;
 }
 
 .vselect-custom .vs__dropdown-menu {
@@ -276,6 +285,10 @@ body {
 .vselect-custom .vs__dropdown-option--highlight {
   background-color: rgba(212, 175, 55, 0.2);
   color: #f1f1f1;
+}
+
+.vselect-custom .vs__selected {
+  color: var(--text-primary);
 }
 
 .form-select:disabled,
@@ -373,20 +386,22 @@ input[type="number"] {
 
 /* ===== MODAL ===== */
 
+/* ===== MODAL ===== */
+
 .dark-modal {
   background-color: #111111;
   border: 1px solid rgba(212, 175, 55, 0.2);
   border-radius: 16px;
-  color: var(--color-text);
+  color: var(--text-primary);
 }
 
 .modal-header,
 .modal-footer {
-  border-color: rgba(212, 175, 55, 0.2);
+  border-color: rgba(212, 175, 55, 0.15);
 }
 
 .modal-title {
-  color: #d4af37;
+  color: var(--color-gold);
   font-weight: 600;
 }
 
@@ -397,7 +412,7 @@ input[type="number"] {
 .modal-actions {
   display: flex;
   gap: 1rem;
-  margin-top: 1rem;
+  margin-top: 1.5rem;
 }
 
 .modal-actions .btn {
