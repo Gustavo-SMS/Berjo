@@ -17,7 +17,6 @@
                 :key="editableType"
                 :typeValue="editableType"
                 @selectedOption="selectedType"
-                class="form-control"
               />
             </div>
 

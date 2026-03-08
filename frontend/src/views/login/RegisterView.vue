@@ -8,7 +8,7 @@
 
         <form @submit.prevent="submitForm" class="dark-input" novalidate>
           <SelectUnlinkedCustomers
-            class="dark-select mb-3"
+            class="mb-3"
             @selectedOption="selectedUnlinkedCustomer"
             :refresh-key="refreshKey"
           />

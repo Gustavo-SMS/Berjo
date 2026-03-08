@@ -17,7 +17,10 @@
 
         <div class="col-sm-6 col-md-2">
           <label class="form-label">Tipo</label>
-          <SelectType @selectedOption="selectedType" class="dark-select" />
+          <SelectType
+            :typeValue="type"
+            @selectedOption="handleTypeSelected"
+          />
         </div>
 
         <div class="col-12 col-md-4">
@@ -25,10 +28,8 @@
           <SelectBlindType  
             :key="type"
             :typeValue="type"
-            @selectedOption="selectedBlindTypeId" 
-            @change="$emit('updateRow', { field: 'type_id', value: type_id })"
+            @selectedOption="handleBlindTypeSelected" 
             :disabled="!type"
-            class="dark-select"
           />
         </div>
 
@@ -70,21 +71,13 @@
 
         <div class="col-6 col-md-1">
           <label class="form-label">Lado</label>
-          <select
-            class="form-select dark-select"
-            :disabled="!modelOptions.length"
+          <v-select
             v-model="row.model"
-            @change="$emit('updateRow', { field: 'model', value: row.model })"
-          >
-            <option value="" disabled></option>
-            <option
-              v-for="option in modelOptions"
-              :key="option"
-              :value="option"
-            >
-              {{ option }}
-            </option>
-          </select>
+            :options="modelOptions"
+            :clearable="false"
+            :disabled="!modelOptions.length"
+            class="vselect-custom"
+          />
         </div>
 
         <div class="col-6 col-md-1 d-flex align-items-end">
@@ -120,20 +113,29 @@
 import { computed, watch, ref } from 'vue'
 import SelectBlindType from './SelectBlindType.vue'
 import SelectType from './SelectType.vue'
+import vSelect from 'vue-select'
+import 'vue-select/dist/vue-select.css'
 
-defineProps(['row', 'canDelete', 'rowId'])
-defineEmits(['updateRow', 'selectedBlindTypeId', 'deleteRow'])
+const props = defineProps(['row', 'canDelete', 'rowId'])
+const emit = defineEmits(['updateRow', 'deleteRow'])
 
 const type = ref(null)
-const type_id = ref('')
-const model = ref('')
+const type_id = ref(null)
 
-const selectedType = (event, arrayBlindTypes) => {
-    type.value = arrayBlindTypes[event.target.selectedIndex] || null
+const handleTypeSelected  = (selected) => {
+  type.value = selected
+
+  emit('updateRow', { field: 'type_id', value: '' })
+  emit('updateRow', { field: 'model', value: '' })
 }
 
-const selectedBlindTypeId = (event, arrayBlindTypes) => {
-    type_id.value = arrayBlindTypes[event.target.selectedIndex].id || ''
+const handleBlindTypeSelected  = (selectedObject) => {
+  if (!selectedObject) return
+
+  emit('updateRow', {
+    field: 'type_id',
+    value: selectedObject.id
+  })
 }
 
 const modelOptions = computed(() => {
@@ -153,7 +155,11 @@ const modelOptions = computed(() => {
 })
 
 watch(type, () => {
-    type_id.value = ''
-    model.value = ''
+  emit('updateRow', { field: 'type_id', value: '' })
+  emit('updateRow', { field: 'model', value: '' })
+})
+
+watch(() => props.row.model, (newValue) => {
+  emit('updateRow', { field: 'model', value: newValue })
 })
 </script>

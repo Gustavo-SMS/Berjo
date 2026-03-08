@@ -9,16 +9,14 @@
         <form @submit.prevent="submitForm" novalidate class="dark-input">
           <div class="mb-3">
             <label class="form-label">Tipo *</label>
-            <select class="form-select dark-select" v-model="type" required>
-              <option value="" disabled></option>
-              <option
-                v-for="option in typeOptions"
-                :key="option"
-                :value="option"
-              >
-                {{ option }}
-              </option>
-            </select>
+              <v-select
+                v-model="type"
+                :options="typeOptions"
+                label="label"
+                :reduce="option => option.value"
+                :clearable="false"
+                class="vselect-custom"
+              />
           </div>
 
           <div class="mb-3">
@@ -78,6 +76,8 @@ import { useNotificationStore } from '@/stores/notificationStore'
 import { fetchWithAuth } from '@/utils/api'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore'
+import vSelect from 'vue-select'
+import 'vue-select/dist/vue-select.css'
 
 const authStore = useAuthStore()
 const router = useRouter()
@@ -120,12 +120,18 @@ const submitForm = async () => {
     }
 }
 
-const typeOptions = ['Persiana vertical', 'PH 25mm', 'Rolo', 'Romana']
+// const typeOptions = ['Persiana vertical', 'PH 25mm', 'Rolo', 'Romana']
+const typeOptions = [
+  { label: 'Persiana vertical', value: 'Persiana vertical' },
+  { label: 'PH 25mm', value: 'PH 25mm' },
+  { label: 'Rolo', value: 'Rolo' },
+  { label: 'Romana', value: 'Romana' }
+]
 </script>
 
 <style scoped>
 .register-card {
   max-width: 520px;
-  margin: 0 auto;
+  margin: 5rem auto;
 }
 </style>

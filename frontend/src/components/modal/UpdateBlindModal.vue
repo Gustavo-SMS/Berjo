@@ -12,43 +12,42 @@
                 <form class="dark-input w-100 d-flex flex-column gap-3" @submit.prevent="handleUptadeBlind">
 
                     <div class="w-100">
-                        <label for="type">Qtde *</label>
+                        <label for="type" class="form-label">Qtde *</label>
                         <input v-model="editableQuantity" type="number" name="type" id="type" class="form-control" required>
                     </div>
                                 
                     <div class="w-100">
-                        <label for="collection">Tipo *</label>
-                        <SelectType :key="editableType" :typeValue="editableType" @selectedOption="selectedType" class="form-control" />
+                        <label for="collection" class="form-label">Tipo *</label>
+                        <SelectType :key="editableType" :typeValue="editableType" @selectedOption="selectedType" />
                     </div>
                         
                     <div class="w-100">
-                        <label for="color">Coleção - Cor *</label>
+                        <label for="color" class="form-label">Coleção - Cor *</label>
                         <SelectBlindType 
                             :key="editableType"
                             :typeValue="editableType"
                             :collection="editableCollection"
-                            @selectedOption="selectedBlindTypeId" 
-                            class="form-control"
+                            @selectedOption="selectedBlindTypeId"
                         />
                     </div>
 
                     <div class="w-100">
-                        <label for="max_width">Largura</label>
+                        <label for="max_width" class="form-label">Largura</label>
                         <input v-model="editableWidth" type="number" name="max_width" id="max_width" class="form-control" min="0" step="0.01">
                     </div>
 
                     <div class="w-100">
-                        <label for="price">Altura *</label>
+                        <label for="price" class="form-label">Altura *</label>
                         <input v-model="editableHeight" type="number" name="price" id="price" class="form-control" min="0" step="0.01" required>
                     </div>
 
                     <div class="w-100">
-                        <label for="price">Alt. comando *</label>
+                        <label for="price" class="form-label">Alt. comando *</label>
                         <input v-model="editableCommand_height" type="number" name="price" id="price" class="form-control" min="0" step="0.01" required>
                     </div>
 
                     <div class="w-100">
-                        <label for="price">Modelo *</label>
+                        <label for="price" class="form-label">Modelo *</label>
                         <select v-if="modelOptions.length" class="form-control" v-model="editableModel">
                             <option value="" disabled></option>
                             <option v-for="option in modelOptions" :key="option" :value="option">
@@ -58,7 +57,7 @@
                     </div>
 
                     <div class="w-100">
-                        <label for="price">Observações</label>
+                        <label for="price" class="form-label">Observações</label>
                         <input v-model="editableObservation" type="text" name="observation" id="observation" class="form-control" min="0" step="0.01">
                     </div>
 

@@ -50,11 +50,14 @@
               <h5>Cliente: {{ order.customer.name }}</h5>
 
               <div v-if="editingOrderId === order.id" class="status-edit">
-                <select v-model="statusMap[order.id]" class="form-select dark-select">
-                  <option value="Em espera">Em espera</option>
-                  <option value="Em produção">Em produção</option>
-                  <option value="Concluido">Concluído</option>
-                </select>
+                <v-select
+                  v-model="statusMap[order.id]"
+                  :options="statusOptions"
+                  label="label"
+                  :reduce="option => option.value"
+                  :clearable="false"
+                  class="vselect-custom status-select"
+                />
                 <button @click="() => changeStatus(order.id)" class="btn btn-success">
                   Confirmar
                 </button>

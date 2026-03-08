@@ -260,7 +260,7 @@ body {
 }
 
 .vselect-custom {
-  min-width: 160px;
+  min-width: 114px;
 }
 
 .vselect-custom .vs__dropdown-toggle {
@@ -289,6 +289,27 @@ body {
 
 .vselect-custom .vs__selected {
   color: var(--text-primary);
+}
+
+.vselect-custom.vs--disabled .vs__dropdown-toggle {
+  background-color: var(--color-surface-secondary);
+  border-color: var(--color-border);
+  color: var(--color-text-muted);
+  opacity: 1;
+  cursor: not-allowed;
+}
+
+.vselect-custom.vs--disabled .vs__selected {
+  color: var(--color-text-muted);
+}
+
+.vselect-custom.vs--disabled .vs__open-indicator {
+  display: none;
+}
+
+.vselect-custom.vs--disabled .vs__search {
+  background-color: transparent !important;
+  color: var(--color-text-muted);
 }
 
 .form-select:disabled,
