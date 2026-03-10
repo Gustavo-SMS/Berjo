@@ -18,16 +18,16 @@
                                 
                     <div class="w-100">
                         <label for="collection" class="form-label">Tipo *</label>
-                        <SelectType :key="editableType" :typeValue="editableType" @selectedOption="selectedType" />
+                        <SelectType :typeValue="editableType" @selectedOption="handleTypeSelected" />
                     </div>
                         
                     <div class="w-100">
                         <label for="color" class="form-label">Coleção - Cor *</label>
                         <SelectBlindType 
-                            :key="editableType"
-                            :typeValue="editableType"
-                            :collection="editableCollection"
-                            @selectedOption="selectedBlindTypeId"
+                          :key="editableType"
+                          :typeValue="editableType"
+                          :collection="editableCollection"
+                          @selectedOption="handleBlindTypeSelected" 
                         />
                     </div>
 
@@ -97,14 +97,17 @@ const editableCommand_height = ref('')
 const editableModel = ref('')
 const editableObservation = ref('')
 const editableBlindTypeId = ref('')
+const isInitializing = ref(true)
 
-const selectedType = (event, arrayBlindTypes) => {
-    editableType.value = arrayBlindTypes[event.target.selectedIndex] || null
-    editableCollection.value = ''
-}
+const handleTypeSelected  = (selected) => {
+  editableType.value = selected || null
 
-const selectedBlindTypeId = (event, arrayBlindTypes) => {
-    editableBlindTypeId.value = arrayBlindTypes[event.target.selectedIndex].id || props.blindTypeId
+} 
+
+const handleBlindTypeSelected  = (selectedObject) => {
+  if (!selectedObject) return
+
+  editableBlindTypeId.value = selectedObject.id || null
 }
 
 const modelOptions = computed(() => {
@@ -188,9 +191,17 @@ const resetFields = () => {
     editableBlindTypeId.value = ''
 }
   
+watch(editableType, (newVal, oldVal) => {
+  if (isInitializing.value) return
+  if (newVal !== oldVal) {
+    editableCollection.value = ''
+    editableBlindTypeId.value = ''
+  }
+})
+
 watch(() => props.blind, (newBlind) => {
   if (!newBlind || typeof newBlind !== 'object') return
-  
+
   editableQuantity.value = newBlind.quantity || ''
   editableType.value = newBlind.type || ''
   editableCollection.value = newBlind.collection || ''
@@ -200,8 +211,9 @@ watch(() => props.blind, (newBlind) => {
   editableModel.value = newBlind.model || ''
   editableObservation.value = newBlind.observation || ''
   editableBlindTypeId.value = newBlind.blindTypeId || ''
+
+  isInitializing.value = false
 }, { immediate: true })
   
 defineExpose({ showModal })
 </script>
-  

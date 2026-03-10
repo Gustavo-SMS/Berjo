@@ -61,8 +61,6 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore'
-import { fetchWithAuth } from '@/utils/api'
-import vSelect from 'vue-select'
 import 'vue-select/dist/vue-select.css'
 import SelectCustomers from '@/components/order/formCreateOrder/SelectCustomers.vue'
 
