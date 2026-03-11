@@ -97,11 +97,9 @@ const editableCommand_height = ref('')
 const editableModel = ref('')
 const editableObservation = ref('')
 const editableBlindTypeId = ref('')
-const isInitializing = ref(true)
 
 const handleTypeSelected  = (selected) => {
   editableType.value = selected || null
-
 } 
 
 const handleBlindTypeSelected  = (selectedObject) => {
@@ -190,14 +188,6 @@ const resetFields = () => {
     editableObservation.value = ''
     editableBlindTypeId.value = ''
 }
-  
-watch(editableType, (newVal, oldVal) => {
-  if (isInitializing.value) return
-  if (newVal !== oldVal) {
-    editableCollection.value = ''
-    editableBlindTypeId.value = ''
-  }
-})
 
 watch(() => props.blind, (newBlind) => {
   if (!newBlind || typeof newBlind !== 'object') return
@@ -212,7 +202,6 @@ watch(() => props.blind, (newBlind) => {
   editableObservation.value = newBlind.observation || ''
   editableBlindTypeId.value = newBlind.blindTypeId || ''
 
-  isInitializing.value = false
 }, { immediate: true })
   
 defineExpose({ showModal })

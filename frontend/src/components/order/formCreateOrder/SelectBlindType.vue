@@ -75,7 +75,32 @@ const fetchBlindCollections = async (type) => {
   }
 }
 
-watch(() => props.typeValue, fetchBlindCollections, { immediate: true })
+watch(
+  () => [props.typeValue, props.collection],
+  async ([newType, newCollection]) => {
+
+    if (!newType) {
+      blindCollections.value = []
+      selectedCollection.value = null
+      return
+    }
+
+    await fetchBlindCollections(newType)
+
+    if (newCollection) {
+      const match = blindCollections.value.find(
+        bc => bc.collection === newCollection
+      )
+
+      selectedCollection.value = match
+        ? match.collection
+        : null
+    } else {
+      selectedCollection.value = null
+    }
+  },
+  { immediate: true }
+)
 
 watch(selectedCollection, (newValue) => {
   const selectedObject = blindCollections.value.find(
@@ -87,7 +112,4 @@ watch(selectedCollection, (newValue) => {
   }
 })
 
-watch(() => props.collection, (newValue) => {
-  selectedCollection.value = newValue || null
-}, { immediate: true })
 </script>

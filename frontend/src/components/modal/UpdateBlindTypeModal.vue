@@ -14,9 +14,8 @@
             <div class="w-100">
               <label class="form-label">Tipo *</label>
               <SelectType
-                :key="editableType"
                 :typeValue="editableType"
-                @selectedOption="selectedType"
+                @selectedOption="handleTypeSelected"
               />
             </div>
 
@@ -101,8 +100,8 @@ const editableColor = ref('')
 const editableMaxWidth = ref('')
 const editablePrice = ref('')
 
-const selectedType = (event, arrayBlindTypes) => {
-    editableType.value = arrayBlindTypes[event.target.selectedIndex] || null
+const handleTypeSelected = (selectedOption) => {
+    editableType.value = selectedOption || null
 }
   
 const handleUptadeBlindType = async () => {
@@ -157,7 +156,7 @@ const hideModal = () => {
 }
   
 const resetFields = () => {
-    editableType.value = ''
+    editableType.value = null
     editableCollection.value = ''
     editableColor.value = ''
     editableMaxWidth.value = ''
