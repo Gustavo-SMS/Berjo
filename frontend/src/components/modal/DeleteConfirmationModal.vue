@@ -1,7 +1,7 @@
 <template>
     <div class="modal-overlay" @click="$emit('close')">
-      <div class="modal-content" @click.stop>
-        <p class="fs-5 fw-bold text-dark mb-3">{{ message }}</p>
+      <div class="modal-content card" @click.stop>
+        <p class="fs-5 fw-bold mb-3">{{ message }}</p>
         <!-- <form action=""> -->
             <!-- <label id="password" name="password">Insira a senha para confirmar</label>
             <input v-model="password" type="password" name="password" id="password" class="form-control" required> -->
@@ -53,7 +53,7 @@ const closeModal = () => {
 .modal-content {
   width: 90%;
   max-width: 400px;
-  background: white;
+  
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.3);

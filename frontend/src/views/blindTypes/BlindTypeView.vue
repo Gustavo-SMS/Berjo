@@ -6,7 +6,7 @@
           <h1>Tipos de persiana</h1>
         </div>
 
-          <div class="d-flex align-items-center gap-2 flex-wrap mb-4">
+          <div class="d-flex align-items-center gap-2 flex-wrap mb-4 justify-content-start">
             <div class="input-group dark-input" style="max-width: 350px">
               <input
                 v-model="searchTerm"

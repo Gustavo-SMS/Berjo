@@ -1,6 +1,6 @@
 <template>
   <form @submit.prevent="submitUpdate" class="order-row-wrapper">
-    <div class="card p-3">
+    <div class="card p-3 mb-2">
       <div class="row gy-3 align-items-start">
         <div class="col-6 col-md-1">
           <label class="form-label fw-semibold">Qtd.</label>

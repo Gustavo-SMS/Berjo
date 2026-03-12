@@ -93,7 +93,11 @@ const openUpdateBlindTypeModal = async () => {
 }
 </script>
 
-<style>
+<style scoped>
+form {
+  border-bottom: 1px solid #333;
+}
+
 p {
   margin: 0;
   padding: 0;

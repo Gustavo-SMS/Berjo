@@ -12,7 +12,7 @@
         <button
           v-if="authStore.userRole === 'ADMIN' && canDelete"
           @click="props.customer.isActive ? openDeactivateModal() : reactivateCustomer()"
-          :class="props.customer.isActive ? 'btn btn-danger' : 'btn btn-reactivate'"
+          :class="props.customer.isActive ? 'btn btn-danger' : 'btn btn-outline-gold'"
           type="button"
         >
           {{ props.customer.isActive ? 'Desativar' : 'Reativar' }}
@@ -217,7 +217,7 @@ const openUpdateCustomerModal = async () => {
 </script>
 
 <style scoped>
-.btn-reactivate {
+/* .btn-reactivate {
   background-color: var(--color-secondary);
   color: var(--color-text-light);
   border: none;
@@ -225,7 +225,7 @@ const openUpdateCustomerModal = async () => {
   font-size: var(--font-size-base);
   border-radius: var(--border-radius);
   transition: background-color var(--transition-fast);
-}
+} */
 
 .btn-reactivate:hover,
 .btn-reactivate:focus {
