@@ -1,5 +1,13 @@
 <template>
   <main class="page-content">
+      <button
+        type="button"
+        class="btn btn-outline-light back-home-btn"
+        @click="goHome"
+      >
+        <i class="bi bi-arrow-left"></i>
+        Voltar à homepage
+      </button>
     <div class="card login-card">
       <div class="card-body">
         <div class="page-header">
@@ -159,6 +167,10 @@ const submitForm = async () => {
   }
 }
 
+const goHome = () => {
+  router.push('/')
+}
+
 const recoverPasswordModal = ref(null)
 const openRecoverPasswordModal = () => {
   recoverPasswordModal.value?.showModal()
@@ -184,5 +196,18 @@ const togglePassword = () => {
 
 button:disabled {
   background-color: var(--text-muted);
+}
+
+.back-home-btn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  border-color: var(--color-gold);
+  color: var(--color-gold);
+}
+
+.back-home-btn:hover {
+  background-color: var(--color-gold);
+  color: #000;
 }
 </style>

@@ -33,9 +33,10 @@
             <button
               @click="addRow"
               type="button"
+              :disabled="orderRows.length >= MAX_ROWS"
               class="btn btn-secondary flex-fill"
             >
-              Adicionar linha
+              Adicionar linha ({{ orderRows.length }} / {{ MAX_ROWS }})
             </button>
 
             <button
@@ -68,10 +69,16 @@ const notificationStore = useNotificationStore()
 
 const customerId = ref('')
 const orderRows = ref([])
+const MAX_ROWS = 5
 
 let idCounter = 0
 
 function addRow() {
+    if (orderRows.value.length >= MAX_ROWS) {
+      notificationStore.addNotification(`Máximo de ${MAX_ROWS} itens por pedido.`, 'warning')
+      return
+    }
+
     orderRows.value.push({
         id: idCounter++,
         quantity: '',
@@ -103,6 +110,11 @@ function deleteRow(id) {
 const selectedCustomer = ref(null)
 const submitForm = async () => {
     const blinds = orderRows.value.map(({ id, ...rest }) => rest)
+
+    if (authStore.userRole === 'ADMIN' && !selectedCustomer.value) {
+        notificationStore.addNotification('Selecione um cliente', 'error')
+        return
+    }
 
     const data = {
         customer: authStore.userRole === 'ADMIN' ? selectedCustomer.value.id : authStore.customerId,
