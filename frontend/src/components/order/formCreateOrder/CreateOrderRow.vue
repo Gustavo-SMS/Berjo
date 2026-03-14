@@ -120,7 +120,6 @@ const props = defineProps(['row', 'canDelete', 'rowId'])
 const emit = defineEmits(['updateRow', 'deleteRow'])
 
 const type = ref(null)
-const type_id = ref(null)
 
 const handleTypeSelected  = (selected) => {
   type.value = selected

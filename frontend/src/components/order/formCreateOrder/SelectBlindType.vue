@@ -3,14 +3,13 @@
     v-model="selectedCollection"
     :options="formattedCollections"
     label="label"
-    :reduce="option => option.collection"
     :clearable="false"
     class="vselect-custom"
   />
 </template>
 
 <script setup>
-import { ref, watch, computed, nextTick } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { useNotificationStore } from '@/stores/notificationStore'
 import { fetchWithAuth } from '@/utils/api'
 import { useAuthStore } from '@/stores/authStore'
@@ -63,8 +62,6 @@ const fetchBlindCollections = async (type) => {
       color: bt.color
     }))
 
-    await nextTick()
-
     if (props.collection) {
       selectedCollection.value = props.collection
     }
@@ -92,9 +89,8 @@ watch(
         bc => bc.collection === newCollection
       )
 
-      selectedCollection.value = match
-        ? match.collection
-        : null
+      selectedCollection.value = match || null
+
     } else {
       selectedCollection.value = null
     }
@@ -103,12 +99,8 @@ watch(
 )
 
 watch(selectedCollection, (newValue) => {
-  const selectedObject = blindCollections.value.find(
-    bc => bc.collection === newValue
-  )
-
-  if (selectedObject) {
-    emit('selectedOption', selectedObject)
+  if (newValue) {
+    emit('selectedOption', newValue)
   }
 })
 
