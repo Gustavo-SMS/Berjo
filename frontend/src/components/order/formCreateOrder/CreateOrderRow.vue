@@ -87,7 +87,7 @@
             type="button"
             :disabled="!canDelete"
           >
-            Excluir
+            <i class="bi bi-trash"></i>
           </button>
         </div>
 
@@ -137,20 +137,38 @@ const handleBlindTypeSelected  = (selectedObject) => {
   })
 }
 
+const modelConfig = {
+  'Persiana vertical': {
+    includeDefault: false,
+    extra: ['Lateral', 'Central', 'Invertida']
+  },
+  'PH 25mm': {
+    includeDefault: true,
+    extra: ['Duplex']
+  },
+  'Rolo': {
+    includeDefault: true,
+    extra: ['Duplex']
+  },
+  'Romana': {
+    includeDefault: true,
+    extra: ['Duplex']
+  },
+  'Double Vision': {
+    includeDefault: true,
+    extra: ['Duplex']
+  }
+}
+
 const modelOptions = computed(() => {
     if (!type.value) return []
 
     const defaultOptions = ['Dir', 'Esq']
+    const config = modelConfig[type.value]
+    
+    if (!config) return defaultOptions
 
-    const extraOptionsMap  = {
-        'Vertical': ['Lateral', 'Central', 'Invertida'],
-        'Horizontal': ['Duplex'],
-        'Rolo': ['Duplex'],
-        'Romana': ['Duplex'],
-        'Double Vision': ['Duplex'],
-    }
-    const extra = extraOptionsMap[type.value] || []
-    return [...defaultOptions, ...extra]
+    return config.includeDefault ? [...defaultOptions, ...config.extra] : config.extra
 })
 
 watch(type, () => {

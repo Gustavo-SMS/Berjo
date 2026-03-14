@@ -462,23 +462,32 @@ const deleteOrder = async (req, res) => {
     const id = req.params.id
 
     try {
-        const blind = prismaClient.blind.deleteMany({
-            where: {
-                order_id: id
-            }
+        const transaction = await prismaClient.$transaction(async (tx) => {
+
+            const order = await tx.order.findUnique({
+                where: { id }
+            })
+
+            if (!order) throw new Error("Pedido não encontrado")
+
+            await tx.blind.deleteMany({
+                where: { order_id: id }
+            })
+
+            await tx.order.delete({
+                where: { id }
+            })
+
+            await tx.customer.update({
+                where: { id: order.customer_id },
+                data: {
+                    debt: {
+                        decrement: order.total_price
+                    }
+                }
+            })
+
         })
-
-        const order = prismaClient.order.delete({
-            where: {
-                id
-            }
-        })
-
-        const transaction = await prismaClient.$transaction([blind, order])
-
-        if (!transaction) {
-            return res.status(404).json({ error: 'Não foi possível excluir o pedido' })
-        }
 
         return res.status(200).json(transaction)
     } catch (error) {

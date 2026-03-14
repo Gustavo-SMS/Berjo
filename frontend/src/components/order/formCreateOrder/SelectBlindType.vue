@@ -2,7 +2,7 @@
   <v-select
     v-model="selectedCollection"
     :options="formattedCollections"
-    label="label"
+    :get-option-label="formatLabel"
     :clearable="false"
     class="vselect-custom"
   />
@@ -19,7 +19,7 @@ import 'vue-select/dist/vue-select.css'
 
 const emit = defineEmits(['selectedOption'])
 
-const props = defineProps(['typeValue', 'collection'])
+const props = defineProps(['typeValue', 'selectedId'])
 
 const authStore = useAuthStore()
 const router = useRouter()
@@ -36,6 +36,10 @@ const formattedCollections = computed(() =>
       : 'Selecione'
   }))
 )
+
+const formatLabel = (option) => {
+  return `${option.collection} ${option.color}`
+}
 
 const fetchBlindCollections = async (type) => {
   if (!type) return
@@ -62,10 +66,6 @@ const fetchBlindCollections = async (type) => {
       color: bt.color
     }))
 
-    if (props.collection) {
-      selectedCollection.value = props.collection
-    }
-
   } catch (error) {
     console.log(error.message)
     notificationStore.addNotification(error.message, 'error')
@@ -73,8 +73,8 @@ const fetchBlindCollections = async (type) => {
 }
 
 watch(
-  () => [props.typeValue, props.collection],
-  async ([newType, newCollection]) => {
+  () => [props.typeValue, props.selectedId],
+  async ([newType, newSelectedId]) => {
 
     if (!newType) {
       blindCollections.value = []
@@ -84,13 +84,12 @@ watch(
 
     await fetchBlindCollections(newType)
 
-    if (newCollection) {
+    if (newSelectedId) {
       const match = blindCollections.value.find(
-        bc => bc.collection === newCollection
+        bc => bc.id === newSelectedId
       )
 
       selectedCollection.value = match || null
-
     } else {
       selectedCollection.value = null
     }

@@ -27,6 +27,7 @@
                           :key="editableType"
                           :typeValue="editableType"
                           :collection="editableCollection"
+                          :selectedId="editableBlindTypeId"
                           @selectedOption="handleBlindTypeSelected" 
                         />
                     </div>
