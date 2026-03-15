@@ -1,33 +1,98 @@
 <template>
-  <div class="card mb-3">
-    <div class="card-body row g-3">
-      <div class="col-md-3 col-sm-6" v-for="(field, index) in fields" :key="index">
-        <label class="form-label mb-1 fw-bold">{{ field.label }}</label>
-        <p class="form-control-plaintext">{{ field.value }}</p>
+  <div class="card customer-card">
+    <div class="card-body">
+
+      <div class="customer-header">
+        <div>
+          <h2 class="customer-name mb-1">
+            {{ props.customer.name }}
+          </h2>
+
+          <h3 class="customer-debt mb-0">
+            {{ formattedDebt }}
+          </h3>
+        </div>
+
+        <span
+          class="status-badge"
+          :class="props.customer.isActive ? 'active' : 'inactive'"
+        >
+          {{ props.customer.isActive ? 'ATIVO' : 'INATIVO' }}
+        </span>
       </div>
 
-      <div class="col-12 d-flex justify-content-end gap-2 mt-3">
-        <button @click="openUpdateCustomerModal" type="button" class="btn btn-primary">Editar</button>
-        <UpdateCustomerModal ref="updateCustomerModal" :customer="customerData" />
-        <button
-          v-if="authStore.userRole === 'ADMIN' && canDelete"
-          @click="props.customer.isActive ? openDeactivateModal() : reactivateCustomer()"
-          :class="props.customer.isActive ? 'btn btn-danger' : 'btn btn-outline-gold'"
-          type="button"
-        >
-          {{ props.customer.isActive ? 'Desativar' : 'Reativar' }}
-        </button>
-        <button
-          v-if="authStore.userRole === 'ADMIN' && canDelete && !props.customer.isActive"
-          @click="openDeleteModal()"
-          class="btn btn-danger"
-          type="button"
-        >
-          Excluir
-        </button>
+      <div class="customer-info mt-3">
+        <div class="info-item mb-2">
+          <i class="bi bi-envelope me-2"></i>
+          <span>{{ props.customer.email }}</span>
+        </div>
+
+        <div class="info-item mb-2">
+          <i class="bi bi-telephone me-2"></i>
+          <span>{{ formatPhone(props.customer.phone) }}</span>
+        </div>
+
+        <div class="info-item">
+          <i class="bi bi-geo-alt me-2"></i>
+          <span>
+            {{ props.customer.address.city }} -
+            {{ props.customer.address.state }}
+          </span>
+        </div>
       </div>
+
+      <transition name="expand">
+        <div v-if="isExpanded" class="pt-4 mt-3 border-top-gold">
+
+          <div class="row g-3">
+            <div
+              v-for="(field, index) in hiddenFields"
+              :key="index"
+              class="col-12 col-md-6 col-lg-4"
+            >
+              <label class="form-label">
+                {{ field.label }}
+              </label>
+
+              <p class="form-control-plaintext text-primary-custom">
+                {{ field.value || '-' }}
+              </p>
+            </div>
+          </div>
+
+          <div class="col-12 d-flex justify-content-end gap-2 mt-3">
+            <button @click="openUpdateCustomerModal" type="button" class="btn btn-primary">Editar</button>
+            <button
+              v-if="authStore.userRole === 'ADMIN' && canDelete"
+              @click="props.customer.isActive ? openDeactivateModal() : reactivateCustomer()"
+              :class="props.customer.isActive ? 'btn btn-danger' : 'btn btn-outline-gold'"
+              type="button"
+            >
+              {{ props.customer.isActive ? 'Desativar' : 'Reativar' }}
+            </button>
+            <button
+              v-if="authStore.userRole === 'ADMIN' && canDelete && !props.customer.isActive"
+              @click="openDeleteModal()"
+              class="btn btn-danger"
+              type="button"
+            >
+              Excluir
+            </button>
+          </div>
+
+        </div>
+      </transition>
+
+      <button
+        class="btn btn-outline-gold w-100 mt-4"
+        @click="toggleDetails"
+      >
+        {{ isExpanded ? 'Ocultar informações' : 'Ver mais informações' }}
+      </button>
+
     </div>
   </div>
+  <UpdateCustomerModal ref="updateCustomerModal" :customer="customerData" />
 
   <ConfirmationModal
     v-if="showModal"
@@ -45,7 +110,7 @@
     @close="showDeleteModal = false"
   />
 </template>
-                        
+
 <script setup>
 import { ref, nextTick, computed } from 'vue'
 import ConfirmationModal from '@/components/modal/ConfirmationModal.vue'
@@ -62,26 +127,26 @@ const notificationStore = useNotificationStore()
 
 const props = defineProps(['customer', 'getCustomers', 'canDelete'])
 
-const fields = computed(() => [
-  { label: 'Nome', value: props.customer.name },
-  { label: 'Email', value: props.customer.email },
+const isExpanded = ref(false)
+
+const toggleDetails = () => {
+  isExpanded.value = !isExpanded.value
+}
+
+const formattedDebt = computed(() => {
+  return new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL'
+  }).format(props.customer.debt || 0)
+})
+
+const hiddenFields = computed(() => [
   { label: 'CPF/CNPJ', value: formatDocNumber(props.customer.docNumber) },
-  { label: 'Telefone', value: formatPhone(props.customer.phone) },
   { label: 'Rua', value: props.customer.address.street },
-  { label: 'Nº', value: props.customer.address.house_number },
+  { label: 'Número', value: props.customer.address.house_number },
   { label: 'Complemento', value: props.customer.address.complement },
-  { label: 'Cidade', value: props.customer.address.city },
   { label: 'Bairro', value: props.customer.address.district },
-  { label: 'UF', value: props.customer.address.state },
-  { label: 'CEP', value: formatCEP(props.customer.address.zip) },
-  {
-    label: 'Dívida',
-    value: new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL'
-    }).format(props.customer.debt || 0)
-  },
-  { label: 'Status', value: props.customer.isActive ? 'Ativo' : 'Inativo'}
+  { label: 'CEP', value: formatCEP(props.customer.address.zip) }
 ])
 
 function formatDocNumber(doc) {
@@ -217,21 +282,67 @@ const openUpdateCustomerModal = async () => {
 </script>
 
 <style scoped>
-/* .btn-reactivate {
-  background-color: var(--color-secondary);
-  color: var(--color-text-light);
-  border: none;
-  padding: 0.5rem 1rem;
-  font-size: var(--font-size-base);
-  border-radius: var(--border-radius);
-  transition: background-color var(--transition-fast);
-} */
+.customer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
 
-.btn-reactivate:hover,
-.btn-reactivate:focus {
-  background-color: var(--color-secondary-dark);
-  color: var(--color-text-light);
-  text-decoration: none;
-  outline: none;
+.customer-name {
+  color: var(--text-primary);
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.customer-debt {
+  color: var(--color-gold);
+  font-weight: 600;
+}
+
+.status-badge {
+  padding: 0.4rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.status-badge.active {
+  background-color: rgba(212, 175, 55, 0.15);
+  color: var(--color-gold);
+}
+
+.status-badge.inactive {
+  background-color: rgba(192, 57, 43, 0.15);
+  color: var(--color-danger);
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+}
+
+.info-item i {
+  color: var(--color-gold-soft);
+}
+
+.border-top-gold {
+  border-top: 1px solid rgba(212, 175, 55, 0.15);
+}
+
+.expand-enter-active,
+.expand-leave-active {
+  transition: all var(--transition-base);
+}
+
+.expand-enter-from,
+.expand-leave-to {
+  opacity: 0;
+  transform: translateY(-6px);
+}
+
+.customer-card:hover {
+  transform: translateY(-2px);
 }
 </style>

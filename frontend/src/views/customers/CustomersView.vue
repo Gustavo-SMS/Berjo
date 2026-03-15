@@ -104,7 +104,7 @@ const searchTerm = ref('')
 const isActive = ref(true)
 
 const currentPage = ref(1)
-const itemsPerPage = 2
+const itemsPerPage = 8
 
 const statusOptions = [
   { label: 'Ativos', value: true },
@@ -208,7 +208,7 @@ watch(isActive, () => {
 
 .customers-grid {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
   gap: 24px;
 }
 
@@ -219,5 +219,11 @@ watch(isActive, () => {
   padding: 32px;
   border-radius: 12px;
   text-align: center;
+}
+
+@media (min-width: 1400px) {
+  .customers-grid {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  }
 }
 </style>
