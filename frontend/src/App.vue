@@ -13,7 +13,7 @@
 
     <Notification />
 
-    <main class="main-content">
+    <main class="main-content" :class="{ 'with-sidebar': showSidebar }">
       <button
         v-if="showSidebar"
         class="hamburger-btn"
@@ -82,7 +82,7 @@ onMounted(() => {
     transform: translateX(0);
   }
 
-  .main-content {
+  .with-sidebar {
     margin-left: 260px;
     width: calc(100% - 260px);
   }
@@ -133,5 +133,6 @@ onMounted(() => {
 .main-content {
   background: radial-gradient(circle at top, #1a1a1a, #0f0f0f);
   min-height: 100vh;
+  width: 100vw;
 }
 </style>
