@@ -1,8 +1,5 @@
 <template>
-  <main class="page-content">
-    <div class="card">
       <div class="card-body">
-
         <div class="page-header d-flex justify-content-between align-items-center flex-wrap gap-3">
           <h1>Pedidos</h1>
         </div>
@@ -46,8 +43,8 @@
         >
           <div class="order-header">
             <div class="order-title-status">
-              <h5>{{ new Date(order.created_at).toLocaleDateString('pt-BR') }}</h5>
-              <h5>Cliente: {{ order.customer.name }}</h5>
+              <h5 class="order-info">{{ new Date(order.created_at).toLocaleDateString('pt-BR') }}</h5>
+              <h5 class="order-info">Cliente: {{ order.customer.name }}</h5>
 
               <div v-if="editingOrderId === order.id" class="status-edit">
                 <v-select
@@ -79,7 +76,7 @@
             </div>
 
             <div class="order-actions">
-              <span class="fw-bold">Total: R$ {{ order.total_price }}</span>
+              <span class="order-info">Total: R$ {{ order.total_price }}</span>
 
               <button
                 v-if="(authStore.userRole === 'ADMIN' && order.status !== 'Concluido') ||
@@ -128,7 +125,6 @@
         </nav>
 
       </div>
-    </div>
 
     <ConfirmationModal
       v-if="showModal"
@@ -137,7 +133,6 @@
       @confirm="() => deleteOrder(orderToDeleteId)"
       @close="showModal = false"
     />
-  </main>
 </template>
 
 
@@ -395,6 +390,11 @@ const blindProps = (blind, status) => ({
   display: flex;
   align-items: center;
   gap: 1rem;
+}
+
+.order-info {
+  color: var(--text-primary);
+  font-weight: bold;
 }
 
 .empty-state {

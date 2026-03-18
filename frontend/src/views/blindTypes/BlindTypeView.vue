@@ -41,7 +41,7 @@
           <span>Cor</span>
           <span>Largura Máx.</span>
           <span>Preço</span>
-          <span>Ações</span>
+          <span v-if="authStore.userRole === 'ADMIN'">Ações</span>
         </div>
 
         <BlindTypeRow
@@ -118,8 +118,8 @@ const getBlindTypes = async () => {
 
         if (!response.ok) {
             const errorData = await response.json()
-            throw new Error(errorData.error || 'Erro ao buscar clientes')
-        }   
+            throw new Error(errorData.error || 'Erro ao buscar tipos de persiana')
+        }
 
         const data = await response.json()
         blindTypes.value = data
