@@ -526,7 +526,7 @@ async function generateReportByPeriod(req, res) {
 
     const content = [
       { text: `Relatório de Pedidos por Período`, style: 'header' },
-      { text: `Período: ${start.toLocaleDateString()} até ${end.toLocaleDateString()}`, margin: [0, 0, 0, 10] }
+      { text: `Período: ${start.toLocaleDateString('pt-BR')} até ${end.toLocaleDateString('pt-BR')}`, margin: [0, 0, 0, 10] }
     ]
 
     if (orders.length === 0) {
@@ -536,7 +536,7 @@ async function generateReportByPeriod(req, res) {
         content.push({ text: `Pedido ${index + 1}`, style: 'subheader' })
         content.push({ text: `Cliente: ${order.customer.name}` })
         content.push({ text: `Status: ${order.status}` })
-        content.push({ text: `Data: ${new Date(order.created_at).toLocaleDateString()}` })
+        content.push({ text: `Data: ${new Date(order.created_at).toLocaleDateString('pt-BR')}` })
         content.push({ text: `Total: R$ ${order.total_price.toFixed(2)}\n` })
 
         const blindsTable = [

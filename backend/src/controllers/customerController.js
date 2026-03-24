@@ -388,8 +388,8 @@ const generateReportByCustomer = async (req, res) => {
     { text: `Documento: ${customer.docNumber}` },
     { text: `Telefone: ${customer.phone}` },
     { text: `Email: ${customer.email}` },
-    { text: `Criado em: ${new Date(customer.created_at).toLocaleDateString()}` },
-    { text: `Período: ${start.toLocaleDateString()} até ${end.toLocaleDateString()}`, margin: [0, 10, 0, 10] }
+    { text: `Criado em: ${new Date(customer.created_at).toLocaleDateString('pt-BR')}` },
+    { text: `Período: ${start.toLocaleDateString('pt-BR')} até ${end.toLocaleDateString('pt-BR')}`, margin: [0, 10, 0, 10] }
   ]
 
   if (customer.address) {
@@ -406,7 +406,7 @@ const generateReportByCustomer = async (req, res) => {
   } else {
     customer.orders.forEach((order, i) => {
       content.push({ text: `Pedido ${i + 1}`, style: 'subheader' })
-      content.push({ text: `Data: ${new Date(order.created_at).toLocaleDateString()}` })
+      content.push({ text: `Data: ${new Date(order.created_at).toLocaleDateString('pt-BR')}` })
       content.push({ text: `Status: ${order.status}` })
       content.push({ text: `Total: R$ ${order.total_price.toFixed(2)}\n` })
 

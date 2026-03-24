@@ -1,7 +1,7 @@
 <template>
   <div class="modal fade" ref="blindTypeModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content dark-modal">
+      <div class="modal-content card">
 
         <div class="modal-header">
           <h5 class="modal-title">Editar tipo de persiana</h5>
