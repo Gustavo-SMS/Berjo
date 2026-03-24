@@ -398,9 +398,12 @@ const blindProps = (blind, status) => ({
 }
 
 .empty-state {
+  background-color: #141414;
+  border: 1px dashed rgba(212, 175, 55, 0.3);
+  color: #bfbfbf;
+  padding: 32px;
+  border-radius: 12px;
   text-align: center;
-  padding: 2rem;
-  opacity: 0.7;
 }
 
 .status-view {
