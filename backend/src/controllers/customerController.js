@@ -191,7 +191,7 @@ const createCustomer = async (req, res) => {
 
 const updateCustomer = async (req, res) => {
     const { id, name, email, docNumber, phone, street, house_number, complement, city, district, state, zip, debt } = req.body
- 
+    
     try {
         await checkUniqueData(email, docNumber, id)
 
@@ -214,8 +214,8 @@ const updateCustomer = async (req, res) => {
             },
             data: {
                 street: street || undefined,
-                house_number: parseInt(house_number) || undefined,
-                complement: complement || undefined,
+                house_number: parseInt(house_number) || null,
+                complement: complement || "",
                 city: city || undefined,
                 district: district || undefined,
                 state: state || undefined,

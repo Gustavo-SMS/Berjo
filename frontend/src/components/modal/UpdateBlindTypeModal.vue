@@ -13,9 +13,13 @@
 
             <div class="w-100">
               <label class="form-label">Tipo *</label>
-              <SelectType
-                :typeValue="editableType"
-                @selectedOption="handleTypeSelected"
+              <v-select
+                v-model="editableType"
+                :options="typeOptions"
+                label="label"
+                :reduce="option => option.value"
+                :clearable="false"
+                class="vselect-custom"
               />
             </div>
 
@@ -86,7 +90,8 @@ import { useNotificationStore } from '@/stores/notificationStore'
 import { fetchWithAuth } from '@/utils/api'
 import { useAuthStore } from '@/stores/authStore'
 import { useRouter } from 'vue-router'
-import SelectType from '@/components/order/formCreateOrder/SelectType.vue'
+import vSelect from 'vue-select'
+import 'vue-select/dist/vue-select.css'
   
 const authStore = useAuthStore()
 const router = useRouter()
@@ -100,9 +105,12 @@ const editableColor = ref('')
 const editableMaxWidth = ref('')
 const editablePrice = ref('')
 
-const handleTypeSelected = (selectedOption) => {
-    editableType.value = selectedOption || null
-}
+const typeOptions = [
+  { label: 'Persiana vertical', value: 'Persiana vertical' },
+  { label: 'PH 25mm', value: 'PH 25mm' },
+  { label: 'Rolo', value: 'Rolo' },
+  { label: 'Romana', value: 'Romana' }
+]
   
 const handleUptadeBlindType = async () => {
     const data = {

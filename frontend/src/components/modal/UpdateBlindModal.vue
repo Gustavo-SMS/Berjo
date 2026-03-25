@@ -34,7 +34,7 @@
 
                     <div class="w-100">
                         <label for="max_width" class="form-label">Largura</label>
-                        <input v-model="editableWidth" type="number" name="max_width" id="max_width" class="form-control" min="0" step="0.01">
+                        <input v-model="editableWidth" type="number" name="max_width" id="max_width" class="form-control" min="0" step="0.01" required>
                     </div>
 
                     <div class="w-100">

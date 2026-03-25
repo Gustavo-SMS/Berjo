@@ -12,6 +12,7 @@
             v-model="row.quantity"
             min="1"
             @input="$emit('updateRow', { field: 'quantity', value: row.quantity })"
+            required
           >
         </div>
 
@@ -42,6 +43,7 @@
             min="0"
             step="0.01"
             @input="$emit('updateRow', { field: 'width', value: row.width })"
+            required
           >
         </div>
 
@@ -54,6 +56,7 @@
             min="0"
             step="0.01"
             @input="$emit('updateRow', { field: 'height', value: row.height })"
+            required
           >
         </div>
 
@@ -66,6 +69,7 @@
             min="0"
             step="0.01"
             @input="$emit('updateRow', { field: 'command_height', value: row.command_height })"
+            required
           >
         </div>
 

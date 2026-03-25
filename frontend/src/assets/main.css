@@ -399,13 +399,12 @@ input[type="number"] {
   background-color: #d4af37;
   color: #000;
   border-color: #d4af37;
+  /* box-shadow: 0 0 0 0.20rem rgba(212, 175, 55, 0.25); */
 }
 
 .pagination-dark .page-link:hover {
   background-color: rgba(212, 175, 55, 0.2);
 }
-
-/* ===== MODAL ===== */
 
 /* ===== MODAL ===== */
 

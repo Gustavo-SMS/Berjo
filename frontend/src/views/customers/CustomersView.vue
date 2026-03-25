@@ -210,6 +210,7 @@ watch(isActive, () => {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
   gap: 24px;
+  align-items: start;
 }
 
 .empty-state {

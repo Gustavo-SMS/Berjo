@@ -62,7 +62,7 @@ const updateBlind = async (req, res) => {
                 height: parseFloat(height) || undefined,
                 command_height: parseFloat(command_height) || undefined,
                 model: model || undefined,
-                observation: observation || undefined,
+                observation: observation || "",
                 square_metre: parseFloat(square_metre) || undefined,
                 blind_price: blind_price || undefined,
                 type_id: type_id || undefined

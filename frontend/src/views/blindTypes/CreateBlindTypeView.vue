@@ -71,7 +71,7 @@
 
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { useNotificationStore } from '@/stores/notificationStore'
 import { fetchWithAuth } from '@/utils/api'
 import { useRouter } from 'vue-router'
@@ -120,7 +120,6 @@ const submitForm = async () => {
     }
 }
 
-// const typeOptions = ['Persiana vertical', 'PH 25mm', 'Rolo', 'Romana']
 const typeOptions = [
   { label: 'Persiana vertical', value: 'Persiana vertical' },
   { label: 'PH 25mm', value: 'PH 25mm' },
