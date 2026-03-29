@@ -24,7 +24,7 @@
               class="vselect-custom"
             />
 
-            <div v-if="authStore.userRole === 'ADMIN'" class="ms-auto">
+            <div class="ms-auto">
               <RouterLink to="/createOrder" class="btn btn-primary">
                 Adicionar pedido
               </RouterLink>
@@ -66,7 +66,7 @@
                 </span>
 
                 <button
-                  v-if="authStore.userRole === 'ADMIN' && selectedStatus !== 'Concluido'"
+                  v-if="authStore.userRole === 'ADMIN' && selectedStatus !== 'Concluído'"
                   @click="editStatus(order.id, order.status)"
                   class="btn btn-primary"
                 >
@@ -435,17 +435,14 @@ const blindProps = (blind, status) => ({
 .badge-status {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  padding: 0.6rem 1.2rem;
-  border-radius: 0.5rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
   font-weight: 600;
-  font-size: 0.9rem;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  border: 2px solid transparent;
-  transition: all 0.3s ease;
+  letter-spacing: 0.04em;
   white-space: nowrap;
+  border: 1px solid transparent;
 }
 
 .badge-status:hover {
@@ -454,32 +451,20 @@ const blindProps = (blind, status) => ({
 }
 
 .badge-espera {
-  background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
-  color: #000;
-  border-color: #ff9800;
-}
-
-.badge-espera:hover {
-  background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+  background-color: rgba(212, 175, 55, 0.12);
+  color: var(--color-gold);
+  border-color: rgba(212, 175, 55, 0.3);
 }
 
 .badge-producao {
-  background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
-  color: #fff;
-  border-color: #1976d2;
-}
-
-.badge-producao:hover {
-  background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+  background-color: rgba(33, 150, 243, 0.12);
+  color: #64b5f6;
+  border-color: rgba(33, 150, 243, 0.3);
 }
 
 .badge-concluido {
-  background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%);
-  color: #fff;
-  border-color: #388e3c;
-}
-
-.badge-concluido:hover {
-  background: linear-gradient(135deg, #388e3c 0%, #2e7d32 100%);
+  background-color: rgba(76, 175, 80, 0.12);
+  color: #81c784;
+  border-color: rgba(76, 175, 80, 0.3);
 }
 </style>

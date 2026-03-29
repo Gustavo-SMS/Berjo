@@ -4,7 +4,7 @@
 
       <div class="customer-header">
         <div>
-          <h2 class="customer-name mb-1">
+          <h2 class="customer-name mb-1" :class="{ truncated: !isExpanded }">
             {{ props.customer.name }}
           </h2>
 
@@ -288,10 +288,21 @@ const openUpdateCustomerModal = async () => {
   align-items: flex-start;
 }
 
+.customer-header > div {
+  flex: 1;
+  min-width: 0;
+}
+
 .customer-name {
   color: var(--text-primary);
   font-weight: 600;
   text-transform: capitalize;
+}
+
+.customer-name.truncated {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .customer-debt {

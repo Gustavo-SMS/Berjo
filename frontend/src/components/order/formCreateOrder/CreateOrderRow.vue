@@ -2,9 +2,8 @@
   <div class="card order-row-card mb-3">
     <div class="card-body">
 
-      <div class="row g-3 align-items-end">
-
-        <div class="col-sm-6 col-md-1 dark-input">
+      <div class="row g-3">
+        <div class="col-6 col-lg-1 dark-input">
           <label class="form-label">Qtd</label>
           <input
             type="number"
@@ -16,7 +15,7 @@
           >
         </div>
 
-        <div class="col-sm-6 col-md-2">
+        <div class="col-6 col-lg-2">
           <label class="form-label">Tipo</label>
           <SelectType
             :typeValue="type"
@@ -24,7 +23,7 @@
           />
         </div>
 
-        <div class="col-12 col-md-4">
+        <div class="col-12 col-lg-3">
           <label class="form-label">Modelo</label>
           <SelectBlindType  
             :key="type"
@@ -34,7 +33,7 @@
           />
         </div>
 
-        <div class="col-6 col-md-1 dark-input">
+        <div class="col-6 col-lg-1 dark-input">
           <label class="form-label">Largura</label>
           <input
             type="number"
@@ -47,7 +46,7 @@
           >
         </div>
 
-        <div class="col-6 col-md-1 dark-input">
+        <div class="col-6 col-lg-1 dark-input">
           <label class="form-label">Altura</label>
           <input
             type="number"
@@ -60,7 +59,7 @@
           >
         </div>
 
-        <div class="col-6 col-md-1 dark-input">
+        <div class="col-6 col-lg-1 dark-input">
           <label class="form-label">Comando</label>
           <input
             type="number"
@@ -73,7 +72,7 @@
           >
         </div>
 
-        <div class="col-6 col-md-1">
+        <div class="col-6 col-lg-2">
           <label class="form-label">Lado</label>
           <v-select
             v-model="row.model"
@@ -84,7 +83,7 @@
           />
         </div>
 
-        <div class="col-6 col-md-1 d-flex align-items-end">
+        <div class="col-12 col-lg-1 d-flex align-items-end">
           <button
             @click="$emit('deleteRow', rowId)"
             class="btn btn-danger w-100"
@@ -107,7 +106,6 @@
         </div>
 
       </div>
-
     </div>
   </div>
 </template>

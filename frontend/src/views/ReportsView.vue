@@ -3,7 +3,9 @@
     <div class="row justify-content-center">
       <div class="col-lg-8">
 
-        <h2 class="mb-4">Relatórios</h2>
+        <div class="page-header d-flex justify-content-between align-items-center flex-wrap gap-3">
+          <h1>Relatórios</h1>
+        </div>
 
         <div v-if="authStore.userRole && authStore.userRole === 'ADMIN'" class="card shadow-sm rounded-4 mb-4">
           <div class="card-body">
