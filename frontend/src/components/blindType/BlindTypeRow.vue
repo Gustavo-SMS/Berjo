@@ -1,27 +1,41 @@
 <template>
-    <form @submit.prevent="submitUpdate" class="blind-type-row">
-        <div>
-            <p>{{ props.blindType.type }}</p>
-        </div>
-        <div>
-            <p>{{ props.blindType.collection }}</p>
-        </div>
-        <div>
-            <p>{{ props.blindType.color }}</p>
-        </div>
-        <div>
-            <p>{{ props.blindType.max_width }}</p>
-        </div>
-        <div>
-            <p>R$ {{ props.blindType.price }}</p>
-        </div>
+  <form @submit.prevent="submitUpdate" class="blind-type-row">
+    
+    <div class="field">
+      <span class="mobile-label">Tipo</span>
+      <p>{{ props.blindType.type }}</p>
+    </div>
 
-        <div class="actions" v-if="authStore.userRole === 'ADMIN'">
-            <button @click="openUpdateBlindTypeModal" type="button" class="btn btn-primary">Editar</button>
-            <UpdateBlindTypeModal ref="updateBlindTypeModal" :blindType="blindTypeData" />
-            <button v-if="authStore.userRole === 'ADMIN'" @click="openDeleteModal" type="button" class="btn btn-danger">Excluir</button>
-        </div>
-      </form>
+    <div class="field">
+      <span class="mobile-label">Coleção</span>
+      <p>{{ props.blindType.collection }}</p>
+    </div>
+
+    <div class="field">
+      <span class="mobile-label">Cor</span>
+      <p>{{ props.blindType.color }}</p>
+    </div>
+
+    <div class="field">
+      <span class="mobile-label">Largura Máx.</span>
+      <p>{{ props.blindType.max_width }}</p>
+    </div>
+
+    <div class="field">
+      <span class="mobile-label">Preço</span>
+      <p>R$ {{ props.blindType.price }}</p>
+    </div>
+
+    <div class="actions" v-if="authStore.userRole === 'ADMIN'">
+      <button @click="openUpdateBlindTypeModal" type="button" class="btn btn-primary btn-sm">
+        Editar
+      </button>
+      <button @click="openDeleteModal" type="button" class="btn btn-danger btn-sm">
+        Excluir
+      </button>
+    </div>
+
+  </form>
 
         <ConfirmationModal
           v-if="showModal"
@@ -94,16 +108,6 @@ const openUpdateBlindTypeModal = async () => {
 </script>
 
 <style scoped>
-form {
-  border-bottom: 1px solid #333;
-}
-
-p {
-  margin: 0;
-  padding: 0;
-  font-size: 14px;
-}
-
 .blind-type-row {
   display: grid;
   grid-template-columns: 2fr 2fr 1fr 2fr 1fr 2fr;
@@ -111,39 +115,52 @@ p {
   align-items: center;
   width: 100%;
   padding: 0.75rem;
+  border-bottom: 1px solid var(--color-border);
 }
 
-.blind-type-row > div {
+.field {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+}
+
+.mobile-label {
+  display: none;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-gold);
+  margin-bottom: 2px;
+}
+
+p {
+  margin: 0;
+  font-size: 14px;
 }
 
 .actions {
   display: flex;
-  justify-content: flex-start;
   gap: 8px;
-}
-
-.blind-type-row button {
-  width: auto;
-  min-width: 70px;
 }
 
 @media (max-width: 768px) {
   .blind-type-row {
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr;
+    background: var(--color-card);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1rem;
   }
-}
 
-.d-flex {
-  display: flex;
-  gap: 1rem;
-  justify-content: flex-end;
-  align-items: center;
-}
+  .field {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 
-button {
-  white-space: nowrap;
+  .mobile-label {
+    display: block;
+  }
+
+  .actions {
+    margin-top: 0.75rem;
+  }
 }
 </style>
