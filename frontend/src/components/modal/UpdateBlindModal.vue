@@ -9,19 +9,19 @@
           </div>
   
             <div class="modal-body">
-                <form class="dark-input w-100 d-flex flex-column gap-3" @submit.prevent="handleUptadeBlind">
+                <form class="dark-input row g-3" @submit.prevent="handleUptadeBlind">
 
-                    <div class="w-100">
+                    <div class="col-12 col-md-6">
                         <label for="type" class="form-label">Qtde *</label>
                         <input v-model="editableQuantity" type="number" name="type" id="type" class="form-control" required>
                     </div>
-                                
-                    <div class="w-100">
+
+                    <div class="col-12 col-md-6">
                         <label for="collection" class="form-label">Tipo *</label>
                         <SelectType :typeValue="editableType" @selectedOption="handleTypeSelected" />
                     </div>
-                        
-                    <div class="w-100">
+
+                    <div class="col-12 col-md-6">
                         <label for="color" class="form-label">Coleção - Cor *</label>
                         <SelectBlindType 
                           :key="editableType"
@@ -32,22 +32,22 @@
                         />
                     </div>
 
-                    <div class="w-100">
+                    <div class="col-12 col-md-6">
                         <label for="max_width" class="form-label">Largura</label>
                         <input v-model="editableWidth" type="number" name="max_width" id="max_width" class="form-control" min="0" step="0.01" required>
                     </div>
 
-                    <div class="w-100">
+                    <div class="col-12 col-md-6">
                         <label for="price" class="form-label">Altura *</label>
                         <input v-model="editableHeight" type="number" name="price" id="price" class="form-control" min="0" step="0.01" required>
                     </div>
 
-                    <div class="w-100">
+                    <div class="col-12 col-md-6">
                         <label for="price" class="form-label">Alt. comando *</label>
                         <input v-model="editableCommand_height" type="number" name="price" id="price" class="form-control" min="0" step="0.01" required>
                     </div>
 
-                    <div class="w-100">
+                    <div class="col-12 col-md-6">
                         <label for="price" class="form-label">Modelo *</label>
                         <select v-if="modelOptions.length" class="form-control" v-model="editableModel">
                             <option value="" disabled></option>
@@ -57,7 +57,7 @@
                         </select>
                     </div>
 
-                    <div class="w-100">
+                    <div class="col-12">
                         <label for="price" class="form-label">Observações</label>
                         <input v-model="editableObservation" type="text" name="observation" id="observation" class="form-control" min="0" step="0.01">
                     </div>

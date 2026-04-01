@@ -60,7 +60,7 @@
         <ul class="dropdown-menu dark-select">
           <li>
             <button
-              class="dropdown-item btn-action-edit"
+              class="dropdown-item value"
               @click="openUpdateBlindModal"
             >
               Editar
@@ -252,5 +252,13 @@ watch(() => props.blind_price, (newVal) => {
   .actions {
     grid-column: span 2;
   }
+}
+
+.dropdown-menu.dark-select .dropdown-item:hover {
+  background-color: rgba(212, 175, 55, 0.2);
+}
+
+.dropdown-menu.dark-select .dropdown-item.text-danger:hover {
+  background-color: rgba(192, 57, 43, 0.12);
 }
 </style>

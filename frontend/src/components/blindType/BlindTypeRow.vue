@@ -37,6 +37,8 @@
 
   </form>
 
+    <UpdateBlindTypeModal :blindType="blindTypeData" ref="updateBlindTypeModal" />
+
         <ConfirmationModal
           v-if="showModal"
           :show="showModal"
