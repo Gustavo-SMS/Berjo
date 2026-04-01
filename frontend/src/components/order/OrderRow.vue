@@ -1,81 +1,87 @@
 <template>
-  <form @submit.prevent="submitUpdate" class="order-row-wrapper">
-    <div class="card p-3 mb-2">
-      <div class="row gy-3 align-items-start">
-        <div class="col-6 col-md-1">
-          <label class="form-label fw-semibold">Qtd.</label>
-          <p class="mb-0">{{ quantity }}</p>
-        </div>
+  <div class="blind-row">
 
-        <div class="col-6 col-md-2">
-          <label class="form-label fw-semibold">Tipo</label>
-          <p class="mb-0">{{ type }}</p>
-        </div>
+    <div class="cell">
+      <span class="label">Qtd</span>
+      <span class="value">{{ quantity }}</span>
+    </div>
 
-        <div class="col-12 col-md-3">
-          <label class="form-label fw-semibold">Coleção / Cor</label>
-          <p class="mb-0">{{ collection + ' ' + color }}</p>
-        </div>
+    <div class="cell">
+      <span class="label">Tipo</span>
+      <span class="value">{{ type }}</span>
+    </div>
 
-        <div class="col-6 col-md-1">
-            <label class="form-label fw-semibold label-full">Largura</label>
-            <label class="form-label fw-semibold label-short">Larg.</label>
-            <p class="mb-0">{{ width }}</p>
-        </div>
+    <div class="cell">
+      <span class="label">Coleção / Cor</span>
+      <span class="value">{{ collection + ' ' + color }}</span>
+    </div>
 
-        <div class="col-6 col-md-1">
-          <label class="form-label fw-semibold">Altura</label>
-          <p class="mb-0">{{ height }}</p>
-        </div>
+    <div class="cell">
+      <span class="label">Larg.</span>
+      <span class="value">{{ width }}</span>
+    </div>
 
-        <div class="col-6 col-md-1">
-            <label class="form-label fw-semibold label-full">Comando</label>
-            <label class="form-label fw-semibold label-short">Cmd.</label>
-            <p class="mb-0">{{ command_height }}</p>
-        </div>
+    <div class="cell">
+      <span class="label">Alt.</span>
+      <span class="value">{{ height }}</span>
+    </div>
 
-        <div class="col-6 col-md-1">
-          <label class="form-label fw-semibold">Lado</label>
-          <p class="mb-0">{{ model }}</p>
-        </div>
+    <div class="cell">
+      <span class="label">Cmd.</span>
+      <span class="value">{{ command_height }}</span>
+    </div>
 
-        <div class="col-6 col-md-1">
-          <label class="form-label fw-semibold">Preço</label>
-          <p class="mb-0">{{ editableBlind_price }}</p>
-        </div>
+    <div class="cell">
+      <span class="label">Lado</span>
+      <span class="value">{{ model }}</span>
+    </div>
 
-        <div class="col-6 col-md-1" v-if="props.status !== 'Concluido' && !(authStore.userRole === 'CUSTOMER' && props.status !== 'Em espera')">
-          <label class="form-label fw-semibold">Ações</label>
-          <div class="dropdown">
+    <div class="cell">
+      <span class="label">Preço</span>
+      <span class="value price">R$ {{ editableBlind_price }}</span>
+    </div>
+
+    <div
+      v-if="props.status !== 'Concluido' &&
+            !(authStore.userRole === 'CUSTOMER' && props.status !== 'Em espera')"
+      class="cell actions"
+    >
+      <span class="label">Ações</span>
+
+      <div class="dropdown">
+        <button
+          class="btn btn-sm btn-outline-gold"
+          type="button"
+          data-bs-toggle="dropdown"
+        >
+          ⋮
+        </button>
+
+        <ul class="dropdown-menu dark-select">
+          <li>
             <button
-              class="btn btn-outline-gold"
-              type="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
+              class="dropdown-item btn-action-edit"
+              @click="openUpdateBlindModal"
             >
-              ⋮
+              Editar
             </button>
-            <ul class="dropdown-menu dark-select">
-              <li>
-                <button class="dropdown-item btn-action-edit" @click="openUpdateBlindModal">Editar</button>
-              </li>
-              <li>
-                <button class="dropdown-item text-danger" @click="openDeleteModal">Excluir</button>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="col-12">
-          <label class="form-label fw-semibold">Observações</label>
-          <p class="mb-0">{{ observation }}</p>
-        </div>
+          </li>
+          <li>
+            <button
+              class="dropdown-item text-danger"
+              @click="openDeleteModal"
+            >
+              Excluir
+            </button>
+          </li>
+        </ul>
       </div>
     </div>
 
-    <UpdateBlindModal ref="updateBlindModal" :blind="blindData" />
+  </div>
 
-  </form>
+  <UpdateBlindModal ref="updateBlindModal" :blind="blindData" />
+
   <ConfirmationModal
     v-if="showModal"
     :show="showModal"
@@ -94,14 +100,28 @@ import { useRouter } from 'vue-router'
 import ConfirmationModal from '@/components/modal/ConfirmationModal.vue'
 import UpdateBlindModal from '@/components/modal/UpdateBlindModal.vue'
 
-const props = defineProps(['id', 'quantity', 'type', 'collection', 'blindTypeId', 'color', 
-'width', 'height', 'command_height', 'model', 'observation', 'status', 'blind_price', 'getOrders'])
+const props = defineProps([
+  'id',
+  'quantity',
+  'type',
+  'collection',
+  'blindTypeId',
+  'color',
+  'width',
+  'height',
+  'command_height',
+  'model',
+  'observation',
+  'status',
+  'blind_price',
+  'getOrders'
+])
 
 const authStore = useAuthStore()
 const router = useRouter()
 const notificationStore = useNotificationStore()
-const showModal = ref(false)
 
+const showModal = ref(false)
 const editableBlind_price = ref(props.blind_price)
 
 const openDeleteModal = () => {
@@ -110,24 +130,30 @@ const openDeleteModal = () => {
 
 const deleteBlind = async () => {
   try {
-        const response = await fetchWithAuth(`/blinds/${props.id}`, {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-          }
-        }, authStore, router)
+    const response = await fetchWithAuth(
+      `/blinds/${props.id}`,
+      {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' }
+      },
+      authStore,
+      router
+    )
 
-        if (!response.ok) {
-            const errorData = await response.json()
-            throw new Error(errorData.error || 'Erro ao excluir persiana')
-        }
+    if (!response.ok) {
+      const errorData = await response.json()
+      throw new Error(errorData.error || 'Erro ao excluir persiana')
+    }
 
-        notificationStore.addNotification('Persiana excluida', 'success')
-        props.getOrders(props.status)
-      } catch (error) {
-        console.error('Erro ao excluir persiana:', error.message)
-        notificationStore.addNotification(error.message, 'error')
-      }
+    notificationStore.addNotification('Persiana excluída', 'success')
+    props.getOrders(props.status)
+
+  } catch (error) {
+    console.error(error.message)
+    notificationStore.addNotification(error.message, 'error')
+  } finally {
+    showModal.value = false
+  }
 }
 
 const blindData = ref({})
@@ -149,6 +175,7 @@ const openUpdateBlindModal = async () => {
     status: props.status,
     getOrders: props.getOrders
   }
+
   await nextTick()
   updateBlindModal.value?.showModal()
 }
@@ -159,38 +186,71 @@ watch(() => props.blind_price, (newVal) => {
 </script>
 
 <style scoped>
-.form-label {
-  white-space: nowrap;
+.blind-row {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 1rem;
+  padding: 1rem 0.75rem;
+  align-items: center;
+  border-bottom: 1px solid var(--color-border);
+  transition: background 0.2s ease;
 }
 
-.label-full {
-  display: inline;
+.blind-row:hover {
+  background-color: rgba(212, 175, 55, 0.05);
 }
 
-.label-short {
+.cell {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
   display: none;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-gold);
+  margin-bottom: 2px;
 }
 
-@media (max-width: 999.98px) and (min-width: 768px) {
-  .label-full {
-    display: none;
+.value {
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.price {
+  font-weight: 600;
+}
+
+@media (max-width: 1200px) {
+  .blind-row {
+    grid-template-columns: repeat(4, 1fr);
+    row-gap: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+
+  .blind-row {
+    grid-template-columns: 1fr 1fr;
+    background: rgba(255,255,255,0.02);
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
   }
 
-  .label-short {
-    display: inline;
+  .label {
+    display: block;
   }
-}
 
-.btn-action-edit {
-  color: #fff;
-}
+  .value {
+    font-size: 1rem;
+  }
 
-.dropdown-item {
-  transition: all 0.2s ease;
-}
-
-.dropdown-item:hover {
-  background-color: rgba(212, 175, 55, 0.2);
-  color: #f1f1f1;
+  .actions {
+    grid-column: span 2;
+  }
 }
 </style>

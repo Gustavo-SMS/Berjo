@@ -39,7 +39,7 @@
           v-else
           v-for="order in paginatedOrders"
           :key="order.id"
-          class="order-card"
+          class="order-card card"
         >
           <div class="order-header">
             <div class="order-title-status">
@@ -79,6 +79,13 @@
               <span class="order-info">Total: R$ {{ order.total_price }}</span>
 
               <button
+                @click="toggleOrder(order.id)"
+                class="btn btn-outline-gold"
+              >
+                {{ isExpanded(order.id) ? 'Ocultar pedido' : 'Ver pedido' }}
+              </button>
+
+              <button
                 v-if="(authStore.userRole === 'ADMIN' && order.status !== 'Concluido') ||
                        (authStore.userRole === 'CUSTOMER' && order.status === 'Em espera')"
                 @click="() => openDeleteModal(order.id)"
@@ -89,12 +96,27 @@
             </div>
           </div>
 
-          <OrderRow
+          <div v-if="isExpanded(order.id)" class="blinds-list">
+
+            <div class="blinds-header">
+              <div>Qtd</div>
+              <div>Tipo</div>
+              <div>Coleção / Cor</div>
+              <div>Larg.</div>
+              <div>Alt.</div>
+              <div>Cmd.</div>
+              <div>Lado</div>
+              <div>Preço</div>
+              <div v-if="order.status !== 'Concluido'">Ações</div>
+            </div>
+
+            <OrderRow
             v-for="blind in order.blind"
             :key="blind.id"
             v-bind="blindProps(blind, order.status)"
             :getOrders="getOrders"
-          />
+            />
+          </div>
         </div>
 
         <nav v-if="totalPages > 1" class="pagination-wrapper">
@@ -160,13 +182,29 @@ const statusMap = ref({})
 const searchTerm = ref('')
 
 const currentPage = ref(1)
-const itemsPerPage = 2
+const itemsPerPage = 5
 
 const statusOptions = [
   { label: 'Em espera', value: 'Em espera' },
   { label: 'Em produção', value: 'Em produção' },
   { label: 'Concluído', value: 'Concluído' }
 ]
+
+const expandedOrders = ref(new Set())
+
+const toggleOrder = (orderId) => {
+  if (expandedOrders.value.has(orderId)) {
+    expandedOrders.value.delete(orderId)
+  } else {
+    expandedOrders.value.add(orderId)
+  }
+
+  expandedOrders.value = new Set(expandedOrders.value)
+}
+
+const isExpanded = (orderId) => {
+  return expandedOrders.value.has(orderId)
+}
 
 const getOrders = async (status, customerId) => {
     let url = `/orders/filter/`
@@ -367,8 +405,6 @@ const blindProps = (blind, status) => ({
   border: 1px solid var(--color-border);
   border-radius: var(--border-radius);
   padding: 1.5rem;
-  margin-bottom: 2rem;
-  background: var(--color-surface);
 }
 
 .order-header {
@@ -376,7 +412,6 @@ const blindProps = (blind, status) => ({
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 1rem;
-  margin-bottom: 1rem;
 }
 
 .order-title-status {
@@ -466,5 +501,33 @@ const blindProps = (blind, status) => ({
   background-color: rgba(76, 175, 80, 0.12);
   color: #81c784;
   border-color: rgba(76, 175, 80, 0.3);
+}
+
+.blinds-list {
+  margin-top: 1.5rem;
+  border-top: 1px solid var(--color-border);
+  padding-top: 1rem;
+}
+
+.blinds-header {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 1rem;
+  font-size: 0.95rem;        
+  font-weight: 600;          
+  /* letter-spacing: 0.04em; */
+  /* text-transform: uppercase; */
+  color: var(--color-gold);
+  /* margin-bottom: 1rem; */
+  padding: 0.75rem 1rem;
+  /* background: rgba(212, 175, 55, 0.06); */
+  border-radius: 8px;
+  /* border: 1px solid rgba(212, 175, 55, 0.15); */
+}
+
+@media (max-width: 768px) {
+  .blinds-header {
+    display: none;
+  }
 }
 </style>
