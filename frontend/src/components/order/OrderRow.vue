@@ -224,13 +224,6 @@ watch(() => props.blind_price, (newVal) => {
   font-weight: 600;
 }
 
-@media (max-width: 1200px) {
-  .blind-row {
-    grid-template-columns: repeat(4, 1fr);
-    row-gap: 1rem;
-  }
-}
-
 @media (max-width: 768px) {
 
   .blind-row {

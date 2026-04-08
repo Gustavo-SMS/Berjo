@@ -514,15 +514,9 @@ const blindProps = (blind, status) => ({
   grid-template-columns: repeat(9, 1fr);
   gap: 1rem;
   font-size: 0.95rem;        
-  font-weight: 600;          
-  /* letter-spacing: 0.04em; */
-  /* text-transform: uppercase; */
   color: var(--color-gold);
-  /* margin-bottom: 1rem; */
   padding: 0.75rem 1rem;
-  /* background: rgba(212, 175, 55, 0.06); */
   border-radius: 8px;
-  /* border: 1px solid rgba(212, 175, 55, 0.15); */
 }
 
 @media (max-width: 768px) {
