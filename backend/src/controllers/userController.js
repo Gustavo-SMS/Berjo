@@ -179,7 +179,7 @@ const validateLogin = async (req, res) => {
   const checkPassword = await validatePassword(password, user.password)
 
   if (!checkPassword) {
-    return res.status(422).json({ error: 'Senha incorreta' })
+    return res.status(422).json({ error: 'Login ou senha incorretos' })
   }
 
   try {

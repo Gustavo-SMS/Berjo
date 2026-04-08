@@ -86,7 +86,7 @@
               </button>
 
               <button
-                v-if="(authStore.userRole === 'ADMIN' && order.status !== 'Concluido') ||
+                v-if="(authStore.userRole === 'ADMIN' && order.status !== 'Concluído') ||
                        (authStore.userRole === 'CUSTOMER' && order.status === 'Em espera')"
                 @click="() => openDeleteModal(order.id)"
                 class="btn btn-danger"
@@ -107,7 +107,7 @@
               <div>Cmd.</div>
               <div>Lado</div>
               <div>Preço</div>
-              <div v-if="order.status !== 'Concluido'">Ações</div>
+              <div v-if="order.status !== 'Concluído'">Ações</div>
             </div>
 
             <OrderRow

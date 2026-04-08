@@ -42,7 +42,7 @@
     </div>
 
     <div
-      v-if="props.status !== 'Concluido' &&
+      v-if="props.status !== 'Concluído' &&
             !(authStore.userRole === 'CUSTOMER' && props.status !== 'Em espera')"
       class="cell actions"
     >

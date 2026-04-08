@@ -213,7 +213,7 @@ const getOrdersByFilter = async (req, res) => {
     const { status, customerId } = req.query
 
     try {
-        const isCompleted = status === 'Concluido'
+        const isCompleted = status === 'Concluído'
         const limit = 30
 
         const orders = await prismaClient.order.findMany({
@@ -319,7 +319,7 @@ const changeStatus = async (req, res) => {
             return res.status(404).json({ error: 'Não foi possível atualizar o pedido' })
         }
 
-        if (status === "Concluido" && status) {
+        if (status === "Concluído" && status) {
             createMail(id)
         }
 

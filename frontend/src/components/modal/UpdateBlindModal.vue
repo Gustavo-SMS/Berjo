@@ -49,12 +49,13 @@
 
                     <div class="col-12 col-md-6">
                         <label for="price" class="form-label">Modelo *</label>
-                        <select v-if="modelOptions.length" class="form-control" v-model="editableModel">
-                            <option value="" disabled></option>
-                            <option v-for="option in modelOptions" :key="option" :value="option">
-                                {{ option }}
-                            </option>
-                        </select>
+                        <v-select
+                          v-model="editableModel"
+                          :options="modelOptions"
+                          :clearable="false"
+                          :disabled="!modelOptions.length"
+                          class="vselect-custom"
+                        />
                     </div>
 
                     <div class="col-12">
@@ -80,6 +81,8 @@ import { useNotificationStore } from '@/stores/notificationStore'
 import { fetchWithAuth } from '@/utils/api'
 import { useAuthStore } from '@/stores/authStore'
 import { useRouter } from 'vue-router'
+import vSelect from 'vue-select'
+import 'vue-select/dist/vue-select.css'
 import SelectType from '@/components/order/formCreateOrder/SelectType.vue'
 import SelectBlindType from '@/components/order/formCreateOrder/SelectBlindType.vue'
   
@@ -109,20 +112,38 @@ const handleBlindTypeSelected  = (selectedObject) => {
   editableBlindTypeId.value = selectedObject.id || null
 }
 
+const modelConfig = {
+  'Persiana vertical': {
+    includeDefault: false,
+    extra: ['Lateral', 'Central', 'Invertida']
+  },
+  'PH 25mm': {
+    includeDefault: true,
+    extra: ['Duplex']
+  },
+  'Rolo': {
+    includeDefault: true,
+    extra: ['Duplex']
+  },
+  'Romana': {
+    includeDefault: true,
+    extra: ['Duplex']
+  },
+  'Double Vision': {
+    includeDefault: true,
+    extra: ['Duplex']
+  }
+}
+
 const modelOptions = computed(() => {
     if (!editableType.value) return []
 
     const defaultOptions = ['Dir', 'Esq']
+    const config = modelConfig[editableType.value]
 
-    const extraOptionsMap  = {
-        'Vertical': ['Lateral', 'Central', 'Invertida'],
-        'Horizontal': ['Duplex'],
-        'Rolo': ['Duplex'],
-        'Romana': ['Duplex'],
-        'Double Vision': ['Duplex'],
-    }
-    const extra = extraOptionsMap[editableType.value] || []
-    return [...defaultOptions, ...extra]
+    if (!config) return defaultOptions
+
+    return config.includeDefault ? [...defaultOptions, ...config.extra] : config.extra
 })
   
 const handleUptadeBlind = async () => {

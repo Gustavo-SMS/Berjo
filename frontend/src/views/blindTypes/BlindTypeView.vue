@@ -98,7 +98,7 @@ const blindTypes = ref([])
 const searchTerm = ref('')
 
 const currentPage = ref(1)
-const itemsPerPage = 3
+const itemsPerPage = 10
 
 const selectedOption = ref('type')
 
