@@ -1,5 +1,6 @@
 const { prismaClient } = require('../database/prismaClient')
-const { sendEmail, generateHtmlTable } = require('../services/nodemailer')
+const { sendEmail } = require('../services/nodemailer')
+const { orderCompletedTemplate } = require("../utils/orderCompletedTemplate.js")
 const { calculateTotalPrice } = require("../utils/priceCalculator")
 const customerController = require('./customerController')
 const generateReportPDF = require('../utils/reportGenerator')
@@ -336,25 +337,11 @@ const createMail = async (id) => {
     const email = order.customer.email
     const total_price = order.total_price
 
-    const blindsEmail = order.blind.map(blind => ({
-        Qtde: blind.quantity,
-        Largura: blind.width,
-        Altura: blind.height,
-        Modelo: blind.model,
-        Tipo: blind.type.type,
-        Coleção: blind.type.collection,
-        Cor: blind.type.color,
-    }))
-
-    const tabela = generateHtmlTable(blindsEmail)
-
-    const html = `
-    <p>Olá, ${name}!</p>
-    <p>Seu pedido está pronto. Aqui estão os detalhes:</p>
-    ${tabela}
-    <p><strong>Total: R$ ${total_price}</strong></p>
-    <p>Obrigado por comprar conosco!</p>
-  `
+    const html = orderCompletedTemplate({
+        name,
+        order,
+        total_price
+    })
 
     await sendEmail({
         to: email,
