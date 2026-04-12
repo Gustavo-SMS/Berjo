@@ -7,16 +7,10 @@ const userSchema = Joi.object({
     'string.min': 'Login deve ter pelo menos 5 caracteres',
     'any.required': 'Login é obrigatório'
   }),
-  password: Joi.string().min(6).pattern(/^[a-zA-Z0-9]{3,30}$/).required().messages({
-    'string.min': 'Senha deve ter no mínimo 6 caracteres',
-    'string.pattern.base': 'A senha deve conter apenas letras e números',
-    'string.empty': 'Senha é obrigatória',
-    'any.required': 'Senha é obrigatória'
-  }),
-  confirmPassword: Joi.any().valid(Joi.ref('password')).required().messages({
-    'any.only': 'As senhas não coincidem',
-    'any.required': 'Confirmação de senha é obrigatória'
-  }),
+  // confirmPassword: Joi.any().valid(Joi.ref('password')).required().messages({
+  //   'any.only': 'As senhas não coincidem',
+  //   'any.required': 'Confirmação de senha é obrigatória'
+  // }),
   customerId: Joi.string().required().messages({
     'string.empty': 'Cliente é obrigatório',
     'any.required': 'Cliente é obrigatório'
@@ -25,6 +19,13 @@ const userSchema = Joi.object({
     'any.only': 'Tipo de usuário deve ser USER ou ADMIN'
   })
 })
+
+const passwordSchema = Joi.string().min(6).pattern(/^[a-zA-Z0-9]{3,30}$/).required().messages({
+    'string.min': 'Senha deve ter no mínimo 6 caracteres',
+    'string.pattern.base': 'A senha deve conter apenas letras e números',
+    'string.empty': 'Senha é obrigatória',
+    'any.required': 'Senha é obrigatória'
+  })
 
 const loginSchema = Joi.object({
   login: Joi.string().min(5).required().messages({
@@ -156,6 +157,7 @@ const blindTypeSchema = Joi.object({
 module.exports = {
     userSchema,
     loginSchema,
+    passwordSchema,
     customerSchema,
     blindSchema,
     blindTypeSchema,

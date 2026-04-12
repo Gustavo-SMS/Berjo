@@ -20,6 +20,9 @@ model User {
   passwordResetToken    String?  @db.Text
   passwordResetExpires  DateTime?
 
+  isActive             Boolean   @default(false)
+  mustChangePassword   Boolean   @default(true)
+
   customerId    String?   @unique
   customer      Customer? @relation(fields: [customerId], references: [id])
 }

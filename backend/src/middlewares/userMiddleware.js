@@ -1,5 +1,5 @@
 const { prismaClient } = require('../database/prismaClient')
-const { userSchema, loginSchema } = require('../schema/validationSchema')
+const { userSchema, loginSchema, passwordSchema } = require('../schema/validationSchema')
 
 
 const validateUserData = async (req, res, next) => {
@@ -30,7 +30,6 @@ const validateLoginData = async (req, res, next) => {
 const validatePassword = async (req, res, next) => {
     try {
         const { newPassword } = req.body
-        const passwordSchema = userSchema.extract('password')
         await passwordSchema.validateAsync(newPassword)
         next()
     }

@@ -24,7 +24,7 @@
             />
           </div>
 
-          <div class="mb-3">
+          <!-- <div class="mb-3">
             <label for="password" class="form-label">Senha *</label>
             <div class="password-wrapper">
               <input
@@ -63,8 +63,8 @@
               >
                 <i :class="showConfirmPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
               </button>
-            </div>
-          </div>
+            </div> -->
+          <!-- </div> -->
 
           <button type="submit" class="btn btn-primary w-100">
             Cadastrar usuário
@@ -104,8 +104,8 @@ const submitForm = async () => {
 
   const data = {
     login: login.value,
-    password: password.value,
-    confirmPassword: confirmPassword.value,
+    // password: password.value,
+    // confirmPassword: confirmPassword.value,
     customerId: unlinkedCustomerId.value
   }
   
@@ -139,8 +139,8 @@ const customerError = ref(false)
 
 const validateForm = () => {
   loginError.value = !login.value.trim()
-  passwordError.value = !password.value.trim()
-  confirmPasswordError.value = password.value !== confirmPassword.value
+  // passwordError.value = !password.value.trim()
+  // confirmPasswordError.value = password.value !== confirmPassword.value
   customerError.value = !unlinkedCustomerId.value
 
   const errors = []
@@ -149,13 +149,13 @@ const validateForm = () => {
     errors.push('Login é obrigatório')
   }
 
-  if (!password.value.trim()) {
-    errors.push('Senha é obrigatória')
-  }
+  // if (!password.value.trim()) {
+  //   errors.push('Senha é obrigatória')
+  // }
 
-  if (password.value !== confirmPassword.value) {
-    errors.push('As senhas não coincidem')
-  }
+  // if (password.value !== confirmPassword.value) {
+  //   errors.push('As senhas não coincidem')
+  // }
 
   if (!unlinkedCustomerId.value) {
     errors.push('É necessário selecionar um cliente')
@@ -165,25 +165,25 @@ const validateForm = () => {
     errors.forEach(err => notificationStore.addNotification(err, 'error'))
   }
 
-  return !(loginError.value || passwordError.value || confirmPasswordError.value || customerError.value)
+  return !(loginError.value /*|| passwordError.value || confirmPasswordError.value*/ || customerError.value)
 }
 
 const resetForm = () => {
   login.value = ''
-  password.value = ''
-  confirmPassword.value = ''
+  // password.value = ''
+  // confirmPassword.value = ''
 }
 
-const showPassword = ref(false)
-const showConfirmPassword = ref(false)
+// const showPassword = ref(false)
+// const showConfirmPassword = ref(false)
 
-const togglePassword = () => {
-  showPassword.value = !showPassword.value
-}
+// const togglePassword = () => {
+//   showPassword.value = !showPassword.value
+// }
 
-const toggleConfirmPassword = () => {
-  showConfirmPassword.value = !showConfirmPassword.value
-}
+// const toggleConfirmPassword = () => {
+//   showConfirmPassword.value = !showConfirmPassword.value
+// }
 </script>
 
 <style scoped>

@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken')
 const crypto = require('crypto')
 const { sendEmail } = require('../services/nodemailer')
 const resetPasswordTemplate = require('../utils/resetPasswordTemplate')
+const userActivationTemplate = require('../utils/userActivationTemplate')
 
 const validateCurrentPassword = async (userId, currentPassword) => {
   const user = await prismaClient.user.findUnique({ where: { id: userId } })
@@ -87,45 +88,58 @@ const updatePassword = async (req, res) => {
 }
 
 const registerUser = async (req, res) => {
-  const { login, password, confirmPassword, customerId, role } = req.body
+  const { login, customerId } = req.body
 
   if (!login) {
     return res.status(422).json({ error: 'O login é obrigatório!' })
   }
 
-  if (!password) {
-    return res.status(422).json({ error: 'A senha é obrigatória!' })
-  }
-
-  if (password !== confirmPassword) {
-    return res.status(422).json({ error: 'As senhas não conferem!' })
-  }
-
   const userExists = await prismaClient.user.findUnique({
-    where: {
-      login
-    }
+    where: { login }
   })
 
   if (userExists) {
     return res.status(422).json({ error: 'Por favor, utilize outro login!' })
   }
 
-  const salt = await bcrypt.genSalt(12)
-  const passwordHash = await bcrypt.hash(password, salt)
+try {
+    const tempPassword = crypto.randomBytes(8).toString('hex')
+    const salt = await bcrypt.genSalt(12)
+    const passwordHash = await bcrypt.hash(tempPassword, salt)
 
-  const user = await prismaClient.user.create({
-    data: {
-      login,
-      password: passwordHash,
-      role,
-      customer: {
-        connect: { id: customerId }
-      }
-    }
-  })
+    const token = crypto.randomBytes(32).toString('hex')
+    const expiration = new Date(Date.now() + 24 * 60 * 60 * 1000) // 24h
 
-  return res.status(200).json(`Usuário criado com sucesso! ${user.login}`)
+    const user = await prismaClient.user.create({
+      data: {
+        login,
+        password: passwordHash,
+        isActive: false,
+        mustChangePassword: true,
+        passwordResetToken: token,
+        passwordResetExpires: expiration,
+        customer: {
+          connect: { id: customerId }
+        }
+      },
+      include: { customer: true }
+    })
+    const link = `${process.env.FRONTEND_URL}/resetPassword?token=${token}`
+
+    await sendEmail({
+      to: user.customer.email,
+      subject: 'Ativação de Conta',
+      html: userActivationTemplate(link)
+    })
+
+    return res.status(201).json({
+      msg: 'Usuário criado com sucesso! Link de ativação enviado.'
+    })
+
+  } catch (error) {
+    console.error(error)
+    return res.status(500).json({ error: 'Erro ao criar usuário.' })
+  }
 }
 
 async function validateUser(login) {
@@ -141,6 +155,10 @@ async function validateUser(login) {
     })
 
     if (!user) return { error: 'Usuário não encontrado' }
+
+    if (!user.isActive) {
+      return { error: "Conta ainda não ativada." }
+    }
 
     if (user.role === 'CUSTOMER' && !user.customer) {
       return { error: 'Usuário ainda não vinculado a um cliente.' }
@@ -227,6 +245,10 @@ const recoverPassword = async (req, res) => {
       return res.status(200).json({ error: 'Link enviado para o email informado' })
     }
 
+    if (!customer.user.isActive) {
+      return res.status(400).json({ error: 'Conta ainda não ativada.' })
+    }
+
     const token = crypto.randomBytes(32).toString('hex');
     const expiration = new Date(Date.now() + 60 * 60 * 1000) // 1 hora
 
@@ -282,7 +304,9 @@ const resetPassword = async (req, res) => {
     data: {
       password: hashedPassword,
       passwordResetToken: null,
-      passwordResetExpires: null
+      passwordResetExpires: null,
+      isActive: true,
+      mustChangePassword: false
     }
   })
 
