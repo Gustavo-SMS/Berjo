@@ -119,7 +119,10 @@ const changeView = () => {
 }
 
 const registerUser = () => {
-    router.push('/register')
+    router.push({
+        path: '/customers',
+        query: { openUserModal: 'true' }
+    })
 }
 
 const submitForm = async () => {

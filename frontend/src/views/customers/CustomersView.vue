@@ -35,9 +35,9 @@
         <RouterLink :to="'/createCustomer'" class="btn btn-primary">
           Adicionar cliente
         </RouterLink>
-        <RouterLink :to="'/register'" class="btn btn-primary">
+        <button @click="openRegisterUserModal" type="button" class="btn btn-primary">
           Cadastrar usuário
-        </RouterLink>
+        </button>
       </div>
     </div>
 
@@ -81,15 +81,17 @@
         </li>
       </ul>
     </nav>
-
   </div>
+
+  <RegisterUserModal ref="registerUserModal" />
 </template>
 
 <script setup>
-import { onMounted, ref, computed, watch } from 'vue'
+import { onMounted, ref, computed, watch, nextTick } from 'vue'
 import CustomerRow from '@/components/customer/CustomerRow.vue'
+import RegisterUserModal from '@/components/modal/RegisterUserModal.vue'
 import { useAuthStore } from '@/stores/authStore'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { fetchWithAuth } from '@/utils/api'
 import vSelect from 'vue-select'
 import 'vue-select/dist/vue-select.css'
@@ -98,6 +100,7 @@ const apiUrl = import.meta.env.VITE_API_URL
 
 const authStore = useAuthStore()
 const router = useRouter()
+const route = useRoute()
 
 const customers = ref([])
 const searchTerm = ref('')
@@ -198,6 +201,22 @@ watch(isActive, () => {
   } else {
     getCustomers()
   }
+})
+
+const registerUserModal = ref(null)
+
+const openRegisterUserModal = async () => {
+  await nextTick()
+  registerUserModal.value?.showModal()
+}
+
+onMounted(async () => {
+    if (route.query.openUserModal === 'true') {
+        await nextTick()
+        registerUserModal.value?.showModal()
+
+        router.replace({ query: {} })
+    }
 })
 </script>
 

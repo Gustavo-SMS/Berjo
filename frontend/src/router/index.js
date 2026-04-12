@@ -16,12 +16,6 @@ const router = createRouter({
       component: () => import('../views/login/LoginView.vue')
     },
     {
-      path: '/register',
-      name: 'register',
-      component: () => import('../views/login/RegisterView.vue'),
-      meta: { requiresAuth: true, requiresAdmin: true }
-    },
-    {
       path: '/resetPassword',
       name: 'resetPassword',
       component: () => import('../views/login/ResetPasswordView.vue')
@@ -96,24 +90,5 @@ router.beforeEach(async (to, from, next) => {
 
   next()
 })
-
-// router.beforeEach((to, from, next) => {
-//   const isAuthenticated = !!localStorage.getItem('userRole')
-//   const userRole = localStorage.getItem('userRole')
-
-//   if (to.meta.requiresAuth && !isAuthenticated) {
-//     document.cookie = 'token=; Max-Age=0; path=/'
-//     document.cookie = 'refreshToken=; Max-Age=0; path=/'
-//     localStorage.removeItem('userRole')
-//     localStorage.removeItem('customerId')
-//     return next('/')
-//   }
-
-//   if (to.meta.requiresAdmin && userRole !== 'ADMIN') {
-//     return next('/')
-//   }
-
-//   next()
-// })
 
 export default router
