@@ -28,6 +28,7 @@ router.put('/users/login', authenticateToken.authenticateToken, userController.u
 router.put('/users/password', authenticateToken.authenticateToken, userController.updatePassword)
 router.put('/users/recoverPassword', userController.recoverPassword)
 router.post('/users/resetPassword', userMiddleware.validatePassword, userController.resetPassword)
+router.post('/users/resendReset', userController.resendResetPassword)
 
 router.get('/me', authenticateToken.authenticateToken, (req, res) => {
   const { role, customerId } = req.user

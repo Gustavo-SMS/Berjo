@@ -282,35 +282,91 @@ const recoverPassword = async (req, res) => {
 
 const resetPassword = async (req, res) => {
   const { token, newPassword } = req.body
-  
-  const user = await prismaClient.user.findFirst({
-    where: {
-      passwordResetToken: token,
-      passwordResetExpires: { 
-        gte: new Date() 
-      }
-    }
-  })
 
-  if (!user) {
-    return res.status(400).json({ error: 'Token inválido ou expirado.' })
+  try {
+    const user = await prismaClient.user.findFirst({
+      where: {
+        passwordResetToken: token
+      },
+      include: { customer: true }
+    })
+
+    if (!user) {
+      return res.status(400).json({ 
+        error: 'Token inválido ou expirado.'
+      })
+    }
+    if(user.passwordResetExpires < new Date()) {
+      return res.status(400).json({ error: 'Token expirado. Por favor, solicite um novo link de recuperação.',
+        email: user.customer.email || null
+      })
+    }
+
+    const salt = await bcrypt.genSalt(12)
+    const hashedPassword = await bcrypt.hash(newPassword, salt)
+
+    await prismaClient.user.update({
+      where: { id: user.id },
+      data: {
+        password: hashedPassword,
+        passwordResetToken: null,
+        passwordResetExpires: null,
+        isActive: true,
+        mustChangePassword: false
+      }
+    })
+
+    return res.status(200).json({ msg: 'Senha redefinida com sucesso!' })
+  } catch (error) {
+    return res.status(500).json({ message: 'Erro na alteração da senha' })
+  }
+}
+
+const resendResetPassword = async (req, res) => {
+  const { email } = req.body
+
+  if (!email) {
+    return res.status(400).json({
+      message: 'Requisição inválida'
+    })
   }
 
-  const salt = await bcrypt.genSalt(12)
-  const hashedPassword = await bcrypt.hash(newPassword, salt)
+  try {
+    const customer = await prismaClient.customer.findUnique({
+      where: { email },
+      include: { user: true }
+    })
 
-  await prismaClient.user.update({
-    where: { id: user.id },
-    data: {
-      password: hashedPassword,
-      passwordResetToken: null,
-      passwordResetExpires: null,
-      isActive: true,
-      mustChangePassword: false
+    if (!customer || !customer.user) {
+      return res.status(200).json({
+        message: 'Não foi possível reenviar o email'
+      })
     }
-  })
 
-  return res.status(200).json({ msg: 'Senha redefinida com sucesso!' })
+    const resetToken = crypto.randomBytes(32).toString('hex')
+    const expires = new Date(Date.now() + 1000 * 60 * 15) // 15 minutos
+
+    await prismaClient.user.update({
+      where: { id: customer.user.id },
+      data: {
+        passwordResetToken: resetToken,
+        passwordResetExpires: expires
+      }
+    })
+
+    const link = `${process.env.FRONTEND_URL}/resetPassword?token=${resetToken}`
+
+    await sendEmail({
+      to: email,
+      subject: customer.user.isActive ? "Recuperação de senha" : 'Ativação de conta',
+      html: customer.user.isActive ? resetPasswordTemplate(link) : userActivationTemplate(link)
+    })
+    
+    return res.status(200).json({ message: 'Se o email estiver cadastrado, um novo link foi enviado.'})
+  } catch (error) {
+    console.error('Erro ao enviar e-mail:', error)
+    return res.status(500).json({ message: 'Erro ao enviar o e-mail de recuperação' })
+  }
 }
 
 const doLogout = async (req, res) => {
@@ -341,5 +397,6 @@ module.exports = {
   validateLogin,
   recoverPassword,
   resetPassword,
+  resendResetPassword,
   doLogout
 }
