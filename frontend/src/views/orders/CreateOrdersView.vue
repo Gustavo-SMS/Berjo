@@ -19,6 +19,17 @@
             </div>
           </div>
 
+          <div class="row list-header d-none d-md-flex">
+            <div class="col-lg-1">Qtd</div>
+            <div class="col-lg-2">Tipo</div>
+            <div class="col-lg-3">Modelo</div>
+            <div class="col-lg-1">Largura</div>
+            <div class="col-lg-1">Altura</div>
+            <div class="col-lg-1">Comando</div>
+            <div class="col-lg-2">Lado</div>
+            <div class="col-lg-1">Ação</div>
+          </div>
+
           <CreateOrderRow 
             v-for="row in orderRows" 
             :key="row.id" 
@@ -28,6 +39,16 @@
             @updateRow="updateRow(row.id, $event.field, $event.value)"
             @deleteRow="deleteRow"
           />
+
+          <div class="col-12 dark-input">
+            <label class="form-label">Observações</label>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Observações"
+              v-model="observation"
+            >
+          </div>
 
           <div class="d-flex gap-3 mt-4 flex-wrap">
             <button
@@ -67,8 +88,8 @@ const authStore = useAuthStore()
 const router = useRouter()
 const notificationStore = useNotificationStore()
 
-const customerId = ref('')
 const orderRows = ref([])
+const observation = ref('')
 const MAX_ROWS = 5
 
 let idCounter = 0
@@ -86,8 +107,7 @@ function addRow() {
         width: '',
         height: '',
         command_height: '',
-        model: '',
-        observation: ''
+        model: ''
     })
 }
 
@@ -118,7 +138,8 @@ const submitForm = async () => {
 
     const data = {
         customer: authStore.userRole === 'ADMIN' ? selectedCustomer.value.id : authStore.customerId,
-        blinds
+        blinds,
+        observation: observation.value
     }
 
     try {
@@ -148,5 +169,12 @@ const submitForm = async () => {
 select,
 :deep(.select-customers) {
   max-width: 420px;
+}
+
+.list-header {
+  color: var(--color-gold);
+  font-weight: 600;
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 0.5rem;
 }
 </style>

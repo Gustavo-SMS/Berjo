@@ -116,6 +116,55 @@
             v-bind="blindProps(blind, order.status)"
             :getOrders="getOrders"
             />
+
+            <div v-if="isExpanded(order.id)" class="order-observation-wrapper">
+              <div v-if="editingObservationId !== order.id" class="order-observation">
+                <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+                  
+                  <div>
+                    <div class="observation-label">Observações</div>
+                    <p v-if="order.observation">
+                      {{ order.observation }}
+                    </p>
+                    <p v-else>
+                      Nenhuma observação informada.
+                    </p>
+                  </div>
+
+                  <button
+                    v-if="order.status !== 'Concluído'"
+                    class="btn btn-sm btn-outline-gold"
+                    @click="startEditingObservation(order)"
+                  >
+                    Editar
+                  </button>
+                </div>
+              </div>
+
+              <div v-else class="order-observation-edit">
+                <textarea
+                  v-model="observationMap[order.id]"
+                  class="form-control"
+                  rows="3"
+                ></textarea>
+
+                <div class="d-flex gap-2 mt-2">
+                  <button
+                    class="btn btn-primary btn-sm"
+                    @click="saveObservation(order.id)"
+                  >
+                    Salvar
+                  </button>
+
+                  <button
+                    class="btn btn-danger btn-sm"
+                    @click="editingObservationId = null"
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -178,6 +227,9 @@ const orders = ref([])
 
 const editingOrderId = ref(null)
 const statusMap = ref({})
+
+const editingObservationId = ref(null)
+const observationMap = ref({})
 
 const searchTerm = ref('')
 
@@ -395,9 +447,44 @@ const blindProps = (blind, status) => ({
   command_height: blind.command_height,
   model: blind.model,
   blind_price: blind.blind_price,
-  observation: blind.observation,
   status
 })
+
+const startEditingObservation = (order) => {
+  editingObservationId.value = order.id
+  observationMap.value[order.id] = order.observation || ''
+}
+
+const saveObservation = async (orderId) => {
+  const newObservation = observationMap.value[orderId]
+
+  const data = {
+    id: orderId,
+    observation: newObservation
+  }
+
+  try {
+    const response = await fetchWithAuth(`/orders`, {
+      method: 'PUT',
+      headers: { 'Content-type': 'application/json' },
+      body: JSON.stringify(data)
+    }, authStore, router)
+
+    if (!response.ok) {
+      const errorData = await response.json()
+      throw new Error(errorData.error || 'Erro ao atualizar observação')
+    }
+
+    const order = orders.value.find(o => o.id === orderId)
+    if (order) order.observation = newObservation
+
+    editingObservationId.value = null
+    notificationStore.addNotification('Observação atualizada', 'success')
+
+  } catch (error) {
+    notificationStore.addNotification(error.message, 'error')
+  }
+}
 </script>
 
 <style scoped>
@@ -430,6 +517,39 @@ const blindProps = (blind, status) => ({
 .order-info {
   color: var(--text-primary);
   font-weight: bold;
+}
+
+.order-observation {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background-color: rgba(212, 175, 55, 0.05);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 8px;
+  color: var(--text-primary);
+}
+
+.order-observation-wrapper {
+  margin-top: 1.5rem;
+}
+
+.order-observation-edit textarea {
+  background-color: var(--input-bg);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  color: var(--text-primary);
+}
+
+.observation-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-gold);
+  margin-bottom: 0.5rem;
+}
+
+.order-observation p {
+  margin: 0;
+  line-height: 1.5;
+  color: var(--text-secondary);
 }
 
 .empty-state {

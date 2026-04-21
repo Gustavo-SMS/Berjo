@@ -16,7 +16,7 @@ const getAll = async (req, res) => {
 }
 
 const createBlind = async (req, res) => {
-    const { quantity, width, height, command_height, model, observation, square_metre, blind_price, blindTypeId, orderId } = req.body
+    const { quantity, width, height, command_height, model, square_metre, blind_price, blindTypeId, orderId } = req.body
 
     try {
         const blind = await prismaClient.blind.create({
@@ -26,7 +26,6 @@ const createBlind = async (req, res) => {
                 height: parseFloat(height),
                 command_height: parseFloat(command_height),
                 model,
-                observation,
                 square_metre,
                 blind_price,
                 type: {
@@ -49,7 +48,7 @@ const createBlind = async (req, res) => {
 }
 
 const updateBlind = async (req, res) => {
-    const { id, quantity, width, height, command_height, model, observation, square_metre, blind_price, type_id } = req.body
+    const { id, quantity, width, height, command_height, model, square_metre, blind_price, type_id } = req.body
 
     try {
         const blind = await prismaClient.blind.update({
@@ -62,7 +61,6 @@ const updateBlind = async (req, res) => {
                 height: parseFloat(height) || undefined,
                 command_height: parseFloat(command_height) || undefined,
                 model: model || undefined,
-                observation: observation || "",
                 square_metre: parseFloat(square_metre) || undefined,
                 blind_price: blind_price || undefined,
                 type_id: type_id || undefined

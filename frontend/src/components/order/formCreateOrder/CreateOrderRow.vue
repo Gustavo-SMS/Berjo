@@ -1,10 +1,7 @@
 <template>
-  <div class="card order-row-card mb-3">
-    <div class="card-body">
-
-      <div class="row g-3">
+      <div class="row g-3 mb-2 blind-row">
         <div class="col-6 col-lg-1 dark-input">
-          <label class="form-label">Qtd</label>
+          <label class="mobile-label">Qtd</label>
           <input
             type="number"
             class="form-control"
@@ -16,7 +13,7 @@
         </div>
 
         <div class="col-6 col-lg-2">
-          <label class="form-label">Tipo</label>
+          <label class="mobile-label">Tipo</label>
           <SelectType
             :typeValue="type"
             @selectedOption="handleTypeSelected"
@@ -24,7 +21,7 @@
         </div>
 
         <div class="col-12 col-lg-3">
-          <label class="form-label">Modelo</label>
+          <label class="mobile-label">Modelo</label>
           <SelectBlindType  
             :key="type"
             :typeValue="type"
@@ -34,7 +31,7 @@
         </div>
 
         <div class="col-6 col-lg-1 dark-input">
-          <label class="form-label">Largura</label>
+          <label class="mobile-label">Largura</label>
           <input
             type="number"
             class="form-control"
@@ -47,7 +44,7 @@
         </div>
 
         <div class="col-6 col-lg-1 dark-input">
-          <label class="form-label">Altura</label>
+          <label class="mobile-label">Altura</label>
           <input
             type="number"
             class="form-control"
@@ -60,7 +57,7 @@
         </div>
 
         <div class="col-6 col-lg-1 dark-input">
-          <label class="form-label">Comando</label>
+          <label class="mobile-label">Comando</label>
           <input
             type="number"
             class="form-control"
@@ -73,7 +70,7 @@
         </div>
 
         <div class="col-6 col-lg-2">
-          <label class="form-label">Lado</label>
+          <label class="mobile-label">Lado</label>
           <v-select
             v-model="row.model"
             :options="modelOptions"
@@ -93,21 +90,7 @@
             <i class="bi bi-trash"></i>
           </button>
         </div>
-
-        <div class="col-12 dark-input">
-          <label class="form-label">Observações</label>
-          <input
-            type="text"
-            class="form-control"
-            placeholder="Observações"
-            v-model="row.observation"
-            @input="$emit('updateRow', { field: 'observation', value: row.observation })"
-          >
-        </div>
-
       </div>
-    </div>
-  </div>
 </template>
 
 
@@ -182,3 +165,23 @@ watch(() => props.row.model, (newValue) => {
   emit('updateRow', { field: 'model', value: newValue })
 })
 </script>
+
+<style scoped>
+.blind-row {
+  padding-bottom: 0.5rem;
+}
+
+.mobile-label {
+  display: none;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-gold);
+  margin-bottom: 2px;
+}
+
+@media (max-width: 768px) {
+  .mobile-label {
+    display: block;
+  }
+}
+</style>

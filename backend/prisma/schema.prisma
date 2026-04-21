@@ -71,6 +71,7 @@ model Order {
   total_price     Float
   status          String   @default("Em espera")
   created_at      DateTime @default(now())
+  observation     String?
 
   blind           Blind[]
 
@@ -87,7 +88,6 @@ model Blind {
   height          Float
   command_height  Float
   model           String
-  observation     String?
   square_metre    Float
   blind_price     Float
 

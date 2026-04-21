@@ -261,7 +261,7 @@ const getOrdersByFilter = async (req, res) => {
 }
 
 const createOrder = async (req, res) => {
-    const { customer, blinds } = req.body
+    const { customer, blinds, observation } = req.body
     const total_price = req.total_price
 
     try {
@@ -270,6 +270,7 @@ const createOrder = async (req, res) => {
                 customer: {
                     connect: { id: customer }
                 },
+                observation,
                 total_price,
                 blind: {
                     create:
@@ -389,7 +390,7 @@ const getBlindsToMail = async (id) => {
 }
 
 const updateOrder = async (req, res) => {
-    const { id, status, total_price } = req.body
+    const { id, status, total_price, observation } = req.body
 
     try {
         const order = await prismaClient.order.update({
@@ -398,7 +399,8 @@ const updateOrder = async (req, res) => {
             },
             data: {
                 status: status || undefined,
-                total_price: total_price || undefined
+                total_price: total_price || undefined,
+                observation: observation || null
             }
         })
 
@@ -568,11 +570,11 @@ module.exports = {
     getOrdersByCustomer,
     getOrdersByCustomerName,
     getOrdersByStatus,
+    getOrdersByFilter,
     createOrder,
     changeStatus,
     updateOrder,
     deleteOrder,
-    getOrdersByFilter,
     updateTotalPrice,
     generateReportByPeriod
 }

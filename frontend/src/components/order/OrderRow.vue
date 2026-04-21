@@ -111,7 +111,6 @@ const props = defineProps([
   'height',
   'command_height',
   'model',
-  'observation',
   'status',
   'blind_price',
   'getOrders'
@@ -171,7 +170,6 @@ const openUpdateBlindModal = async () => {
     height: props.height,
     command_height: props.command_height,
     model: props.model,
-    observation: props.observation,
     status: props.status,
     getOrders: props.getOrders
   }

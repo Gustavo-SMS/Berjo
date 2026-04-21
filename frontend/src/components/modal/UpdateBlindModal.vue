@@ -21,7 +21,7 @@
                         <SelectType :typeValue="editableType" @selectedOption="handleTypeSelected" />
                     </div>
 
-                    <div class="col-12 col-md-6">
+                    <div class="col-12 col-md-12">
                         <label for="color" class="form-label">Coleção - Cor *</label>
                         <SelectBlindType 
                           :key="editableType"
@@ -56,11 +56,6 @@
                           :disabled="!modelOptions.length"
                           class="vselect-custom"
                         />
-                    </div>
-
-                    <div class="col-12">
-                        <label for="price" class="form-label">Observações</label>
-                        <input v-model="editableObservation" type="text" name="observation" id="observation" class="form-control" min="0" step="0.01">
                     </div>
 
                     <div class="col-12 d-grid gap-2">
@@ -99,7 +94,6 @@ const editableWidth = ref('')
 const editableHeight = ref('')
 const editableCommand_height = ref('')
 const editableModel = ref('')
-const editableObservation = ref('')
 const editableBlindTypeId = ref('')
 
 const handleTypeSelected  = (selected) => {
@@ -154,8 +148,7 @@ const handleUptadeBlind = async () => {
         width: editableWidth.value,
         height: editableHeight.value,
         command_height: editableCommand_height.value,
-        model: editableModel.value,
-        observation: editableObservation.value
+        model: editableModel.value
       }
     
      try {
@@ -207,7 +200,6 @@ const resetFields = () => {
     editableHeight.value = ''
     editableCommand_height.value = ''
     editableModel.value = ''
-    editableObservation.value = ''
     editableBlindTypeId.value = ''
 }
 
@@ -221,7 +213,6 @@ watch(() => props.blind, (newBlind) => {
   editableHeight.value = newBlind.height || ''
   editableCommand_height.value = newBlind.command_height || ''
   editableModel.value = newBlind.model || ''
-  editableObservation.value = newBlind.observation || ''
   editableBlindTypeId.value = newBlind.blindTypeId || ''
 
 }, { immediate: true })
