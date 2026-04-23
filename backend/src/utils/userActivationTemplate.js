@@ -1,4 +1,4 @@
-const userActivationTemplate = (activationLink) => {
+const userActivationTemplate = (activationLink, name, login) => {
   return `
   <!DOCTYPE html>
   <html>
@@ -25,8 +25,9 @@ const userActivationTemplate = (activationLink) => {
 
             <tr>
               <td style="color:#ffffff; font-size:16px; line-height:1.6;">
-                <p>Olá,</p>
+                <p>Olá, ${name}!</p>
 
+                <p><strong>Seu login é:</strong> <span style="color:#d4af37;">${login}</span></p>
                 <p>
                   Sua conta foi criada com sucesso no sistema.
                   Para ativá-la e definir sua senha, clique no botão abaixo:

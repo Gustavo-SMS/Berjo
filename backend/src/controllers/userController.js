@@ -129,7 +129,7 @@ try {
     await sendEmail({
       to: user.customer.email,
       subject: 'Ativação de Conta',
-      html: userActivationTemplate(link)
+      html: userActivationTemplate(link, user.customer.name, user.login)
     })
 
     return res.status(201).json({

@@ -5,7 +5,6 @@
 
           <div class="modal-header">
             <h5 class="modal-title">Recuperar Senha</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
           </div>
 
