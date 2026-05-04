@@ -3,7 +3,7 @@
     <div class="card">
       <div class="card-body">
         <div class="page-header d-flex justify-content-between align-items-center flex-wrap gap-3">
-          <h1>Tipos de persiana</h1>
+          <h1>Tipos de Persiana</h1>
         </div>
 
           <div class="d-flex align-items-center gap-2 flex-wrap mb-4 justify-content-start">
@@ -41,7 +41,7 @@
           <span>Cor</span>
           <span>Largura Máx.</span>
           <span>Preço</span>
-          <span v-if="authStore.userRole === 'ADMIN'">Ações</span>
+          <span v-if="authStore.userRole === 'ADMIN'" class="text-end">Ações</span>
         </div>
 
         <BlindTypeRow

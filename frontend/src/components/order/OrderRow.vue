@@ -38,7 +38,7 @@
 
     <div class="cell">
       <span class="label">Preço</span>
-      <span class="value price">R$ {{ editableBlind_price }}</span>
+      <span class="value price">{{ formattedPrice }}</span>
     </div>
 
     <div
@@ -92,7 +92,7 @@
 </template>
 
 <script setup>
-import { ref, nextTick, watch } from 'vue'
+import { ref, nextTick, watch, computed } from 'vue'
 import { useNotificationStore } from '@/stores/notificationStore'
 import { fetchWithAuth } from '@/utils/api'
 import { useAuthStore } from '@/stores/authStore'
@@ -180,6 +180,13 @@ const openUpdateBlindModal = async () => {
 
 watch(() => props.blind_price, (newVal) => {
   editableBlind_price.value = newVal
+})
+
+const formattedPrice = computed(() => {
+  return new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL'
+  }).format(editableBlind_price.value || 0)
 })
 </script>
 

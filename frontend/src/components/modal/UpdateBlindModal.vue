@@ -4,7 +4,7 @@
         <div class="modal-content card">
 
           <div class="modal-header">
-            <h5 class="modal-title">Editar persiana</h5>
+            <h5 class="modal-title">Editar Persiana</h5>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
           </div>
   

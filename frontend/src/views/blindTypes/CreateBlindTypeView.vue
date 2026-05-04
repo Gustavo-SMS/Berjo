@@ -3,7 +3,7 @@
     <div class="card register-card">
       <div class="card-body">
         <div class="page-header">
-          <h1>Cadastrar tipo de persiana</h1>
+          <h1>Cadastrar Tipo de Persiana</h1>
         </div>
 
         <form @submit.prevent="submitForm" novalidate class="dark-input">

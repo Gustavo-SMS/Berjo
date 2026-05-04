@@ -23,7 +23,7 @@
 
     <div class="field">
       <span class="mobile-label">Preço</span>
-      <p>R$ {{ props.blindType.price }}</p>
+      <p>{{ formattedPrice }}</p>
     </div>
 
     <div class="actions" v-if="authStore.userRole === 'ADMIN'">
@@ -49,7 +49,7 @@
 </template>
                         
 <script setup>
-import { ref, nextTick } from 'vue'
+import { ref, nextTick, computed } from 'vue'
 import UpdateBlindTypeModal from '../modal/UpdateBlindTypeModal.vue'
 import ConfirmationModal from '@/components/modal/ConfirmationModal.vue'
 import { useNotificationStore } from '@/stores/notificationStore'
@@ -90,6 +90,13 @@ const deleteBlindType = async () => {
         notificationStore.addNotification(error.message, 'error')
       }
 }
+
+const formattedPrice = computed(() => {
+  return new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL'
+  }).format(props.blindType.price || 0)
+})
 
 const blindTypeData = ref({})
 const updateBlindTypeModal = ref(null)
@@ -141,6 +148,7 @@ p {
 .actions {
   display: flex;
   gap: 8px;
+  justify-content: end;
 }
 
 @media (max-width: 768px) {

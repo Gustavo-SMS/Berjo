@@ -2,7 +2,7 @@
     <div class="container mt-5 card">
         <div class="form-wrapper p-2">
             <div class="page-header">
-                <h1>Clientes</h1>
+                <h1>Cadastro de Clientes</h1>
             </div>
             
             <form @submit.prevent="submitForm" class="row g-4 dark-input">

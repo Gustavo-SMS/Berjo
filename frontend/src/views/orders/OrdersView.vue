@@ -76,7 +76,7 @@
             </div>
 
             <div class="order-actions">
-              <span class="order-info">Total: R$ {{ order.total_price }}</span>
+              <span class="order-info">Total do pedido: {{ formattedTotalPrice(order.total_price) }}</span>
 
               <button
                 @click="toggleOrder(order.id)"
@@ -210,7 +210,7 @@
 <script setup>
 import OrderRow from '@/components/order/OrderRow.vue'
 import ConfirmationModal from '@/components/modal/ConfirmationModal.vue'
-import { ref, onMounted, computed, watch, nextTick } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { useNotificationStore } from '@/stores/notificationStore'
 import { fetchWithAuth } from '@/utils/api'
 import { useAuthStore } from '@/stores/authStore'
@@ -484,6 +484,13 @@ const saveObservation = async (orderId) => {
   } catch (error) {
     notificationStore.addNotification(error.message, 'error')
   }
+}
+
+const formattedTotalPrice = (totalPrice) => {
+  return new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL'
+  }).format(totalPrice || 0)
 }
 </script>
 

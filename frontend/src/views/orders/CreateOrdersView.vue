@@ -4,7 +4,7 @@
       <div class="card-body">
 
         <div class="page-header">
-          <h1>Criar Pedido</h1>
+          <h1>Cadastrar Pedido</h1>
         </div>
 
         <form @submit.prevent="submitForm">

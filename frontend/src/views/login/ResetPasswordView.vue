@@ -3,7 +3,7 @@
     <div class="card reset-card">
       <div class="card-body">
         <div class="page-header">
-          <h1>Redefinir senha</h1>
+          <h1>Redefinir Senha</h1>
         </div>
 
         <form @submit.prevent="submitNewPassword" class="dark-input" novalidate>
