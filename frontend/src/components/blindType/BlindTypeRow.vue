@@ -26,7 +26,7 @@
       <p>{{ formattedPrice }}</p>
     </div>
 
-    <div class="actions" v-if="authStore.userRole === 'ADMIN'">
+    <div class="actions justify-content-end" v-if="authStore.userRole === 'ADMIN'">
       <button @click="openUpdateBlindTypeModal" type="button" class="btn btn-primary btn-sm">
         Editar
       </button>
@@ -123,8 +123,8 @@ const openUpdateBlindTypeModal = async () => {
   gap: 1rem;
   align-items: center;
   width: 100%;
-  padding: 0.75rem;
-    border-bottom: 1px solid #333;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #333;
 }
 
 .field {

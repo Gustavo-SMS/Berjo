@@ -179,7 +179,7 @@ watch(() => props.row.model, (newValue) => {
   margin-bottom: 2px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 991px) {
   .mobile-label {
     display: block;
   }

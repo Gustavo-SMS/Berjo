@@ -44,7 +44,7 @@
           <div class="order-header">
             <div class="order-title-status">
               <h5 class="order-info">{{ new Date(order.created_at).toLocaleDateString('pt-BR') }}</h5>
-              <h5 class="order-info">Cliente: {{ order.customer.name }}</h5>
+              <h5 class="order-info customer-name">Cliente: {{ order.customer.name }}</h5>
 
               <div v-if="editingOrderId === order.id" class="status-edit">
                 <v-select
@@ -524,6 +524,10 @@ const formattedTotalPrice = (totalPrice) => {
 .order-info {
   color: var(--text-primary);
   font-weight: bold;
+}
+
+.customer-name {
+  text-transform: capitalize;
 }
 
 .order-observation {

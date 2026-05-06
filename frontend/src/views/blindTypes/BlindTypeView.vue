@@ -183,7 +183,6 @@ watch(searchTerm, () => {
   display: grid;
   grid-template-columns: 2fr 2fr 1fr 2fr 1fr 2fr;
   gap: 1rem;
-  padding: 0.75rem 1rem;
   color: var(--color-gold);
   font-weight: 600;
   border-bottom: 1px solid var(--color-border);

@@ -19,13 +19,20 @@
             </div>
           </div>
 
-          <div class="row list-header d-none d-md-flex">
+          <div class="row list-header d-none d-lg-flex">
             <div class="col-lg-1">Qtd</div>
             <div class="col-lg-2">Tipo</div>
             <div class="col-lg-3">Modelo</div>
-            <div class="col-lg-1">Largura</div>
-            <div class="col-lg-1">Altura</div>
-            <div class="col-lg-1">Comando</div>
+
+            <div class="col-lg-1 large-label">Largura</div>
+            <div class="col-lg-1 medium-label">Larg.</div>
+
+            <div class="col-lg-1 large-label">Altura</div>
+            <div class="col-lg-1 medium-label">Alt.</div>
+            
+            <div class="col-lg-1 large-label">Comando</div>
+            <div class="col-lg-1 medium-label">Cmd.</div>
+
             <div class="col-lg-2">Lado</div>
             <div class="col-lg-1">Ação</div>
           </div>
@@ -176,5 +183,19 @@ select,
   font-weight: 600;
   border-bottom: 1px solid var(--color-border);
   margin-bottom: 0.5rem;
+}
+
+.medium-label {
+  display: none;
+}
+
+@media (max-width: 1426px) {
+  .medium-label {
+    display: block;
+  }
+
+  .large-label {
+    display: none;
+  }
 }
 </style>
