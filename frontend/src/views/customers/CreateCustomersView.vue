@@ -18,10 +18,10 @@
 
                 <div class="col-12 col-md-6">
                     <label for="cpf" class="form-label">CPF</label>
-                    <input type="radio" id="cpf" name="check" value="cpf" v-model="selectedRadio">
+                    <input class="check-input" type="radio" id="cpf" name="check" value="cpf" v-model="selectedRadio">
                     <label for="cnpj" class="form-label">CNPJ</label>
-                    <input type="radio" id="cnpj" name="check" value="cnpj" v-model="selectedRadio">
-                    
+                    <input class="check-input" type="radio" id="cnpj" name="check" value="cnpj" v-model="selectedRadio">
+
                     <input v-model="docNumber" v-mask="currentMask" type="text" name="docNumber" id="docNumber" class="form-control" required>
                 </div>
 
@@ -228,7 +228,7 @@ watch(selectedRadio, () => {
 </script>
 
 <style scoped>
-#cpf {
-    margin-right: 5px;
+.check-input {
+    margin: 0 0.7rem 0 0.2rem;
 }
 </style>

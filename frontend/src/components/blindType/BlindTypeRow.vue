@@ -143,6 +143,7 @@ const openUpdateBlindTypeModal = async () => {
 p {
   margin: 0;
   font-size: 14px;
+  text-transform: capitalize;
 }
 
 .actions {
