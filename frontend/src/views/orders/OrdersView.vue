@@ -43,8 +43,11 @@
         >
           <div class="order-header">
             <div class="order-title-status">
-              <h5 class="order-info">{{ new Date(order.created_at).toLocaleDateString('pt-BR') }}</h5>
-              <h5 class="order-info customer-name">Cliente: {{ order.customer.name }}</h5>
+              <h5 class="order-info order-date">{{ new Date(order.created_at).toLocaleDateString('pt-BR') }}</h5>
+              <h5 class="order-info" 
+              :class="['customer-name',{ expanded: isExpanded(order.id) }]" 
+              :title="order.customer.name">
+              Cliente: {{ order.customer.name }}</h5>
 
               <div v-if="editingOrderId === order.id" class="status-edit">
                 <v-select
@@ -510,9 +513,9 @@ const formattedTotalPrice = (totalPrice) => {
 
 .order-title-status {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .order-actions {
@@ -528,6 +531,27 @@ const formattedTotalPrice = (totalPrice) => {
 
 .customer-name {
   text-transform: capitalize;
+
+  width: 240px;
+  min-width: 240px;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.customer-name.expanded {
+  width: auto;
+  min-width: unset;
+
+  overflow: visible;
+  text-overflow: unset;
+  white-space: normal;
+}
+
+.order-date {
+  width: 110px;
+  min-width: 110px;
 }
 
 .order-observation {
@@ -584,6 +608,12 @@ const formattedTotalPrice = (totalPrice) => {
   align-items: center;
   gap: 0.75rem;
   flex-wrap: nowrap;
+}
+
+.status-view,
+.status-edit {
+  width: 260px;
+  min-width: 260px;
 }
 
 .status-edit .form-select {
