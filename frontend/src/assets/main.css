@@ -15,6 +15,8 @@
   --text-muted: #9a9a9a;
   --text-dark: #1a1a1a;
 
+  --color-border: #333;
+
   /* UI */
   --border-radius: 14px;
   --border-radius-sm: 10px;

@@ -168,6 +168,63 @@
                 </div>
               </div>
             </div>
+            <div class="payments-wrapper">
+              <div class="payments-header">
+                <h5>Pagamentos</h5>
+
+                <button
+                  v-if="authStore.userRole === 'ADMIN'"
+                  class="btn btn-primary btn-sm"
+                  @click="openPaymentModal(order.id)"
+                >
+                  Adicionar pagamento
+                </button>
+              </div>
+
+              <div
+                v-if="!order.payments || order.payments.length === 0"
+                class="empty-payments"
+              >
+                Nenhum pagamento registrado.
+              </div>
+
+              <div v-else class="payments-list">
+                <div
+                  v-for="payment in order.payments"
+                  :key="payment.id"
+                  class="payment-item"
+                >
+                  <div>
+                    <span class="payment-label">Valor:</span>
+                    {{ formattedTotalPrice(payment.amount) }}
+                  </div>
+
+                  <div>
+                    <span class="payment-label">Data:</span>
+                    {{ new Date(payment.date).toLocaleDateString('pt-BR') }}
+                  </div>
+                </div>
+
+                <div class="payment-total">
+                  <strong>Total pago:</strong>
+                  {{
+                    formattedTotalPrice(
+                      order.payments.reduce((acc, payment) => acc + payment.amount, 0)
+                    )
+                  }}
+                </div>
+
+                <div class="payment-total remaining">
+                  <strong>Restante:</strong>
+                  {{
+                    formattedTotalPrice(
+                      order.total_price -
+                      order.payments.reduce((acc, payment) => acc + payment.amount, 0)
+                    )
+                  }}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -542,7 +599,7 @@ const formattedTotalPrice = (totalPrice) => {
 
 .customer-name.expanded {
   width: auto;
-  min-width: unset;
+  min-width: 240px;
 
   overflow: visible;
   text-overflow: unset;
@@ -684,5 +741,61 @@ const formattedTotalPrice = (totalPrice) => {
   .blinds-header {
     display: none;
   }
+}
+
+.payments-wrapper {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.payments-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.payments-header h5 {
+  margin: 0;
+  color: var(--color-gold);
+}
+
+.payments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.payment-item {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+
+  padding: 0.85rem 1rem;
+
+  background: rgba(212, 175, 55, 0.05);
+
+  border: 1px solid rgba(212, 175, 55, 0.15);
+  border-radius: 8px;
+}
+
+.payment-label {
+  color: var(--color-gold);
+  font-weight: 600;
+}
+
+.payment-total {
+  margin-top: 0.5rem;
+  color: var(--text-primary);
+}
+
+.payment-total.remaining {
+  color: #ffb74d;
+}
+
+.empty-payments {
+  color: var(--text-secondary);
 }
 </style>

@@ -27,6 +27,12 @@ const getAll = async (req, res) => {
                     }
 
                 },
+                payment: {
+                    select: {
+                        amount: true,
+                        date: true
+                    }
+                }
             }
         })
 
@@ -67,6 +73,12 @@ const getOne = async (req, res) => {
                     }
 
                 },
+                payment: {
+                    select: {
+                        amount: true,
+                        date: true
+                    }
+                }
             }
         })
 
@@ -105,8 +117,13 @@ const getOrdersByCustomer = async (req, res) => {
                             }
                         }
                     }
-
                 },
+                payment: {
+                    select: {
+                        amount: true,
+                        date: true
+                    }
+                }
             }
         })
 
@@ -149,6 +166,12 @@ const getOrdersByCustomerName = async (req, res) => {
                             color: true
                         }
                     }
+                }
+            },
+            payment: {
+                select: {
+                    amount: true,
+                    date: true
                 }
             }
         },
@@ -194,6 +217,12 @@ const getOrdersByStatus = async (req, res) => {
                     }
 
                 },
+                payment: {
+                    select: {
+                        amount: true,
+                        date: true
+                    }
+                }
             },
             orderBy: {
                 created_at: 'asc'
@@ -243,6 +272,12 @@ const getOrdersByFilter = async (req, res) => {
                     }
 
                 },
+                payment: {
+                    select: {
+                        amount: true,
+                        date: true
+                    }
+                }
             },
             orderBy: {
                 created_at: 'desc'

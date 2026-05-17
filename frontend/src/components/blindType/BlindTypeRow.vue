@@ -124,7 +124,7 @@ const openUpdateBlindTypeModal = async () => {
   align-items: center;
   width: 100%;
   padding: 0.75rem 0;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .field {

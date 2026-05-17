@@ -7,6 +7,8 @@ CREATE TABLE `User` (
     `refreshToken` TEXT NULL,
     `passwordResetToken` TEXT NULL,
     `passwordResetExpires` DATETIME(3) NULL,
+    `isActive` BOOLEAN NOT NULL DEFAULT false,
+    `mustChangePassword` BOOLEAN NOT NULL DEFAULT true,
     `customerId` VARCHAR(191) NULL,
 
     UNIQUE INDEX `User_login_key`(`login`),
@@ -52,7 +54,19 @@ CREATE TABLE `orders` (
     `total_price` DOUBLE NOT NULL,
     `status` VARCHAR(191) NOT NULL DEFAULT 'Em espera',
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `observation` VARCHAR(191) NULL,
     `customer_id` VARCHAR(191) NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `payments` (
+    `id` VARCHAR(191) NOT NULL,
+    `amount` DOUBLE NOT NULL,
+    `date` DATETIME(3) NOT NULL,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `order_id` VARCHAR(191) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -65,7 +79,6 @@ CREATE TABLE `Blind` (
     `height` DOUBLE NOT NULL,
     `command_height` DOUBLE NOT NULL,
     `model` VARCHAR(191) NOT NULL,
-    `observation` VARCHAR(191) NULL,
     `square_metre` DOUBLE NOT NULL,
     `blind_price` DOUBLE NOT NULL,
     `order_id` VARCHAR(191) NOT NULL,
@@ -95,6 +108,9 @@ ALTER TABLE `address` ADD CONSTRAINT `address_customer_id_fkey` FOREIGN KEY (`cu
 
 -- AddForeignKey
 ALTER TABLE `orders` ADD CONSTRAINT `orders_customer_id_fkey` FOREIGN KEY (`customer_id`) REFERENCES `customers`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `payments` ADD CONSTRAINT `payments_order_id_fkey` FOREIGN KEY (`order_id`) REFERENCES `orders`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Blind` ADD CONSTRAINT `Blind_order_id_fkey` FOREIGN KEY (`order_id`) REFERENCES `orders`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

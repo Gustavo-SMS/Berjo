@@ -2,6 +2,7 @@ const express = require('express')
 const router = require('./router')
 const cookieParser = require("cookie-parser")
 const cors = require('cors')
+require('dotenv').config()
 
 const app = express()
 
