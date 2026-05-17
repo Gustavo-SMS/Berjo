@@ -27,7 +27,7 @@ const getAll = async (req, res) => {
                     }
 
                 },
-                payment: {
+                payments: {
                     select: {
                         amount: true,
                         date: true
@@ -73,7 +73,7 @@ const getOne = async (req, res) => {
                     }
 
                 },
-                payment: {
+                payments: {
                     select: {
                         amount: true,
                         date: true
@@ -118,7 +118,7 @@ const getOrdersByCustomer = async (req, res) => {
                         }
                     }
                 },
-                payment: {
+                payments: {
                     select: {
                         amount: true,
                         date: true
@@ -168,7 +168,7 @@ const getOrdersByCustomerName = async (req, res) => {
                     }
                 }
             },
-            payment: {
+            payments: {
                 select: {
                     amount: true,
                     date: true
@@ -217,7 +217,7 @@ const getOrdersByStatus = async (req, res) => {
                     }
 
                 },
-                payment: {
+                payments: {
                     select: {
                         amount: true,
                         date: true
@@ -272,7 +272,7 @@ const getOrdersByFilter = async (req, res) => {
                     }
 
                 },
-                payment: {
+                payments: {
                     select: {
                         amount: true,
                         date: true
@@ -307,6 +307,7 @@ const createOrder = async (req, res) => {
                 },
                 observation,
                 total_price,
+                pending_amount: total_price,
                 blind: {
                     create:
                         blinds
@@ -440,7 +441,6 @@ const updateOrder = async (req, res) => {
         })
 
         if (!order) {
-            S
             return res.status(404).json({ error: 'Não foi possível atualizar o pedido' })
         }
 
@@ -478,7 +478,7 @@ const updateTotalPrice = async (orderId) => {
 
         return response
     } catch (error) {
-        console.log(error.message)
+        return res.status(500).json({ error: error.message })
     }
 }
 
@@ -498,6 +498,10 @@ const deleteOrder = async (req, res) => {
                 where: { order_id: id }
             })
 
+            await tx.payment.deleteMany({
+                where: { order_id: id }
+            })
+
             await tx.order.delete({
                 where: { id }
             })
@@ -506,7 +510,7 @@ const deleteOrder = async (req, res) => {
                 where: { id: order.customer_id },
                 data: {
                     debt: {
-                        decrement: order.total_price
+                        decrement: order.pending_amount
                     }
                 }
             })

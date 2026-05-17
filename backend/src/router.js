@@ -5,6 +5,7 @@ const customerController = require("./controllers/customerController")
 const orderController = require("./controllers/orderController")
 const blindController = require("./controllers/blindController")
 const blindTypeController = require("./controllers/blindTypeController")
+const paymentController = require("./controllers/paymentController")
 
 const authenticateToken = require("./middlewares/authenticateToken")
 const userMiddleware = require("./middlewares/userMiddleware")
@@ -56,6 +57,8 @@ router.post('/orders', authenticateToken.authenticateToken, orderMiddleware.tota
 router.put('/orders', authenticateToken.authenticateToken, orderController.updateOrder)
 router.put('/orders/status', authenticateToken.authenticateToken, orderController.changeStatus)
 router.delete('/orders/:id', authenticateToken.authenticateToken, orderController.deleteOrder)
+
+router.post('/payments', authenticateToken.authenticateToken, paymentController.createPayment)
 
 router.get('/blinds', authenticateToken.authenticateToken, blindController.getAll)
 router.post('/blinds', authenticateToken.authenticateToken, blindMiddleware.validateBlindData, blindController.createBlind)

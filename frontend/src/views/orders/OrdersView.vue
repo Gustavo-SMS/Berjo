@@ -168,6 +168,7 @@
                 </div>
               </div>
             </div>
+
             <div class="payments-wrapper">
               <div class="payments-header">
                 <h5>Pagamentos</h5>
@@ -208,19 +209,14 @@
                 <div class="payment-total">
                   <strong>Total pago:</strong>
                   {{
-                    formattedTotalPrice(
-                      order.payments.reduce((acc, payment) => acc + payment.amount, 0)
-                    )
+                    formattedTotalPrice(order.payments.reduce((sum, p) => sum + p.amount, 0))
                   }}
                 </div>
 
                 <div class="payment-total remaining">
                   <strong>Restante:</strong>
                   {{
-                    formattedTotalPrice(
-                      order.total_price -
-                      order.payments.reduce((acc, payment) => acc + payment.amount, 0)
-                    )
+                    formattedTotalPrice(order.pending_amount)
                   }}
                 </div>
               </div>
@@ -257,6 +253,11 @@
 
       </div>
 
+    <PaymentModal
+      :orderId="selectedOrderId"
+      ref="paymentModal"
+    />
+
     <ConfirmationModal
       v-if="showModal"
       :show="showModal"
@@ -270,6 +271,7 @@
 <script setup>
 import OrderRow from '@/components/order/OrderRow.vue'
 import ConfirmationModal from '@/components/modal/ConfirmationModal.vue'
+import PaymentModal from '@/components/modal/PaymentModal.vue'
 import { ref, onMounted, computed, watch } from 'vue'
 import { useNotificationStore } from '@/stores/notificationStore'
 import { fetchWithAuth } from '@/utils/api'
@@ -277,6 +279,14 @@ import { useAuthStore } from '@/stores/authStore'
 import { useRouter } from 'vue-router'
 import vSelect from 'vue-select'
 import 'vue-select/dist/vue-select.css'
+
+const paymentModal = ref(null)
+const selectedOrderId = ref(null)
+
+const openPaymentModal = (orderId) => {
+  selectedOrderId.value = orderId
+  paymentModal.value?.showModal()
+}
 
 const authStore = useAuthStore()
 const router = useRouter()
