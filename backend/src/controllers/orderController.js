@@ -295,6 +295,25 @@ const getOrdersByFilter = async (req, res) => {
     }
 }
 
+const getPendingPaymentOrders = async (req, res) => {
+    const { customerId } = req.query
+
+    try {
+        const orders = await prismaClient.order.findMany({
+            where: {
+                customer_id: customerId,
+                pending_amount: {
+                    gt: 0
+                }
+            }
+        })
+
+        res.status(200).json(orders)
+    } catch (error) {
+        res.status(500).json({ error: error.message })
+    }
+}
+
 const createOrder = async (req, res) => {
     const { customer, blinds, observation } = req.body
     const total_price = req.total_price
@@ -610,6 +629,7 @@ module.exports = {
     getOrdersByCustomerName,
     getOrdersByStatus,
     getOrdersByFilter,
+    getPendingPaymentOrders,
     createOrder,
     changeStatus,
     updateOrder,

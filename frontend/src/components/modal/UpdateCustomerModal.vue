@@ -23,10 +23,9 @@
 
                     <div class="col-12 col-md-6">
                         <label for="cpf" class="form-label">CPF</label>
-                        <input type="radio" id="cpf" name="check" value="cpf" v-model="selectedRadio" @change="handleDocTypeChange">
+                        <input class="check-input" type="radio" id="cpf" name="check" value="cpf" v-model="selectedRadio" @change="handleDocTypeChange">
                         <label for="cnpj" class="form-label">CNPJ</label>
-                        <input type="radio" id="cnpj" name="check" value="cnpj" v-model="selectedRadio" @change="handleDocTypeChange">
-                        
+                        <input class="check-input" type="radio" id="cnpj" name="check" value="cnpj" v-model="selectedRadio" @change="handleDocTypeChange">
                         <input v-model="editableDocNumber" v-mask="currentMask" type="text" name="docNumber" id="docNumber" class="form-control" required>
                     </div>
 
@@ -263,3 +262,9 @@ watch(() => props.customer, (newCustomer) => {
 
 defineExpose({ showModal })
 </script>
+
+<style scoped>
+.check-input {
+    margin: 0 0.7rem 0 0.2rem;
+}
+</style>

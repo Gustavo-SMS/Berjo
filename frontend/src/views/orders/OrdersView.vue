@@ -220,19 +220,22 @@
                   </div>
                 </div>
 
-                <div class="payment-total">
-                  <strong>Total pago:</strong>
-                  {{
-                    formattedTotalPrice(order.payments.reduce((sum, p) => sum + p.amount, 0))
-                  }}
-                </div>
+                <div class="payment-summary">
 
+                  <div class="payment-total">
+                    <strong>Total pago:</strong>
+                    {{
+                      formattedTotalPrice(order.payments.reduce((sum, p) => sum + p.amount, 0))
+                    }}
+                </div>
+                
                 <div class="payment-total remaining">
                   <strong>Restante:</strong>
                   {{
                     formattedTotalPrice(order.pending_amount)
                   }}
                 </div>
+              </div>
               </div>
             </div>
           </div>
@@ -861,5 +864,11 @@ const handlePaymentAdded = async () => {
 
 .payments-arrow.expanded {
   transform: rotate(180deg);
+}
+
+.payment-summary {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
 }
 </style>
