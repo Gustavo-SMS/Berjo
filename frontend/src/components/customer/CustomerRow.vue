@@ -61,6 +61,7 @@
           </div>
 
           <div class="col-12 d-flex justify-content-end gap-2 mt-3">
+            <button @click="showPendingPayments" type="button" class="btn btn-primary">Pendências</button>
             <button @click="openUpdateCustomerModal" type="button" class="btn btn-primary">Editar</button>
             <button
               v-if="authStore.userRole === 'ADMIN' && canDelete"
@@ -278,6 +279,10 @@ const openUpdateCustomerModal = async () => {
   }
   await nextTick()
   updateCustomerModal.value?.showModal()
+}
+
+const showPendingPayments = () => {
+  router.push("/orders")
 }
 </script>
 

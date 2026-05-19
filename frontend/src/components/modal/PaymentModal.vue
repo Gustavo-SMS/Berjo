@@ -45,6 +45,7 @@
   const notificationStore = useNotificationStore()
 
   const props = defineProps(['orderId'])
+  const emit = defineEmits(['payment-added'])
 
   const amount = ref('')
   const date = ref('')
@@ -81,6 +82,7 @@
       notificationStore.addNotification('Pagamento adicionado com sucesso!', 'success')
       resetFields()
       hideModal()
+      emit('payment-added')
     } catch (err) {
       const message = err.message.includes('Failed to fetch') ? 'Servidor indisponível. Tente novamente mais tarde.' : err.message
       console.log(err.message)

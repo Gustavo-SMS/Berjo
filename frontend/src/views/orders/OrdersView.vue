@@ -169,19 +169,33 @@
               </div>
             </div>
 
-            <div class="payments-wrapper">
-              <div class="payments-header">
+          <div class="payments-wrapper">
+            <div class="payments-header">
+              
+              <div
+                class="payments-title"
+                @click="togglePayments(order.id)"
+              >
                 <h5>Pagamentos</h5>
 
-                <button
-                  v-if="authStore.userRole === 'ADMIN'"
-                  class="btn btn-primary btn-sm"
-                  @click="openPaymentModal(order.id)"
+                <span
+                  class="payments-arrow"
+                  :class="{ expanded: isPaymentsExpanded(order.id) }"
                 >
-                  Adicionar pagamento
-                </button>
+                  ▼
+                </span>
               </div>
 
+              <button
+                v-if="authStore.userRole === 'ADMIN'"
+                class="btn btn-primary btn-sm"
+                @click="openPaymentModal(order.id)"
+              >
+                Adicionar pagamento
+              </button>
+            </div>
+
+            <div v-if="isPaymentsExpanded(order.id)">
               <div
                 v-if="!order.payments || order.payments.length === 0"
                 class="empty-payments"
@@ -222,6 +236,7 @@
               </div>
             </div>
           </div>
+          </div>
         </div>
 
         <nav v-if="totalPages > 1" class="pagination-wrapper">
@@ -256,6 +271,7 @@
     <PaymentModal
       :orderId="selectedOrderId"
       ref="paymentModal"
+      @payment-added="handlePaymentAdded"
     />
 
     <ConfirmationModal
@@ -562,6 +578,26 @@ const formattedTotalPrice = (totalPrice) => {
     currency: 'BRL'
   }).format(totalPrice || 0)
 }
+
+const expandedPayments = ref(new Set())
+
+const togglePayments = (orderId) => {
+  if (expandedPayments.value.has(orderId)) {
+    expandedPayments.value.delete(orderId)
+  } else {
+    expandedPayments.value.add(orderId)
+  }
+
+  expandedPayments.value = new Set(expandedPayments.value)
+}
+
+const isPaymentsExpanded = (orderId) => {
+  return expandedPayments.value.has(orderId)
+}
+
+const handlePaymentAdded = async () => {
+  await getOrders(selectedStatus.value)
+}
 </script>
 
 <style scoped>
@@ -807,5 +843,23 @@ const formattedTotalPrice = (totalPrice) => {
 
 .empty-payments {
   color: var(--text-secondary);
+}
+
+.payments-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.payments-arrow {
+  font-size: 0.8rem;
+  color: var(--color-gold);
+  transition: transform 0.2s ease;
+}
+
+.payments-arrow.expanded {
+  transform: rotate(180deg);
 }
 </style>
