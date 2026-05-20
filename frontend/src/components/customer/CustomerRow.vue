@@ -282,7 +282,13 @@ const openUpdateCustomerModal = async () => {
 }
 
 const showPendingPayments = () => {
-  router.push("/orders")
+  router.push({
+    path: '/orders',
+    query: {
+      pending: 'true',
+      customerId: props.customer.id
+    }
+  })
 }
 </script>
 

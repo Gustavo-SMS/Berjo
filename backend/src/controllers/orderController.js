@@ -305,7 +305,36 @@ const getPendingPaymentOrders = async (req, res) => {
                 pending_amount: {
                     gt: 0
                 }
-            }
+            },
+            include: {
+                customer: {
+                    select: {
+                        name: true
+                    }
+                },
+                blind: {
+                    include: {
+                        type: {
+                            select: {
+                                id: true,
+                                type: true,
+                                collection: true,
+                                color: true
+                            }
+                        }
+                    }
+
+                },
+                payments: {
+                    select: {
+                        amount: true,
+                        date: true
+                    }
+                }
+            },
+            orderBy: {
+                created_at: 'desc'
+            },
         })
 
         res.status(200).json(orders)

@@ -52,7 +52,7 @@ router.get('/orders/filter/', authenticateToken.authenticateToken, orderControll
 router.get('/orders/status/:status', authenticateToken.authenticateToken, orderController.getOrdersByStatus)
 router.get('/orders/customer/:id', authenticateToken.authenticateToken, orderController.getOrdersByCustomer)
 router.get('/orders/search', authenticateToken.authenticateToken, orderController.getOrdersByCustomerName)
-router.get('/orders/pending', authenticateToken.authenticateToken, orderController.getPendingPaymentOrders)
+router.get('/orders/pending/:customerId', authenticateToken.authenticateToken, orderController.getPendingPaymentOrders)
 router.get('/orders/:id', authenticateToken.authenticateToken, orderMiddleware.validateId, orderController.getOne)
 router.post('/orders', authenticateToken.authenticateToken, orderMiddleware.totalPrice, orderController.createOrder)
 router.put('/orders', authenticateToken.authenticateToken, orderController.updateOrder)

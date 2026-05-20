@@ -295,7 +295,7 @@ import { ref, onMounted, computed, watch } from 'vue'
 import { useNotificationStore } from '@/stores/notificationStore'
 import { fetchWithAuth } from '@/utils/api'
 import { useAuthStore } from '@/stores/authStore'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import vSelect from 'vue-select'
 import 'vue-select/dist/vue-select.css'
 
@@ -309,6 +309,7 @@ const openPaymentModal = (orderId) => {
 
 const authStore = useAuthStore()
 const router = useRouter()
+const route = useRoute()
 const notificationStore = useNotificationStore()
 
 const selectedStatus = ref('Em espera')
@@ -411,8 +412,6 @@ const getByCustomer = async () => {
         console.log(error.message)
     } 
 }
-
-onMounted(() => getOrders('Em espera'))
 
 const editStatus = (orderId, currentStatus) => {
     editingOrderId.value = orderId
@@ -582,6 +581,27 @@ const formattedTotalPrice = (totalPrice) => {
   }).format(totalPrice || 0)
 }
 
+const getPendingOrders = async (customerId) => {
+  try {
+    const response = await fetchWithAuth(`/orders/pending/${customerId}`, {
+        method: 'GET',
+        headers: { 'Content-type': 'application/json' }
+      }, authStore, router)
+
+    const data = await response.json()
+    
+    if (!response.ok) {
+      throw new Error(data.error || 'Erro ao buscar pendências')
+    }
+
+    orders.value = Array.isArray(data) ? data : []
+    currentPage.value = 1
+  } catch (error) {
+    orders.value = []
+    console.error(error.message)
+  }
+}
+
 const expandedPayments = ref(new Set())
 
 const togglePayments = (orderId) => {
@@ -601,6 +621,26 @@ const isPaymentsExpanded = (orderId) => {
 const handlePaymentAdded = async () => {
   await getOrders(selectedStatus.value)
 }
+
+const loadOrders = async () => {
+  const isPending = route.query.pending === 'true'
+  const customerId = route.query.customerId
+
+  if (isPending && customerId) {
+    await getPendingOrders(customerId)
+  } else {
+    await getOrders(selectedStatus.value || 'Em espera')
+  }
+}
+
+onMounted(loadOrders)
+
+watch(
+  () => route.query,
+  () => {
+    loadOrders()
+  }
+)
 </script>
 
 <style scoped>
