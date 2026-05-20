@@ -647,7 +647,7 @@ watch(
 .order-card {
   border: 1px solid var(--color-border);
   border-radius: var(--border-radius);
-  padding: 1.5rem;
+  padding: 1rem;
 }
 
 .order-header {

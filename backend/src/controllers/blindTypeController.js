@@ -157,7 +157,7 @@ const updateBlindType = async (req, res) => {
                 type: type || undefined,
                 collection: collection || undefined,
                 color: color || undefined,
-                max_width: parseFloat(max_width) || undefined,
+                max_width: parseFloat(max_width) || null,
                 price: parseFloat(price) || undefined
             }
         })

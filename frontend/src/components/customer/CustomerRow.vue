@@ -13,6 +13,12 @@
           </h3>
         </div>
 
+        <!-- <span
+          class="status-badge"
+          :class="props.customer.user ? 'active' : 'inactive'"
+        >
+          {{ props.customer.user ? 'ATIVO' : 'INATIVO' }}
+        </span> -->
         <span
           class="status-badge"
           :class="props.customer.isActive ? 'active' : 'inactive'"

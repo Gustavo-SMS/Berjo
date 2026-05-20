@@ -18,7 +18,12 @@ const getAll = async (req, res) => {
               ]
             },
             include: {
-              address: true
+              address: true,
+              user: {
+                select: {
+                    isActive: true
+                }
+              }
             },
             orderBy: {
                 name: 'asc'

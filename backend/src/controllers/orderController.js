@@ -296,8 +296,8 @@ const getOrdersByFilter = async (req, res) => {
 }
 
 const getPendingPaymentOrders = async (req, res) => {
-    const { customerId } = req.query
-
+    const customerId = req.params.customerId
+    
     try {
         const orders = await prismaClient.order.findMany({
             where: {
