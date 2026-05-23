@@ -9,12 +9,12 @@ const validateBlindData = async (req, res, next) => {
         const value = await blindSchema.validateAsync(data)
 
         const order = await checkOrderId(res, data.orderId)
-        const blindType = await checkBlindTypeId(res, data.blindTypeId)
+        const catalogItem = await checkCatalogItemId(res, data.catalogItemId)
 
         if (!order) {
             return res.status(500).json({ error: "Pedido não encontrado" })
-        } else if (!blindType) {
-            return res.status(500).json({ error: "Tipo não encontrado" })
+        } else if (!catalogItem) {
+            return res.status(500).json({ error: "Item do catálogo não encontrado" })
         } else if (value) {
             next()
         }
@@ -42,16 +42,16 @@ const checkOrderId = async (res, id) => {
     }
 }
 
-const checkBlindTypeId = async (res, id) => {
+const checkCatalogItemId = async (res, id) => {
     try {
-        const blindType = await prismaClient.blind_Type.findUnique({
+        const catalogItem = await prismaClient.catalogItem.findUnique({
             where: {
                 id
             }
         })
 
-        if (blindType) {
-            return blindType
+        if (catalogItem) {
+            return catalogItem
         }
 
     } catch (error) {
@@ -66,8 +66,8 @@ const calculateBlindPrice = async (req, res, next) => {
         const squareMetre = blind.width * blind.height
         blind.square_metre = squareMetre * blind.quantity
 
-        const blindPrice = await prismaClient.blind_Type.findUnique({
-            where: { id: blind.type_id },
+        const blindPrice = await prismaClient.catalogItem.findUnique({
+            where: { id: blind.catalogItemId },
             select: { price: true }
         })
 

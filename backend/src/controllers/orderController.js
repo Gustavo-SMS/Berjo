@@ -16,7 +16,7 @@ const getAll = async (req, res) => {
                 },
                 blind: {
                     include: {
-                        type: {
+                        catalogItem: {
                             select: {
                                 id: true,
                                 type: true,
@@ -62,7 +62,7 @@ const getOne = async (req, res) => {
                 },
                 blind: {
                     include: {
-                        type: {
+                        catalogItem: {
                             select: {
                                 id: true,
                                 type: true,
@@ -108,7 +108,7 @@ const getOrdersByCustomer = async (req, res) => {
                 },
                 blind: {
                     include: {
-                        type: {
+                        catalogItem: {
                             select: {
                                 id: true,
                                 type: true,
@@ -158,7 +158,7 @@ const getOrdersByCustomerName = async (req, res) => {
             },
             blind: {
                 include: {
-                    type: {
+                    catalogItem: {
                         select: {
                             id: true,
                             type: true,
@@ -206,7 +206,7 @@ const getOrdersByStatus = async (req, res) => {
                 },
                 blind: {
                     include: {
-                        type: {
+                        catalogItem: {
                             select: {
                                 id: true,
                                 type: true,
@@ -261,7 +261,7 @@ const getOrdersByFilter = async (req, res) => {
                 },
                 blind: {
                     include: {
-                        type: {
+                        catalogItem: {
                             select: {
                                 id: true,
                                 type: true,
@@ -314,7 +314,7 @@ const getPendingPaymentOrders = async (req, res) => {
                 },
                 blind: {
                     include: {
-                        type: {
+                        catalogItem: {
                             select: {
                                 id: true,
                                 type: true,
@@ -346,7 +346,6 @@ const getPendingPaymentOrders = async (req, res) => {
 const createOrder = async (req, res) => {
     const { customer, blinds, observation } = req.body
     const total_price = req.total_price
-
     try {
         const order = await prismaClient.order.create({
             data: {
@@ -455,7 +454,7 @@ const getBlindsToMail = async (id) => {
                         width: true,
                         height: true,
                         model: true,
-                        type: {
+                        catalogItem: {
                             select: {
                                 type: true,
                                 collection: true,

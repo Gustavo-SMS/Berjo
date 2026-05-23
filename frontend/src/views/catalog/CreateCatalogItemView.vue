@@ -3,7 +3,7 @@
     <div class="card register-card">
       <div class="card-body">
         <div class="page-header">
-          <h1>Cadastrar Tipo de Persiana</h1>
+          <h1>Cadastrar Item</h1>
         </div>
 
         <form @submit.prevent="submitForm" novalidate class="dark-input">
@@ -99,7 +99,7 @@ const submitForm = async () => {
   }
 
     try {
-        const response = await fetchWithAuth('/blind_types', {
+        const response = await fetchWithAuth('/catalog-items', {
         method: 'POST',
         headers: {
             'Content-type': 'application/json'
@@ -109,11 +109,11 @@ const submitForm = async () => {
         
         if (!response.ok) {
             const errorData = await response.json()
-            throw new Error(errorData.error || 'Erro ao cadastrar tipo de persiana')
+            throw new Error(errorData.error || 'Erro ao cadastrar item do catálogo')
         }
 
-        notificationStore.addNotification('Tipo cadastrado com sucesso!', 'success')
-        router.push('/blindTypes')
+        notificationStore.addNotification('Item cadastrado com sucesso!', 'success')
+        router.push('/catalog')
     } catch (error) {
         console.log(error.message)
         notificationStore.addNotification(error.message, 'error')

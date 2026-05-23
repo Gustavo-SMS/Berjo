@@ -109,7 +109,7 @@ const type = ref(null)
 const handleTypeSelected  = (selected) => {
   type.value = selected
 
-  emit('updateRow', { field: 'type_id', value: '' })
+  emit('updateRow', { field: 'catalogItem_id', value: '' })
   emit('updateRow', { field: 'model', value: '' })
 }
 
@@ -117,7 +117,7 @@ const handleBlindTypeSelected  = (selectedObject) => {
   if (!selectedObject) return
 
   emit('updateRow', {
-    field: 'type_id',
+    field: 'catalogItem_id',
     value: selectedObject.id
   })
 }
@@ -157,7 +157,7 @@ const modelOptions = computed(() => {
 })
 
 watch(type, () => {
-  emit('updateRow', { field: 'type_id', value: '' })
+  emit('updateRow', { field: 'catalogItem_id', value: '' })
   emit('updateRow', { field: 'model', value: '' })
 })
 

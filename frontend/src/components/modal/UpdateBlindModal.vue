@@ -27,7 +27,7 @@
                           :key="editableType"
                           :typeValue="editableType"
                           :collection="editableCollection"
-                          :selectedId="editableBlindTypeId"
+                          :selectedId="editableCatalogItemId"
                           @selectedOption="handleBlindTypeSelected" 
                         />
                     </div>
@@ -94,7 +94,7 @@ const editableWidth = ref('')
 const editableHeight = ref('')
 const editableCommand_height = ref('')
 const editableModel = ref('')
-const editableBlindTypeId = ref('')
+const editableCatalogItemId = ref('')
 
 const handleTypeSelected  = (selected) => {
   editableType.value = selected || null
@@ -102,8 +102,7 @@ const handleTypeSelected  = (selected) => {
 
 const handleBlindTypeSelected  = (selectedObject) => {
   if (!selectedObject) return
-
-  editableBlindTypeId.value = selectedObject.id || null
+  editableCatalogItemId.value = selectedObject.id || null
 }
 
 const modelConfig = {
@@ -144,7 +143,7 @@ const handleUptadeBlind = async () => {
     const data = {
         id: props.blind.id,
         quantity: editableQuantity.value,
-        type_id: editableBlindTypeId.value,
+        catalogItemId: editableCatalogItemId.value,
         width: editableWidth.value,
         height: editableHeight.value,
         command_height: editableCommand_height.value,
@@ -200,7 +199,7 @@ const resetFields = () => {
     editableHeight.value = ''
     editableCommand_height.value = ''
     editableModel.value = ''
-    editableBlindTypeId.value = ''
+    editableCatalogItemId.value = ''
 }
 
 watch(() => props.blind, (newBlind) => {
@@ -213,7 +212,7 @@ watch(() => props.blind, (newBlind) => {
   editableHeight.value = newBlind.height || ''
   editableCommand_height.value = newBlind.command_height || ''
   editableModel.value = newBlind.model || ''
-  editableBlindTypeId.value = newBlind.blindTypeId || ''
+  editableCatalogItemId.value = newBlind.catalogItem_id || ''
 
 }, { immediate: true })
   

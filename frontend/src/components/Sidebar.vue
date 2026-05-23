@@ -16,9 +16,9 @@
       <span>Pedidos</span>
     </RouterLink>
 
-    <RouterLink to="/blindTypes" class="menu-item" active-class="active">
+    <RouterLink to="/catalog" class="menu-item" active-class="active">
       <i class="bi bi-grid"></i>
-      <span>Tipos de Persiana</span>
+      <span>Catálogo</span>
     </RouterLink>
 
     <RouterLink class="menu-item" to="/reports">

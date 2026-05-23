@@ -108,11 +108,11 @@ model Blind {
   order           Order @relation(fields: [order_id], references: [id])
   order_id        String
 
-  type            Blind_Type @relation(fields: [type_id], references: [id])
-  type_id         String
+  catalogItem     CatalogItem @relation(fields: [catalogItem_id], references: [id])
+  catalogItem_id  String
 }
 
-model Blind_Type {
+model CatalogItem {
   id          String @id @default(uuid())
   type        String
   collection  String

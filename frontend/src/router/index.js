@@ -51,15 +51,15 @@ const router = createRouter({
       meta: { requiresAuth: true }
     },
     {
-      path: '/blindTypes',
-      name: 'blindTypes',
-      component: () => import('../views/blindTypes/BlindTypeView.vue'),
+      path: '/catalog',
+      name: 'catalog',
+      component: () => import('../views/catalog/CatalogView.vue'),
       meta: { requiresAuth: true }
     },
     {
-      path: '/createBlindTypes',
-      name: 'createBlindTypes',
-      component: () => import('../views/blindTypes/CreateBlindTypeView.vue'),
+      path: '/createCatalogItem',
+      name: 'createCatalogItem',
+      component: () => import('../views/catalog/CreateCatalogItemView.vue'),
       meta: { requiresAuth: true, requiresAdmin: true }
     },
     {

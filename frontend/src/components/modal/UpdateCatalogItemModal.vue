@@ -1,15 +1,15 @@
 <template>
-  <div class="modal fade" ref="blindTypeModal" tabindex="-1">
+  <div class="modal fade" ref="catalogItemModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content card">
 
         <div class="modal-header">
-          <h5 class="modal-title">Editar Tipo de Persiana</h5>
+          <h5 class="modal-title">Editar Item</h5>
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
         </div>
 
         <div class="modal-body">
-          <form class="dark-input w-100 d-flex flex-column gap-3" @submit.prevent="handleUptadeBlindType">
+          <form class="dark-input w-100 d-flex flex-column gap-3" @submit.prevent="handleUpdateCatalogItem">
 
             <div class="w-100">
               <label class="form-label">Tipo *</label>
@@ -97,7 +97,7 @@ const authStore = useAuthStore()
 const router = useRouter()
 const notificationStore = useNotificationStore()
   
-const props = defineProps(['blindType'])
+const props = defineProps(['catalogItem'])
   
 const editableType = ref('')
 const editableCollection = ref('')
@@ -112,9 +112,9 @@ const typeOptions = [
   { label: 'Romana', value: 'Romana' }
 ]
   
-const handleUptadeBlindType = async () => {
+const handleUpdateCatalogItem = async () => {
     const data = {
-      id: props.blindType.id,
+      id: props.catalogItem.id,
       type: editableType.value,
       collection: editableCollection.value,
       color: editableColor.value,
@@ -123,7 +123,7 @@ const handleUptadeBlindType = async () => {
     }
     
      try {
-      const response = await fetchWithAuth("/blind_types", {
+      const response = await fetchWithAuth("/catalog-items", {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -133,25 +133,25 @@ const handleUptadeBlindType = async () => {
 
       if (!response.ok) {
         const errorData = await response.json()
-        throw new Error(errorData.error || 'Erro ao atualizar tipo')
+        throw new Error(errorData.error || 'Erro ao atualizar item do catálogo')
       }
 
-      notificationStore.addNotification('Tipo atualizado com sucesso!', 'success')
+      notificationStore.addNotification('Item atualizado com sucesso!', 'success')
       resetFields()
       hideModal()
-      props.blindType.getBlindTypes()
+      props.catalogItem.getCatalogItems()
     } catch (error) {
       console.error('Erro ao enviar os dados:', error.message)
       notificationStore.addNotification(error.message, 'error')
     }
 }
     
-const blindTypeModal = ref(null)
+const catalogItemModal = ref(null)
 let modalInstance = null
     
 onMounted(() => {
-  if (blindTypeModal.value) {
-    modalInstance = new bootstrap.Modal(blindTypeModal.value)
+  if (catalogItemModal.value) {
+    modalInstance = new bootstrap.Modal(catalogItemModal.value)
   }
 })
   
@@ -171,14 +171,14 @@ const resetFields = () => {
     editablePrice.value = ''
 }
   
-watch(() => props.blindType, (newBlindType) => {
-  if (!newBlindType || typeof newBlindType !== 'object') return
+watch(() => props.catalogItem, (newCatalogItem) => {
+  if (!newCatalogItem || typeof newCatalogItem !== 'object') return
   
-  editableType.value = newBlindType.type || ''
-  editableCollection.value = newBlindType.collection || ''
-  editableColor.value = newBlindType.color || ''
-  editableMaxWidth.value = newBlindType.max_width || ''
-  editablePrice.value = newBlindType.price || ''
+  editableType.value = newCatalogItem.type || ''
+  editableCollection.value = newCatalogItem.collection || ''
+  editableColor.value = newCatalogItem.color || ''
+  editableMaxWidth.value = newCatalogItem.max_width || ''
+  editablePrice.value = newCatalogItem.price || ''
 }, { immediate: true })
   
 defineExpose({ showModal })

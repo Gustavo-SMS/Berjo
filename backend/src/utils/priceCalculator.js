@@ -7,8 +7,8 @@ const calculateTotalPrice = async (blinds) => {
         const squareMetre = blind.width * blind.height
         blind.square_metre = squareMetre * blind.quantity
 
-        const blindPrice = await prismaClient.blind_Type.findUnique({
-            where: { id: blind.type_id },
+        const blindPrice = await prismaClient.catalogItem.findUnique({
+            where: { id: blind.catalogItem_id },
             select: { price: true }
         })
 

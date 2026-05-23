@@ -1,5 +1,6 @@
 const { prismaClient } = require('../database/prismaClient')
 const orderController = require('./orderController')
+const customerController = require('./customerController')
 
 const getAll = async (req, res) => {
     try {
@@ -16,7 +17,7 @@ const getAll = async (req, res) => {
 }
 
 const createBlind = async (req, res) => {
-    const { quantity, width, height, command_height, model, square_metre, blind_price, blindTypeId, orderId } = req.body
+    const { quantity, width, height, command_height, model, square_metre, blind_price, catalogItemId, orderId } = req.body
 
     try {
         const blind = await prismaClient.blind.create({
@@ -28,8 +29,8 @@ const createBlind = async (req, res) => {
                 model,
                 square_metre,
                 blind_price,
-                type: {
-                    connect: { id: blindTypeId }
+                catalogItem: {
+                    connect: { id: catalogItemId }
                 },
                 order: {
                     connect: { id: orderId }
@@ -48,7 +49,7 @@ const createBlind = async (req, res) => {
 }
 
 const updateBlind = async (req, res) => {
-    const { id, quantity, width, height, command_height, model, square_metre, blind_price, type_id } = req.body
+    const { id, quantity, width, height, command_height, model, square_metre, blind_price, catalogItemId } = req.body
 
     try {
         const blind = await prismaClient.blind.update({
@@ -63,7 +64,9 @@ const updateBlind = async (req, res) => {
                 model: model || undefined,
                 square_metre: parseFloat(square_metre) || undefined,
                 blind_price: blind_price || undefined,
-                type_id: type_id || undefined
+                catalogItem: {
+                    connect: { id: catalogItemId }
+                }
             }
         })
 
@@ -83,30 +86,66 @@ const deleteBlind = async (req, res) => {
     const id = req.params.id
 
     try {
-        const result = await prismaClient.$transaction(async (prisma) => {
-            const blind = await prisma.blind.delete({
-                where: { id }
-            })
-
-            const remainingBlinds = await prisma.blind.findMany({
-                where: { order_id: blind.order_id }
-            })
-
-            if (remainingBlinds.length === 0) {
-                await prisma.order.delete({
-                where: { id: blind.order_id }
-                })
+        const blind = await prismaClient.blind.findUnique({
+            where: {
+                id
+            },
+            include: {
+                order: true
             }
-
-            await orderController.recalculateOrderValues(blind.order_id)
-
-            return blind
         })
 
-        return res.status(200).json(result)
+        if (!blind) {
+            return res.status(404).json({
+                error: 'Persiana não encontrada'
+            })
+        }
+
+        await prismaClient.blind.delete({
+            where: {
+                id
+            }
+        })
+
+        const remainingBlinds = await prismaClient.blind.findMany({
+            where: {
+                order_id: blind.order_id
+            }
+        })
+
+        if (remainingBlinds.length === 0) {
+            await prismaClient.payment.deleteMany({
+                where: {
+                    order_id: blind.order_id
+                }
+            })
+
+            await prismaClient.order.delete({
+                where: {
+                    id: blind.order_id
+                }
+            })
+
+            await customerController.recalculateCustomerDebt(
+                blind.order.customer_id
+            )
+        } else {
+            await orderController.recalculateOrderValues(
+                blind.order_id
+            )
+        }
+
+        return res.status(200).json({
+            message: 'Persiana removida com sucesso'
+        })
+
     } catch (error) {
+
         console.log(error)
-        return res.status(500).json({ error: error.message })
+
+        return res.status(500).json({
+            error: error.message
+        })
     }
 }
 

@@ -45,7 +45,7 @@ const fetchBlindCollections = async (type) => {
   if (!type) return
 
   try {
-    const response = await fetchWithAuth(`/blind_types/search?name=${type}`, {
+    const response = await fetchWithAuth(`/catalog-items/search?name=${type}`, {
         method: 'GET',
         headers: { 'Content-type': 'application/json' }
       },
@@ -58,12 +58,12 @@ const fetchBlindCollections = async (type) => {
       throw new Error(errorData.error || 'Erro ao buscar coleções')
     }
 
-    const blindTypes = await response.json()
+    const catalogItems = await response.json()
 
-    blindCollections.value = blindTypes.map(bt => ({
-      id: bt.id,
-      collection: bt.collection,
-      color: bt.color
+    blindCollections.value = catalogItems.map(ci => ({
+      id: ci.id,
+      collection: ci.collection,
+      color: ci.color
     }))
 
   } catch (error) {

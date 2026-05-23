@@ -121,7 +121,7 @@ const blindSchema = Joi.object({
     'string.empty': 'Modelo é obrigatório',
     'any.required': 'Modelo é obrigatório'
   }),
-  type_id: Joi.string().required().messages({
+  catalogItem_id: Joi.string().required().messages({
     'string.empty': 'Tipo é obrigatório',
     'any.required': 'Tipo é obrigatório'
   }),
@@ -130,7 +130,7 @@ const blindSchema = Joi.object({
   })
 })
 
-const blindTypeSchema = Joi.object({
+const catalogItemSchema = Joi.object({
   type: Joi.string().required().messages({
     'string.empty': 'Tipo é obrigatório',
     'any.required': 'Tipo é obrigatório'
@@ -160,5 +160,5 @@ module.exports = {
     passwordSchema,
     customerSchema,
     blindSchema,
-    blindTypeSchema,
+    catalogItemSchema,
 }

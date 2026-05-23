@@ -29,7 +29,7 @@ const selectedType = ref(props.typeValue || null)
 const fetchTypes = async () => {
   try {
     const response = await fetchWithAuth(
-      "/blind_types/type",
+      "/catalog-items/type",
       {
         method: 'GET',
         headers: { 'Content-type': 'application/json' }

@@ -3,7 +3,7 @@
     <div class="card">
       <div class="card-body">
         <div class="page-header d-flex justify-content-between align-items-center flex-wrap gap-3">
-          <h1>Tipos de Persiana</h1>
+          <h1>Catálogo</h1>
         </div>
 
           <div class="d-flex align-items-center gap-2 flex-wrap mb-4 justify-content-start">
@@ -29,8 +29,8 @@
             />
 
             <div v-if="authStore.userRole === 'ADMIN'" class="ms-auto">
-              <RouterLink to="/createBlindTypes" class="btn btn-primary">
-                Adicionar tipo
+              <RouterLink to="/createCatalogItem" class="btn btn-primary">
+                Adicionar item
               </RouterLink>
             </div>
           </div>
@@ -44,11 +44,11 @@
           <span v-if="authStore.userRole === 'ADMIN'" class="text-end">Ações</span>
         </div>
 
-        <BlindTypeRow
-          v-for="blindType in paginatedBlindTypes"
-          :key="blindType.id"
-          :blindType="blindType"
-          :getBlindTypes="getBlindTypes"
+        <CatalogItemRow
+          v-for="catalogItem in paginatedCatalogItems"
+          :key="catalogItem.id"
+          :catalogItem="catalogItem"
+          :getCatalogItems="getCatalogItems"
         />
 
         <nav v-if="totalPages > 1" class="pagination-wrapper">
@@ -85,7 +85,7 @@
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue'
 import { fetchWithAuth } from '@/utils/api'
-import BlindTypeRow from '@/components/blindType/BlindTypeRow.vue'
+import CatalogItemRow from '@/components/catalog/CatalogItemRow.vue'
 import { useAuthStore } from '@/stores/authStore'
 import { useRouter } from 'vue-router'
 import vSelect from 'vue-select'
@@ -94,7 +94,7 @@ import 'vue-select/dist/vue-select.css'
 const authStore = useAuthStore()
 const router = useRouter()
 
-const blindTypes = ref([])
+const catalogItems = ref([])
 const searchTerm = ref('')
 
 const currentPage = ref(1)
@@ -107,9 +107,9 @@ const statusOptions = [
   { label: 'Coleção', value: 'collection' }
 ]
 
-const getBlindTypes = async () => {
+const getCatalogItems = async () => {
     try {
-        const response = await fetchWithAuth("/blind_types", {
+        const response = await fetchWithAuth("/catalog-items", {
             method: 'GET',
             headers: {
                 'Content-type': 'application/json'
@@ -118,11 +118,11 @@ const getBlindTypes = async () => {
 
         if (!response.ok) {
             const errorData = await response.json()
-            throw new Error(errorData.error || 'Erro ao buscar tipos de persiana')
+            throw new Error(errorData.error || 'Erro ao buscar itens do catálogo')
         }
 
         const data = await response.json()
-        blindTypes.value = data
+        catalogItems.value = data
         currentPage.value = 1
     } catch (error) {
         console.log(error.message)
@@ -133,11 +133,11 @@ const getWithFilter = async () => {
   const name = encodeURIComponent(searchTerm.value.trim())
 
   if(!searchTerm.value) {
-      return getBlindTypes()
+      return getCatalogItems()
   }
 
   try {
-      const response = await fetchWithAuth(`/blind_types/search?name=${name}&filter=${selectedOption.value}`, {
+      const response = await fetchWithAuth(`/catalog-items/search?name=${name}&filter=${selectedOption.value}`, {
           method: 'GET',
           headers: {
               'Content-type': 'application/json'
@@ -150,21 +150,21 @@ const getWithFilter = async () => {
         throw new Error(data.error || 'Erro ao buscar tipo')
       }   
 
-      blindTypes.value = data
+      catalogItems.value = data
   } catch (error) {
       console.log(error.message)
   }
 }
 
-onMounted(getBlindTypes)
+onMounted(getCatalogItems)
 
 const totalPages = computed(() =>
-  Math.ceil(blindTypes.value.length / itemsPerPage)
+  Math.ceil(catalogItems.value.length / itemsPerPage)
 )
 
-const paginatedBlindTypes = computed(() => {
+const paginatedCatalogItems = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage
-  return blindTypes.value.slice(start, start + itemsPerPage)
+  return catalogItems.value.slice(start, start + itemsPerPage)
 })
 
 const goToPage = (page) => {

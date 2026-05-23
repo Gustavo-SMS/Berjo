@@ -1,24 +1,24 @@
 <template>
-  <form @submit.prevent="submitUpdate" class="blind-type-row">
+  <form @submit.prevent="submitUpdate" class="catalog-item-row">
     
     <div class="field">
       <span class="mobile-label">Tipo</span>
-      <p>{{ props.blindType.type }}</p>
+      <p>{{ props.catalogItem.type }}</p>
     </div>
 
     <div class="field">
       <span class="mobile-label">Coleção</span>
-      <p>{{ props.blindType.collection }}</p>
+      <p>{{ props.catalogItem.collection }}</p>
     </div>
 
     <div class="field">
       <span class="mobile-label">Cor</span>
-      <p>{{ props.blindType.color }}</p>
+      <p>{{ props.catalogItem.color }}</p>
     </div>
 
     <div class="field">
       <span class="mobile-label">Largura Máx.</span>
-      <p>{{ props.blindType.max_width }}</p>
+      <p>{{ props.catalogItem.max_width }}</p>
     </div>
 
     <div class="field">
@@ -27,7 +27,7 @@
     </div>
 
     <div class="actions justify-content-end" v-if="authStore.userRole === 'ADMIN'">
-      <button @click="openUpdateBlindTypeModal" type="button" class="btn btn-primary btn-sm">
+      <button @click="openUpdateCatalogItemModal" type="button" class="btn btn-primary btn-sm">
         Editar
       </button>
       <button @click="openDeleteModal" type="button" class="btn btn-danger btn-sm">
@@ -37,20 +37,20 @@
 
   </form>
 
-    <UpdateBlindTypeModal :blindType="blindTypeData" ref="updateBlindTypeModal" />
+    <UpdateCatalogItemModal :catalogItem="catalogItemData" ref="updateCatalogItemModal" />
 
         <ConfirmationModal
           v-if="showModal"
           :show="showModal"
-          message="Tem certeza que deseja excluir este tipo?"
-          @confirm="deleteBlindType"
+          message="Tem certeza que deseja excluir este item?"
+          @confirm="deleteCatalogItem"
           @close="showModal = false"
         />
 </template>
                         
 <script setup>
 import { ref, nextTick, computed } from 'vue'
-import UpdateBlindTypeModal from '../modal/UpdateBlindTypeModal.vue'
+import UpdateCatalogItemModal from '../modal/UpdateCatalogItemModal.vue'
 import ConfirmationModal from '@/components/modal/ConfirmationModal.vue'
 import { useNotificationStore } from '@/stores/notificationStore'
 import { useAuthStore } from '@/stores/authStore'
@@ -61,7 +61,7 @@ const router = useRouter()
 const authStore = useAuthStore()
 const notificationStore = useNotificationStore()
 
-const props = defineProps(['blindType', 'getBlindTypes'])
+const props = defineProps(['catalogItem', 'getCatalogItems'])
 
 const showModal = ref(false)
 
@@ -69,9 +69,9 @@ const openDeleteModal = () => {
   showModal.value = true
 }
 
-const deleteBlindType = async () => {
+const deleteCatalogItem = async () => {
   try {
-        const response = await fetchWithAuth(`/blind_types/${props.blindType.id}`, {
+        const response = await fetchWithAuth(`/catalog-items/${props.catalogItem.id}`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
@@ -79,14 +79,14 @@ const deleteBlindType = async () => {
         }, authStore, router)
 
         if (!response.ok) {
-            throw new Error('Erro ao excluir tipo')
+            throw new Error('Erro ao excluir item')
         }
 
-        notificationStore.addNotification('Tipo excluído com sucesso', 'success')
+        notificationStore.addNotification('Item excluído com sucesso', 'success')
         
-        props.getBlindTypes()
+        props.getCatalogItems()
       } catch (error) {
-        console.error('Erro ao excluir tipo de persiana:', error.message)
+        console.error('Erro ao excluir item:', error.message)
         notificationStore.addNotification(error.message, 'error')
       }
 }
@@ -95,29 +95,29 @@ const formattedPrice = computed(() => {
   return new Intl.NumberFormat('pt-BR', {
     style: 'currency',
     currency: 'BRL'
-  }).format(props.blindType.price || 0)
+  }).format(props.catalogItem.price || 0)
 })
 
-const blindTypeData = ref({})
-const updateBlindTypeModal = ref(null)
+const catalogItemData = ref({})
+const updateCatalogItemModal = ref(null)
 
-const openUpdateBlindTypeModal = async () => {
-  blindTypeData.value = {
-    id: props.blindType.id,
-    type: props.blindType.type,
-    collection: props.blindType.collection,
-    color: props.blindType.color,
-    max_width: props.blindType.max_width,
-    price: props.blindType.price,
-    getBlindTypes: props.getBlindTypes
+const openUpdateCatalogItemModal = async () => {
+  catalogItemData.value = {
+    id: props.catalogItem.id,
+    type: props.catalogItem.type,
+    collection: props.catalogItem.collection,
+    color: props.catalogItem.color,
+    max_width: props.catalogItem.max_width,
+    price: props.catalogItem.price,
+    getCatalogItems: props.getCatalogItems
   }
   await nextTick()
-  updateBlindTypeModal.value?.showModal()
+  updateCatalogItemModal.value?.showModal()
 }
 </script>
 
 <style scoped>
-.blind-type-row {
+.catalog-item-row {
   display: grid;
   grid-template-columns: 2fr 2fr 1fr 2fr 1fr 2fr;
   gap: 1rem;
@@ -153,7 +153,7 @@ p {
 }
 
 @media (max-width: 768px) {
-  .blind-type-row {
+  .catalog-item-row {
     grid-template-columns: 1fr;
     background: var(--color-card);
     border-radius: 12px;

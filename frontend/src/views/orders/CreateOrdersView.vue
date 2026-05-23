@@ -90,6 +90,7 @@ import { useAuthStore } from '@/stores/authStore'
 import { useNotificationStore } from '@/stores/notificationStore'
 import { fetchWithAuth } from '@/utils/api'
 import { useRouter } from 'vue-router'
+import CatalogItemRow from '@/components/catalog/CatalogItemRow.vue'
 
 const authStore = useAuthStore()
 const router = useRouter()
@@ -110,7 +111,7 @@ function addRow() {
     orderRows.value.push({
         id: idCounter++,
         quantity: '',
-        type_id: '',
+        catalogItem_id: '',
         width: '',
         height: '',
         command_height: '',
