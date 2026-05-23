@@ -71,7 +71,7 @@ const updateBlind = async (req, res) => {
             return res.status(404).json({ error: 'Não foi possível atualizar a persiana' })
         }
 
-        orderController.updateTotalPrice(blind.order_id)
+        await orderController.recalculateOrderValues(blind.order_id)
 
         return res.status(200).json(blind)
     } catch (error) {
@@ -84,30 +84,23 @@ const deleteBlind = async (req, res) => {
 
     try {
         const result = await prismaClient.$transaction(async (prisma) => {
-        const blind = await prisma.blind.delete({
-            where: { id }
-        })
-
-        await prisma.order.update({
-            where: { id: blind.order_id },
-            data: {
-            total_price: {
-                decrement: blind.blind_price
-            }
-            }
-        })
-
-        const remainingBlinds = await prisma.blind.findMany({
-            where: { order_id: blind.order_id }
-        })
-
-        if (remainingBlinds.length === 0) {
-            await prisma.order.delete({
-            where: { id: blind.order_id }
+            const blind = await prisma.blind.delete({
+                where: { id }
             })
-        }
 
-        return blind
+            const remainingBlinds = await prisma.blind.findMany({
+                where: { order_id: blind.order_id }
+            })
+
+            if (remainingBlinds.length === 0) {
+                await prisma.order.delete({
+                where: { id: blind.order_id }
+                })
+            }
+
+            await orderController.recalculateOrderValues(blind.order_id)
+
+            return blind
         })
 
         return res.status(200).json(result)

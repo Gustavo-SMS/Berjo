@@ -498,50 +498,64 @@ const updateOrder = async (req, res) => {
     }
 }
 
-const updateTotalPrice = async (orderId) => {
-    try {
-        const order = await prismaClient.order.findUnique({
-            where: {
-                id: orderId
-            },
-            include: {
-                blind: true
-            }
-        })
+const recalculateOrderValues = async (orderId) => {
+    const order = await prismaClient.order.findUnique({
+        where: {
+            id: orderId
+        }
+    })
 
-        if (!order) return res.status(404).json({ error: "Pedido não encontrado" })
-
-        const newTotalPrice = await calculateTotalPrice(order.blind)
-
-        const response = await prismaClient.order.update({
-            where: {
-                id: order.id
-            },
-            data: {
-                total_price: newTotalPrice
-            }
-        })
-
-        customerController.updateDebt(order.customer_id, order.total_price, newTotalPrice)
-
-        return response
-    } catch (error) {
-        return res.status(500).json({ error: error.message })
+    if (!order) {
+        throw new Error('Pedido não encontrado')
     }
+
+    const blinds = await prismaClient.blind.findMany({
+        where: {
+            order_id: orderId
+        }
+    })
+
+    const totalPrice = blinds.reduce((sum, blind) => sum + Number(blind.blind_price), 0)
+
+    const payments = await prismaClient.payment.aggregate({
+        where: {
+            order_id: orderId
+        },
+        _sum: {
+            amount: true
+        }
+    })
+
+    const totalPaid = payments._sum.amount || 0
+
+    const pendingAmount = Math.max(totalPrice - totalPaid, 0)
+
+    const updatedOrder = await prismaClient.order.update({
+        where: {
+            id: orderId
+        },
+        data: {
+            total_price: totalPrice,
+            pending_amount: pendingAmount
+        }
+    })
+
+    await customerController.recalculateCustomerDebt(order.customer_id)
+
+    return updatedOrder
 }
 
 const deleteOrder = async (req, res) => {
     const id = req.params.id
 
     try {
-        const transaction = await prismaClient.$transaction(async (tx) => {
-
-            const order = await tx.order.findUnique({
+        const order = await prismaClient.order.findUnique({
                 where: { id }
             })
 
-            if (!order) throw new Error("Pedido não encontrado")
+        if (!order) throw new Error("Pedido não encontrado")
 
+        const transaction = await prismaClient.$transaction(async (tx) => {
             await tx.blind.deleteMany({
                 where: { order_id: id }
             })
@@ -553,19 +567,13 @@ const deleteOrder = async (req, res) => {
             await tx.order.delete({
                 where: { id }
             })
-
-            await tx.customer.update({
-                where: { id: order.customer_id },
-                data: {
-                    debt: {
-                        decrement: order.pending_amount
-                    }
-                }
-            })
-
         })
+        
+        await customerController.recalculateCustomerDebt(
+            order.customer_id
+        )
 
-        return res.status(200).json(transaction)
+        return res.status(200).json({message: "Pedido excluído com sucesso"})
     } catch (error) {
         return res.status(500).json({ error: error.message })
     }
@@ -662,7 +670,7 @@ module.exports = {
     createOrder,
     changeStatus,
     updateOrder,
+    recalculateOrderValues,
     deleteOrder,
-    updateTotalPrice,
     generateReportByPeriod
 }

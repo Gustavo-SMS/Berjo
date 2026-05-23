@@ -235,20 +235,19 @@ const updateCustomer = async (req, res) => {
     }
 }
 
-const updateDebt = async (customerId, totalPrice, newTotalPrice) => {
-
+const recalculateCustomerDebt = async (customerId) => {
     try {
-        const customer = await prismaClient.customer.findUnique({
+        const orders = await prismaClient.order.findMany({
             where: {
-                id: customerId
+                customer_id: customerId
             }
         })
 
-        const newDebt = (customer.debt - totalPrice) + newTotalPrice
+        const newDebt = orders.reduce((total, order) => total + Number(order.pending_amount || 0), 0)
 
         const response = await prismaClient.customer.update({
             where: {
-                id: customer.id
+                id: customerId
             },
             data: {
                 debt: newDebt
@@ -314,6 +313,14 @@ const deleteCustomer = async (req, res) => {
         }
         
         const result = await prismaClient.$transaction(async (tx) => {
+            await tx.payment.deleteMany({
+                where: {
+                    order: {
+                        customer_id: customer.id
+                    }
+                }
+            })
+
             await tx.blind.deleteMany({
                 where: {
                     order: {
@@ -347,7 +354,7 @@ const deleteCustomer = async (req, res) => {
             })
         })
 
-        return res.status(201).json(result)
+        return res.status(201).json({message: 'Cliente excluído com sucesso'})
     } catch (error) {
         return res.status(500).json({ error: error.message })
     }
@@ -460,7 +467,7 @@ module.exports = {
     getInactiveCustomers,
     createCustomer,
     updateCustomer,
-    updateDebt,
+    recalculateCustomerDebt,
     deactivateCustomer,
     reactivateCustomer,
     deleteCustomer,
