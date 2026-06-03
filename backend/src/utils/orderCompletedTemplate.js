@@ -1,4 +1,4 @@
-const orderCompletedTemplate = ({ name, order, total_price }) => {
+const orderCompletedTemplate = ({ name, order, total_price, pending_amount }) => {
   return `
   <!DOCTYPE html>
   <html>
@@ -53,9 +53,9 @@ const orderCompletedTemplate = ({ name, order, total_price }) => {
                       <tr style="border-bottom:1px solid #262626;">
                         <td>${blind.quantity}</td>
                         <td>${blind.model}</td>
-                        <td>${blind.type.type}</td>
-                        <td>${blind.type.collection}</td>
-                        <td>${blind.type.color}</td>
+                        <td>${blind.catalogItem.type}</td>
+                        <td>${blind.catalogItem.collection}</td>
+                        <td>${blind.catalogItem.color}</td>
                         <td>${blind.width} x ${blind.height}</td>
                       </tr>
                     `).join('')}
@@ -69,7 +69,13 @@ const orderCompletedTemplate = ({ name, order, total_price }) => {
                         Total do pedido
                       </p>
                       <p style="margin:6px 0 0 0; font-size:22px; font-weight:bold; color:#d4af37;">
-                        R$ ${total_price}
+                      R$ ${total_price}
+                      </p>
+                      <p style="margin:0; font-size:13px; color:#bfbfbf;">
+                        Valor pendente
+                      </p>
+                      <p style="margin:6px 0 0 0; font-size:22px; font-weight:bold; color:#d4af37;">
+                        R$ ${pending_amount}
                       </p>
                     </td>
                   </tr>

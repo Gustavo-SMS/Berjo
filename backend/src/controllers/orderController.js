@@ -420,11 +420,13 @@ const createMail = async (id) => {
     const name = order.customer.name
     const email = order.customer.email
     const total_price = order.total_price
+    const pending_amount = order.pending_amount
 
     const html = orderCompletedTemplate({
         name,
         order,
-        total_price
+        total_price,
+        pending_amount
     })
 
     await sendEmail({
@@ -442,6 +444,7 @@ const getBlindsToMail = async (id) => {
             },
             select: {
                 total_price: true,
+                pending_amount: true,
                 customer: {
                     select: {
                         name: true,
