@@ -603,7 +603,7 @@ async function generateReportByPeriod(req, res) {
         customer: true,
         blind: {
           include: {
-            type: true
+            catalogItem: true
           }
         },
       },
@@ -624,6 +624,7 @@ async function generateReportByPeriod(req, res) {
         content.push({ text: `Status: ${order.status}` })
         content.push({ text: `Data: ${new Date(order.created_at).toLocaleDateString('pt-BR')}` })
         content.push({ text: `Total: R$ ${order.total_price.toFixed(2)}\n` })
+        content.push({ text: `Pendente: R$ ${order.pending_amount.toFixed(2)}\n` })
 
         const blindsTable = [
           ['Modelo', 'Tipo', 'Coleção', 'Cor', 'Medidas', 'Qtd', 'Valor']
@@ -632,9 +633,9 @@ async function generateReportByPeriod(req, res) {
         order.blind.forEach(b => {
           blindsTable.push([
             b.model,
-            b.type.type,
-            b.type.collection,
-            b.type.color,
+            b.catalogItem.type,
+            b.catalogItem.collection,
+            b.catalogItem.color,
             `${b.width}x${b.height}cm`,
             b.quantity.toString(),
             `R$ ${b.blind_price.toFixed(2)}`
