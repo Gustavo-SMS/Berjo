@@ -444,7 +444,7 @@ const generateReportByCustomer = async (req, res) => {
       if (blindsTable.length > 1) {
         content.push({
           table: {
-            widths: ['*', '*', '*', '*', 'auto', 'auto', 'auto'],
+            widths: ['auto', '*', '*', '*', 'auto', 'auto', 'auto'],
             body: blindsTable
           },
           margin: [0, 0, 0, 10]
