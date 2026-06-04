@@ -676,8 +676,6 @@ watch(
 }
 
 .customer-name {
-  text-transform: capitalize;
-
   width: 240px;
   min-width: 240px;
 

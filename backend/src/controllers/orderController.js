@@ -419,8 +419,8 @@ const createMail = async (id) => {
 
     const name = order.customer.name
     const email = order.customer.email
-    const total_price = order.total_price
-    const pending_amount = order.pending_amount
+    const total_price = parseFloat(order.total_price).toFixed(2)
+    const pending_amount = parseFloat(order.pending_amount).toFixed(2)
 
     const html = orderCompletedTemplate({
         name,
@@ -603,7 +603,7 @@ async function generateReportByPeriod(req, res) {
         customer: true,
         blind: {
           include: {
-            catalogItem: true
+            type: true
           }
         },
       },
@@ -624,7 +624,6 @@ async function generateReportByPeriod(req, res) {
         content.push({ text: `Status: ${order.status}` })
         content.push({ text: `Data: ${new Date(order.created_at).toLocaleDateString('pt-BR')}` })
         content.push({ text: `Total: R$ ${order.total_price.toFixed(2)}\n` })
-        content.push({ text: `Pendente: R$ ${order.pending_amount.toFixed(2)}\n` })
 
         const blindsTable = [
           ['Modelo', 'Tipo', 'Coleção', 'Cor', 'Medidas', 'Qtd', 'Valor']
@@ -633,9 +632,9 @@ async function generateReportByPeriod(req, res) {
         order.blind.forEach(b => {
           blindsTable.push([
             b.model,
-            b.catalogItem.type,
-            b.catalogItem.collection,
-            b.catalogItem.color,
+            b.type.type,
+            b.type.collection,
+            b.type.color,
             `${b.width}x${b.height}cm`,
             b.quantity.toString(),
             `R$ ${b.blind_price.toFixed(2)}`

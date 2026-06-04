@@ -1,5 +1,6 @@
 const { prismaClient } = require('../database/prismaClient')
 const generateReportPDF = require('../utils/reportGenerator')
+const { capitalizeName } = require('../utils/capitalizeText')
 
 const getAll = async (req, res) => {
     try {
@@ -170,7 +171,7 @@ const createCustomer = async (req, res) => {
 
         const customer = await prismaClient.customer.create({
             data: {
-                name,
+                name: capitalizeName(name),
                 email,
                 phone: parseInt(phone),
                 docNumber,
@@ -205,7 +206,7 @@ const updateCustomer = async (req, res) => {
                 id
             },
             data: {
-                name: name || undefined,
+                name: capitalizeName(name) || undefined,
                 email: email || undefined,
                 docNumber: docNumber || undefined,
                 phone: parseInt(phone) || undefined

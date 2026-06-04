@@ -313,7 +313,6 @@ const showPendingPayments = () => {
 .customer-name {
   color: var(--text-primary);
   font-weight: 600;
-  text-transform: capitalize;
 }
 
 .customer-name.truncated {

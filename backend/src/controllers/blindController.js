@@ -1,6 +1,7 @@
 const { prismaClient } = require('../database/prismaClient')
 const orderController = require('./orderController')
 const customerController = require('./customerController')
+const { capitalizeWords } = require('../utils/capitalizeText')
 
 const getAll = async (req, res) => {
     try {
@@ -26,9 +27,9 @@ const createBlind = async (req, res) => {
                 width: parseFloat(width),
                 height: parseFloat(height),
                 command_height: parseFloat(command_height),
-                model,
-                square_metre,
-                blind_price,
+                model: capitalizeWords(model),
+                square_metre: parseFloat(square_metre),
+                blind_price: parseFloat(blind_price),
                 catalogItem: {
                     connect: { id: catalogItemId }
                 },
@@ -61,9 +62,9 @@ const updateBlind = async (req, res) => {
                 width: parseFloat(width) || undefined,
                 height: parseFloat(height) || undefined,
                 command_height: parseFloat(command_height) || undefined,
-                model: model || undefined,
+                model: capitalizeWords(model) || undefined,
                 square_metre: parseFloat(square_metre) || undefined,
-                blind_price: blind_price || undefined,
+                blind_price: parseFloat(blind_price) || undefined,
                 catalogItem: {
                     connect: { id: catalogItemId }
                 }

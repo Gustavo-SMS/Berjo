@@ -1,4 +1,5 @@
 const { prismaClient } = require('../database/prismaClient')
+const { capitalizeWords } = require('../utils/capitalizeText')
 
 const getAll = async (req, res) => {
     try {
@@ -125,9 +126,9 @@ const createCatalogItem = async (req, res) => {
 
         const catalogItem = await prismaClient.catalogItem.create({
             data: {
-                type,
-                collection,
-                color,
+                type: capitalizeWords(type),
+                collection: capitalizeWords(collection),
+                color: capitalizeWords(color),
                 max_width: parseFloat(max_width) || undefined,
                 price: parseFloat(price)
             }
@@ -154,9 +155,9 @@ const updateCatalogItem = async (req, res) => {
                 id
             },
             data: {
-                type: type || undefined,
-                collection: collection || undefined,
-                color: color || undefined,
+                type: capitalizeWords(type) || undefined,
+                collection: capitalizeWords(collection) || undefined,
+                color: capitalizeWords(color) || undefined,
                 max_width: parseFloat(max_width) || null,
                 price: parseFloat(price) || undefined
             }
