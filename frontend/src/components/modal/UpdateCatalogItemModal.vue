@@ -57,11 +57,10 @@
             <div class="w-100">
               <label class="form-label">Preço *</label>
               <input
-                v-model="editablePrice"
-                type="number"
+                v-model="editablePriceFormatted"
+                type="text"
                 class="form-control"
-                min="0"
-                step="0.01"
+                @input="formatEditablePrice"
                 required
               >
             </div>
@@ -103,7 +102,29 @@ const editableType = ref('')
 const editableCollection = ref('')
 const editableColor = ref('')
 const editableMaxWidth = ref('')
-const editablePrice = ref('')
+const editablePrice = ref(0)
+const editablePriceFormatted = ref('')
+
+const MAX_PRICE = 99999.99
+
+const formatEditablePrice = (event) => {
+  let value = event.target.value.replace(/\D/g, '')
+
+  value = value.slice(0, 8)
+
+  value = Number(value) / 100
+
+  if (value > MAX_PRICE) {
+    value = MAX_PRICE
+  }
+
+  editablePrice.value = value
+
+  editablePriceFormatted.value = value.toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL'
+  })
+}
 
 const typeOptions = [
   { label: 'Persiana vertical', value: 'Persiana vertical' },
@@ -113,6 +134,14 @@ const typeOptions = [
 ]
   
 const handleUpdateCatalogItem = async () => {
+    if (editablePrice.value > MAX_PRICE) {
+      notificationStore.addNotification(
+        'O preço máximo permitido é R$ 99.999,99',
+        'error'
+      )
+      return
+    }
+
     const data = {
       id: props.catalogItem.id,
       type: editableType.value,
@@ -168,7 +197,8 @@ const resetFields = () => {
     editableCollection.value = ''
     editableColor.value = ''
     editableMaxWidth.value = ''
-    editablePrice.value = ''
+    editablePrice.value = 0
+    editablePriceFormatted.value = ''
 }
   
 watch(() => props.catalogItem, (newCatalogItem) => {
@@ -178,7 +208,12 @@ watch(() => props.catalogItem, (newCatalogItem) => {
   editableCollection.value = newCatalogItem.collection || ''
   editableColor.value = newCatalogItem.color || ''
   editableMaxWidth.value = newCatalogItem.max_width || ''
-  editablePrice.value = newCatalogItem.price || ''
+  editablePrice.value = Number(newCatalogItem.price || 0)
+
+  editablePriceFormatted.value = editablePrice.value.toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL'
+  })
 }, { immediate: true })
   
 defineExpose({ showModal })

@@ -147,9 +147,10 @@ const catalogItemSchema = Joi.object({
     'number.positive': 'Largura máxima deve ser maior que zero',
     'number.base': 'Largura máxima deve ser um número'
   }),
-  price: Joi.number().positive().required().messages({
+  price: Joi.number().positive().max(99999.99).required().messages({
     'number.base': 'Preço deve ser um número',
     'number.positive': 'Preço deve ser maior que zero',
+    'number.max': 'Preço deve ser no máximo R$ 99.999,99',
     'any.required': 'Preço é obrigatório'
   })
 })

@@ -52,9 +52,10 @@
           <div class="mb-4">
             <label class="form-label">Preço *</label>
             <input
-              v-model="price"
-              type="number"
+              v-model="priceFormatted"
+              type="text"
               class="form-control"
+              @input="formatPrice"
               min="0"
               required
             />
@@ -87,9 +88,39 @@ const type = ref('')
 const collection = ref('')
 const color = ref('')
 const maxWidth = ref('')
-const price = ref('')
+const price = ref(0)
+const priceFormatted = ref('')
+
+const MAX_PRICE = 99999.99
+
+const formatPrice = (event) => {
+  let value = event.target.value.replace(/\D/g, '')
+
+  value = value.slice(0, 8)
+
+  value = Number(value) / 100
+
+  if (value > MAX_PRICE) {
+    value = MAX_PRICE
+  }
+
+  price.value = value
+
+  priceFormatted.value = value.toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL'
+  })
+}
 
 const submitForm = async () => {
+  if (price.value > MAX_PRICE) {
+    notificationStore.addNotification(
+      'O preço máximo permitido é R$ 99.999,99',
+      'error'
+    )
+    return
+  }
+
   const data = {
     type: type.value,
     collection: collection.value,
