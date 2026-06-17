@@ -13,7 +13,13 @@
                   <div class="dark-input w-100 d-flex flex-column gap-3">
                       <div class="mb-3 dark-input">
                           <label class="form-label">Valor</label>
-                          <input type="number" class="form-control" v-model="amount" min="0" required />
+                          <input 
+                           type="text" 
+                           class="form-control" 
+                           v-model="amountFormatted" 
+                           @input="formatPrice"
+                           min="0" 
+                           required />
                         </div>
                         <div class="mb-3 dark-input">
                             <label class="form-label">Data</label>
@@ -47,9 +53,25 @@
   const props = defineProps(['orderId'])
   const emit = defineEmits(['payment-added'])
 
-  const amount = ref('')
   const date = ref('')
-  
+  const amount = ref(0)
+  const amountFormatted = ref('')
+
+  const formatPrice = (event) => {
+    let value = event.target.value.replace(/\D/g, '')
+
+    value = value.slice(0, 8)
+
+    value = Number(value) / 100
+
+    amount.value = value
+
+    amountFormatted.value = value.toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    })
+  }
+
   const submitPayment = async () => {
     const payload = {
       amount: parseFloat(amount.value),
@@ -85,8 +107,8 @@
       emit('payment-added')
     } catch (err) {
       const message = err.message.includes('Failed to fetch') ? 'Servidor indisponível. Tente novamente mais tarde.' : err.message
-      console.log(err.message)
-      notificationStore.addNotification(err.message, 'error')
+      console.log(message)
+      notificationStore.addNotification(message, 'error')
     }
   }
   
@@ -110,7 +132,7 @@ const hideModal = () => {
 }
 
 const resetFields = () => {
-  amount.value = ''
+  amountFormatted.value = ''
   date.value = ''
 }
   

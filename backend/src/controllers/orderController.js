@@ -31,6 +31,9 @@ const getAll = async (req, res) => {
                     select: {
                         amount: true,
                         date: true
+                    },
+                    orderBy: {
+                        created_at: 'desc'
                     }
                 }
             }
@@ -77,6 +80,9 @@ const getOne = async (req, res) => {
                     select: {
                         amount: true,
                         date: true
+                    },
+                    orderBy: {
+                        created_at: 'desc'
                     }
                 }
             }
@@ -122,6 +128,9 @@ const getOrdersByCustomer = async (req, res) => {
                     select: {
                         amount: true,
                         date: true
+                    },
+                    orderBy: {
+                        created_at: 'desc'
                     }
                 }
             }
@@ -172,6 +181,9 @@ const getOrdersByCustomerName = async (req, res) => {
                 select: {
                     amount: true,
                     date: true
+                },
+                orderBy: {
+                    created_at: 'desc'
                 }
             }
         },
@@ -221,6 +233,9 @@ const getOrdersByStatus = async (req, res) => {
                     select: {
                         amount: true,
                         date: true
+                    },
+                    orderBy: {
+                        created_at: 'desc'
                     }
                 }
             },
@@ -276,6 +291,9 @@ const getOrdersByFilter = async (req, res) => {
                     select: {
                         amount: true,
                         date: true
+                    },
+                    orderBy: {
+                        created_at: 'desc'
                     }
                 }
             },
@@ -329,6 +347,9 @@ const getPendingPaymentOrders = async (req, res) => {
                     select: {
                         amount: true,
                         date: true
+                    },
+                    orderBy: {
+                        created_at: 'desc'
                     }
                 }
             },

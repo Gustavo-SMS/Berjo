@@ -1,5 +1,4 @@
 const { prismaClient } = require('../database/prismaClient')
-const { updatePendingAmount } = require('./orderController')
 
 const createPayment = async (req, res) => {
     const { amount, date, orderId } = req.body

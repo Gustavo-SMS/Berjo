@@ -73,7 +73,7 @@
                   @click="editStatus(order.id, order.status)"
                   class="btn btn-primary"
                 >
-                  Mudar Status
+                  Mudar status
                 </button>
               </div>
             </div>
@@ -768,7 +768,6 @@ watch(
 }
 
 .status-edit {
-  padding: 0.5rem 1rem;
   white-space: nowrap;
 }
 
@@ -777,9 +776,8 @@ watch(
   align-items: center;
   padding: 0.35rem 0.75rem;
   border-radius: 999px;
-  font-size: 0.75rem;
+  font-size: 0.9rem;
   font-weight: 600;
-  text-transform: uppercase;
   letter-spacing: 0.04em;
   white-space: nowrap;
   border: 1px solid transparent;
