@@ -55,6 +55,7 @@ CREATE TABLE `orders` (
     `status` VARCHAR(191) NOT NULL DEFAULT 'Em espera',
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `observation` VARCHAR(191) NULL,
+    `pending_amount` DOUBLE NOT NULL,
     `customer_id` VARCHAR(191) NOT NULL,
 
     PRIMARY KEY (`id`)
@@ -82,13 +83,13 @@ CREATE TABLE `Blind` (
     `square_metre` DOUBLE NOT NULL,
     `blind_price` DOUBLE NOT NULL,
     `order_id` VARCHAR(191) NOT NULL,
-    `type_id` VARCHAR(191) NOT NULL,
+    `catalogItem_id` VARCHAR(191) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `Blind_Type` (
+CREATE TABLE `CatalogItem` (
     `id` VARCHAR(191) NOT NULL,
     `type` VARCHAR(191) NOT NULL,
     `collection` VARCHAR(191) NOT NULL,
@@ -116,4 +117,4 @@ ALTER TABLE `payments` ADD CONSTRAINT `payments_order_id_fkey` FOREIGN KEY (`ord
 ALTER TABLE `Blind` ADD CONSTRAINT `Blind_order_id_fkey` FOREIGN KEY (`order_id`) REFERENCES `orders`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Blind` ADD CONSTRAINT `Blind_type_id_fkey` FOREIGN KEY (`type_id`) REFERENCES `Blind_Type`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Blind` ADD CONSTRAINT `Blind_catalogItem_id_fkey` FOREIGN KEY (`catalogItem_id`) REFERENCES `CatalogItem`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
