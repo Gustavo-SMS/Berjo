@@ -30,5 +30,6 @@ coverage
 *.tsbuildinfo
 
 .env
+.env.mobile
 
 android/
