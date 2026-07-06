@@ -49,7 +49,7 @@
             </div>
           </div>
 
-          <div data-theme="dark" class="g-recaptcha mb-3" ></div>
+          <div class="g-recaptcha mb-3" ></div>
 
           <div class="login-actions mb-3">
             <a type="button" class="action-link" @click="openRecoverPasswordModal">

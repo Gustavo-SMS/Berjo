@@ -736,9 +736,9 @@ watch(
 }
 
 .empty-state {
-  background-color: #141414;
+  background-color: var(--bg-page);
   border: 1px dashed var(--border-empty);
-  color: #bfbfbf;
+  color: var(--text-secondary);
   padding: 32px;
   border-radius: 12px;
   text-align: center;

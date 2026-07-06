@@ -480,7 +480,7 @@ const scrollToSection = (id) => {
   text-align: center;
   max-width: 700px;
   margin: 0 auto;
-  color: rgba(255,255,255,.75);
+  color: var(--text-secondary);
 }
 
 .modelo-card{
