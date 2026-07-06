@@ -248,32 +248,6 @@ label {
     margin-bottom:1.5rem;
 }
 
-/* =====================
-   BADGES DE STATUS
-===================== */
-
-/* .badge-status {
-  padding: 0.4rem 0.75rem;
-  border-radius: 999px;
-  font-size: 0.7rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  display: inline-block;
-}
-
-.badge-status.active {
-  background-color: rgba(212, 175, 55, 0.15);
-  color: var(--color-primary);
-}
-
-.badge-status.inactive {
-  background-color: rgba(192, 57, 43, 0.15);
-  color: var(--color-danger);
-} */
-
-/* =====================
-   BOTÕES
-===================== */
 .btn {
   font-weight: 600;
 }
@@ -326,6 +300,10 @@ label {
   border-color: var(--bg-disabled);
   color: var(--text-muted);
   opacity: .8;
+}
+
+.btn-close {
+  color: var(--text-muted);
 }
 
 /* Toggle senha */
