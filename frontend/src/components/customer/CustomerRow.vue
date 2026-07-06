@@ -72,7 +72,7 @@
             <button
               v-if="authStore.userRole === 'ADMIN' && canDelete"
               @click="props.customer.isActive ? openDeactivateModal() : reactivateCustomer()"
-              :class="props.customer.isActive ? 'btn btn-danger' : 'btn btn-outline-gold'"
+              :class="props.customer.isActive ? 'btn btn-danger' : 'btn btn-outline-primary'"
               type="button"
             >
               {{ props.customer.isActive ? 'Desativar' : 'Reativar' }}
@@ -91,7 +91,7 @@
       </transition>
 
       <button
-        class="btn btn-outline-gold w-100 mt-4"
+        class="btn btn-outline-primary w-100 mt-4"
         @click="toggleDetails"
       >
         {{ isExpanded ? 'Ocultar informações' : 'Ver mais informações' }}
@@ -322,7 +322,7 @@ const showPendingPayments = () => {
 }
 
 .customer-debt {
-  color: var(--color-gold);
+  color: var(--color-primary);
   font-weight: 600;
 }
 
@@ -336,12 +336,12 @@ const showPendingPayments = () => {
 }
 
 .status-badge.active {
-  background-color: rgba(212, 175, 55, 0.15);
-  color: var(--color-gold);
+  background-color: var(--bg-active);
+  color: var(--color-primary);
 }
 
 .status-badge.inactive {
-  background-color: rgba(192, 57, 43, 0.15);
+  background-color: var(--bg-inactive);
   color: var(--color-danger);
 }
 
@@ -351,11 +351,11 @@ const showPendingPayments = () => {
 }
 
 .info-item i {
-  color: var(--color-gold-soft);
+  color: var(--color-primary);
 }
 
 .border-top-gold {
-  border-top: 1px solid rgba(212, 175, 55, 0.15);
+  border-top: 1px solid var(--border-primary);
 }
 
 .expand-enter-active,

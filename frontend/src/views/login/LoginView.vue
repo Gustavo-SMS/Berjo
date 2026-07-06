@@ -1,5 +1,5 @@
 <template>
-  <main class="page-content">
+  <main class="container-page">
       <button
         type="button"
         class="btn btn-outline-light back-home-btn"
@@ -14,7 +14,7 @@
           <h1>Faça login</h1>
         </div>
 
-        <form ref="loginForm" @submit.prevent="submitForm" class="dark-input">
+        <form ref="loginForm" @submit.prevent="submitForm" class="input-custom">
           <div class="mb-3">
             <label for="login" class="form-label">Login</label>
             <input
@@ -183,7 +183,7 @@ const togglePassword = () => {
 </script>
 
 <style scoped>
-.page-content {
+.container-page {
   display: flex;
   justify-content: center;
   padding: 2.5rem 1rem;
@@ -196,18 +196,19 @@ const togglePassword = () => {
 
 button:disabled {
   background-color: var(--text-muted);
+  color: var(--text-dark);
 }
 
 .back-home-btn {
   position: absolute;
   top: 20px;
   left: 20px;
-  border-color: var(--color-gold);
-  color: var(--color-gold);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
 }
 
 .back-home-btn:hover {
-  background-color: var(--color-gold);
-  color: #000;
+  background-color: var(--color-primary);
+  color: var(--text-dark);
 }
 </style>

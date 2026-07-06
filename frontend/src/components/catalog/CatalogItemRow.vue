@@ -124,7 +124,7 @@ const openUpdateCatalogItemModal = async () => {
   align-items: center;
   width: 100%;
   padding: 0.75rem 0;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .field {
@@ -136,7 +136,7 @@ const openUpdateCatalogItemModal = async () => {
   display: none;
   font-size: 12px;
   font-weight: 600;
-  color: var(--color-gold);
+  color: var(--text-primary);
   margin-bottom: 2px;
 }
 
@@ -154,7 +154,6 @@ p {
 @media (max-width: 768px) {
   .catalog-item-row {
     grid-template-columns: 1fr;
-    background: var(--color-card);
     border-radius: 12px;
     padding: 1rem;
     margin-bottom: 1rem;

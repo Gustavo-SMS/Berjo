@@ -1,5 +1,5 @@
 <template>
-  <main class="page-content">
+  <main class="container-page">
     <div class="card">
       <div class="card-body">
         <div class="page-header d-flex justify-content-between align-items-center flex-wrap gap-3">
@@ -7,14 +7,14 @@
         </div>
 
           <div class="d-flex align-items-center gap-2 flex-wrap mb-4 justify-content-start">
-            <div class="input-group dark-input" style="max-width: 350px">
+            <div class="input-group input-custom" style="max-width: 350px">
               <input
                 v-model="searchTerm"
                 type="text"
                 class="form-control"
                 placeholder="Buscar"
               />
-              <button @click="getWithFilter" class="btn btn-outline-gold">
+              <button @click="getWithFilter" class="btn btn-outline-primary">
                 Buscar
               </button>
             </div>
@@ -52,7 +52,7 @@
         />
 
         <nav v-if="totalPages > 1" class="pagination-wrapper">
-          <ul class="pagination pagination-dark">
+          <ul class="pagination pagination-custom">
             <li class="page-item" :class="{ disabled: currentPage === 1 }">
               <button class="page-link" @click="goToPage(currentPage - 1)">
                 Anterior
@@ -183,9 +183,9 @@ watch(searchTerm, () => {
   display: grid;
   grid-template-columns: 2fr 2fr 1fr 2fr 1fr 2fr;
   gap: 1rem;
-  color: var(--color-gold);
+  color: var(--text-primary);
   font-weight: 600;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--border-color);
   margin-bottom: 0.5rem;
 }
 </style>

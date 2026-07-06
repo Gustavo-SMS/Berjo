@@ -1,11 +1,12 @@
 <template>
-    <div class="container mt-5 card">
-        <div class="form-wrapper p-2">
-            <div class="page-header">
+    <div class="container-page">
+        <div class="container mt-5 card">
+            <div class="form-wrapper p-2">
+                <div class="page-header">
                 <h1>Cadastro de Clientes</h1>
             </div>
             
-            <form @submit.prevent="submitForm" class="row g-4 dark-input">
+            <form @submit.prevent="submitForm" class="row g-4 input-custom">
                 <div class="col-12 col-md-6">
                     <label for="name" class="form-label">Nome *</label>
                     <input v-model="name" type="text" name="name" id="name" class="form-control" required>
@@ -70,8 +71,8 @@
                 </div>
             </form>
         </div>
+        </div>
     </div>
-
 
     <ConfirmationModal
           v-if="showModal"
@@ -229,6 +230,6 @@ watch(selectedRadio, () => {
 
 <style scoped>
 .check-input {
-    margin: 0 0.7rem 0 0.2rem;
+    margin: 0 0.7rem 0 0.4rem;
 }
 </style>

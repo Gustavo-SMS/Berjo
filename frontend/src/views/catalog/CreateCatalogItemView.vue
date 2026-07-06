@@ -1,12 +1,12 @@
 <template>
-  <main class="page-content">
+  <main class="container-page">
     <div class="card register-card">
       <div class="card-body">
         <div class="page-header">
           <h1>Cadastrar Item</h1>
         </div>
 
-        <form @submit.prevent="submitForm" novalidate class="dark-input">
+        <form @submit.prevent="submitForm" novalidate class="input-custom">
           <div class="mb-3">
             <label class="form-label">Tipo *</label>
               <v-select

@@ -10,8 +10,8 @@
 
           <div class="modal-body">
               <form @submit.prevent="submitPayment">
-                  <div class="dark-input w-100 d-flex flex-column gap-3">
-                      <div class="mb-3 dark-input">
+                  <div class="input-custom w-100 d-flex flex-column gap-3">
+                      <div class="mb-3 input-custom">
                           <label class="form-label">Valor</label>
                           <input 
                            type="text" 
@@ -21,7 +21,7 @@
                            min="0" 
                            required />
                         </div>
-                        <div class="mb-3 dark-input">
+                        <div class="mb-3 input-custom">
                             <label class="form-label">Data</label>
                             <input type="date" class="form-control" v-model="date" :max="today" required />
                         </div>

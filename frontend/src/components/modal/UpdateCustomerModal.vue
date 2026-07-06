@@ -9,7 +9,7 @@
         </div>
 
             <div class="modal-body shadow-sm">
-                <form id="modalForm" @submit.prevent="handleUpdateCustomer" class="row g-4 dark-input">
+                <form id="modalForm" @submit.prevent="handleUpdateCustomer" class="row g-4 input-custom">
 
                     <div class="col-12 col-md-6">
                         <label for="name" class="form-label">Nome *</label>

@@ -9,7 +9,7 @@
           </div>
   
             <div class="modal-body">
-                <form class="dark-input row g-3" @submit.prevent="handleUptadeBlind">
+                <form class="input-custom row g-3" @submit.prevent="handleUptadeBlind">
 
                     <div class="col-12 col-md-6">
                         <label for="type" class="form-label">Qtde *</label>

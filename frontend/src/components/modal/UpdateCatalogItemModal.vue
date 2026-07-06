@@ -9,7 +9,7 @@
         </div>
 
         <div class="modal-body">
-          <form class="dark-input w-100 d-flex flex-column gap-3" @submit.prevent="handleUpdateCatalogItem">
+          <form class="input-custom w-100 d-flex flex-column gap-3" @submit.prevent="handleUpdateCatalogItem">
 
             <div class="w-100">
               <label class="form-label">Tipo *</label>

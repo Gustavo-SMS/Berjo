@@ -1,5 +1,5 @@
 <template>
-  <main class="page-content">
+  <main class="container-page">
     <div class="card">
       <div class="card-body">
 
@@ -47,7 +47,7 @@
             @deleteRow="deleteRow"
           />
 
-          <div class="col-12 dark-input">
+          <div class="col-12 input-custom">
             <label class="form-label">Observações</label>
             <input
               type="text"
@@ -90,7 +90,6 @@ import { useAuthStore } from '@/stores/authStore'
 import { useNotificationStore } from '@/stores/notificationStore'
 import { fetchWithAuth } from '@/utils/api'
 import { useRouter } from 'vue-router'
-import CatalogItemRow from '@/components/catalog/CatalogItemRow.vue'
 
 const authStore = useAuthStore()
 const router = useRouter()
@@ -180,9 +179,9 @@ select,
 }
 
 .list-header {
-  color: var(--color-gold);
+  color: var(--text-primary);
   font-weight: 600;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--border-color);
   margin-bottom: 0.5rem;
 }
 

@@ -1,18 +1,20 @@
 <template>
+  <main class="container-page">
+    <div class="card">
       <div class="card-body">
         <div class="page-header d-flex justify-content-between align-items-center flex-wrap gap-3">
           <h1>Pedidos</h1>
         </div>
 
           <div class="d-flex align-items-center gap-2 flex-wrap mb-4">
-            <div v-if="authStore.userRole === 'ADMIN'" class="input-group dark-input" style="max-width: 350px">
+            <div v-if="authStore.userRole === 'ADMIN'" class="input-group input-custom" style="max-width: 350px">
               <input
                 v-model="searchTerm"
                 type="text"
                 class="form-control"
                 placeholder="Buscar por nome"
               />
-              <button @click="getByCustomer" class="btn btn-outline-gold">Buscar</button>
+              <button @click="getByCustomer" class="btn btn-outline-primary">Buscar</button>
             </div>
 
             <v-select
@@ -83,7 +85,7 @@
 
               <button
                 @click="toggleOrder(order.id)"
-                class="btn btn-outline-gold"
+                class="btn btn-outline-primary"
               >
                 {{ isExpanded(order.id) ? 'Ocultar pedido' : 'Ver pedido' }}
               </button>
@@ -136,7 +138,7 @@
 
                   <button
                     v-if="order.status !== 'Concluído'"
-                    class="btn btn-sm btn-outline-gold"
+                    class="btn btn-sm btn-outline-primary"
                     @click="startEditingObservation(order)"
                   >
                     Editar
@@ -243,7 +245,7 @@
         </div>
 
         <nav v-if="totalPages > 1" class="pagination-wrapper">
-        <ul class="pagination pagination-dark">
+        <ul class="pagination pagination-custom">
             <li class="page-item" :class="{ disabled: currentPage === 1 }">
             <button class="page-link" @click="goToPage(currentPage - 1)">
                 Anterior
@@ -270,6 +272,8 @@
         </nav>
 
       </div>
+      </div>
+    </main>
 
     <PaymentModal
       :orderId="selectedOrderId"
@@ -645,8 +649,8 @@ watch(
 
 <style scoped>
 .order-card {
-  border: 1px solid var(--color-border);
-  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
   padding: 1rem;
 }
 
@@ -701,8 +705,8 @@ watch(
 .order-observation {
   margin-top: 1.5rem;
   padding: 1rem;
-  background-color: rgba(212, 175, 55, 0.05);
-  border: 1px solid rgba(212, 175, 55, 0.2);
+  background-color: var(--bg-hover);
+  border: 1px solid var(--border-primary);
   border-radius: 8px;
   color: var(--text-primary);
 }
@@ -713,7 +717,7 @@ watch(
 
 .order-observation-edit textarea {
   background-color: var(--input-bg);
-  border: 1px solid rgba(212, 175, 55, 0.2);
+  border: 1px solid var(--border-primary);
   color: var(--text-primary);
 }
 
@@ -721,7 +725,7 @@ watch(
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--color-gold);
+  color: var(--text-primary);
   margin-bottom: 0.5rem;
 }
 
@@ -733,7 +737,7 @@ watch(
 
 .empty-state {
   background-color: #141414;
-  border: 1px dashed rgba(212, 175, 55, 0.3);
+  border: 1px dashed var(--border-empty);
   color: #bfbfbf;
   padding: 32px;
   border-radius: 12px;
@@ -790,8 +794,8 @@ watch(
 
 .badge-espera {
   background-color: rgba(212, 175, 55, 0.12);
-  color: var(--color-gold);
-  border-color: rgba(212, 175, 55, 0.3);
+  color: var(--color-primary);
+  border-color: var(--border-empty);
 }
 
 .badge-producao {
@@ -808,7 +812,7 @@ watch(
 
 .blinds-list {
   margin-top: 1.5rem;
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid var(--border-color);
   padding-top: 1rem;
 }
 
@@ -817,7 +821,7 @@ watch(
   grid-template-columns: repeat(9, 1fr);
   gap: 1rem;
   font-size: 0.95rem;        
-  color: var(--color-gold);
+  color: var(--text-primary);
   padding: 0.75rem 1rem;
   border-radius: 8px;
 }
@@ -831,7 +835,7 @@ watch(
 .payments-wrapper {
   margin-top: 1rem;
   padding-top: 1rem;
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid var(--border-color);
 }
 
 .payments-header {
@@ -843,7 +847,7 @@ watch(
 
 .payments-header h5 {
   margin: 0;
-  color: var(--color-gold);
+  color: var(--text-primary);
 }
 
 .payments-list {
@@ -860,14 +864,14 @@ watch(
 
   padding: 0.85rem 1rem;
 
-  background: rgba(212, 175, 55, 0.05);
+  background: var(--bg-hover);
 
-  border: 1px solid rgba(212, 175, 55, 0.15);
+  border: 1px solid var(--border-primary);
   border-radius: 8px;
 }
 
 .payment-label {
-  color: var(--color-gold);
+  color: var(--text-primary);
   font-weight: 600;
 }
 
@@ -894,7 +898,7 @@ watch(
 
 .payments-arrow {
   font-size: 0.8rem;
-  color: var(--color-gold);
+  color: var(--text-primary);
   transition: transform 0.2s ease;
 }
 

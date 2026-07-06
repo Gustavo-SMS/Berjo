@@ -1,12 +1,12 @@
 <template>
-  <main class="page-content">
+  <main class="container-page">
     <div class="card reset-card">
       <div class="card-body">
         <div class="page-header">
           <h1>Redefinir Senha</h1>
         </div>
 
-        <form @submit.prevent="submitNewPassword" class="dark-input" novalidate>
+        <form @submit.prevent="submitNewPassword" class="input-custom" novalidate>
           <div class="mb-3">
             <label class="form-label">Nova senha</label>
             <div class="password-wrapper">
@@ -57,7 +57,7 @@
           <button
             v-if="tokenExpired"
             type="button"
-            class="btn btn-outline-gold w-100 mt-3"
+            class="btn btn-outline-primary w-100 mt-3"
             @click="resendEmail"
             :disabled="resendLoading"
           >

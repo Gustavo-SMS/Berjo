@@ -1,6 +1,6 @@
 <template>
       <div class="row g-3 mb-2 blind-row">
-        <div class="col-6 col-lg-1 dark-input">
+        <div class="col-6 col-lg-1 input-custom">
           <label class="mobile-label">Qtd</label>
           <input
             type="number"
@@ -30,7 +30,7 @@
           />
         </div>
 
-        <div class="col-6 col-lg-1 dark-input">
+        <div class="col-6 col-lg-1 input-custom">
           <label class="mobile-label">Largura</label>
           <input
             type="number"
@@ -43,7 +43,7 @@
           >
         </div>
 
-        <div class="col-6 col-lg-1 dark-input">
+        <div class="col-6 col-lg-1 input-custom">
           <label class="mobile-label">Altura</label>
           <input
             type="number"
@@ -56,7 +56,7 @@
           >
         </div>
 
-        <div class="col-6 col-lg-1 dark-input">
+        <div class="col-6 col-lg-1 input-custom">
           <label class="mobile-label">Comando</label>
           <input
             type="number"
@@ -175,7 +175,7 @@ watch(() => props.row.model, (newValue) => {
   display: none;
   font-size: 12px;
   font-weight: 600;
-  color: var(--color-gold);
+  color: var(--text-primary);
   margin-bottom: 2px;
 }
 

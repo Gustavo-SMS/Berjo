@@ -7,14 +7,14 @@
 
     <div class="filters row g-3 align-items-center">
       <div class="col-md-6 col-lg-5">
-        <div class="input-group dark-input">
+        <div class="input-group input-custom">
           <input
             v-model="searchTerm"
             type="text"
             class="form-control"
             placeholder="Buscar por nome"
           />
-          <button @click="getByName" class="btn btn-outline-gold">
+          <button @click="getByName" class="btn btn-outline-primary">
             Buscar
           </button>
         </div>
@@ -56,7 +56,7 @@
     </div>
 
     <nav v-if="totalPages > 1" class="pagination-wrapper">
-      <ul class="pagination pagination-dark">
+      <ul class="pagination pagination-custom">
         <li class="page-item" :class="{ disabled: currentPage === 1 }">
           <button class="page-link" @click="goToPage(currentPage - 1)">
             Anterior
@@ -234,7 +234,7 @@ onMounted(async () => {
 
 .empty-state {
   background-color: #141414;
-  border: 1px dashed rgba(212, 175, 55, 0.3);
+  border: 1px dashed var(--border-empty);
   color: #bfbfbf;
   padding: 32px;
   border-radius: 12px;

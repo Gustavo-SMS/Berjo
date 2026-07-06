@@ -8,7 +8,7 @@
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
         </div>
 
-        <form @submit.prevent="submitForm" class="modal-body dark-input" novalidate>
+        <form @submit.prevent="submitForm" class="modal-body input-custom" novalidate>
             <label for="login" class="form-label">Cliente *</label>
             <SelectUnlinkedCustomers
                 class="mb-3"

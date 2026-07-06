@@ -72,7 +72,3 @@ const openChangePasswordModal = () => {
 
 onMounted(getCustomers)
 </script>
-
-<style scoped>
-
-</style>

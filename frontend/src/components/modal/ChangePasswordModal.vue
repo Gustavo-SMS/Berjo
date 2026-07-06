@@ -8,7 +8,7 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
   
-            <div class="modal-body dark-input">
+            <div class="modal-body input-custom">
               <div class="mb-3">
                 <label class="form-label">Senha Atual</label>
                 <div class="password-wrapper">
@@ -188,6 +188,6 @@ defineExpose({ showModal })
   border: none;
   cursor: pointer;
   font-size: 1.2rem;
-  color: var(--color-text);
+  color: var(--text-primary);
 }
 </style>

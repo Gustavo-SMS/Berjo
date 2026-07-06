@@ -50,7 +50,7 @@
 
       <div class="dropdown">
         <button
-          class="btn btn-sm btn-outline-gold"
+          class="btn btn-sm btn-outline-primary"
           type="button"
           data-bs-toggle="dropdown"
         >
@@ -197,12 +197,12 @@ const formattedPrice = computed(() => {
   gap: 1rem;
   padding: 1rem 0.75rem;
   align-items: center;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--border-color);
   transition: background 0.2s ease;
 }
 
 .blind-row:hover {
-  background-color: rgba(212, 175, 55, 0.05);
+  background-color: var(--bg-active);
 }
 
 .cell {
@@ -215,7 +215,7 @@ const formattedPrice = computed(() => {
   font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--color-gold);
+  color: var(--text-primary);
   margin-bottom: 2px;
 }
 
@@ -233,7 +233,6 @@ const formattedPrice = computed(() => {
 
   .blind-row {
     grid-template-columns: 1fr 1fr;
-    background: rgba(255,255,255,0.02);
     border-radius: 10px;
     padding: 1rem;
     margin-bottom: 0.75rem;
@@ -253,10 +252,10 @@ const formattedPrice = computed(() => {
 }
 
 .dropdown-menu.dark-select .dropdown-item:hover {
-  background-color: rgba(212, 175, 55, 0.2);
+  background-color: var(--bg-active);
 }
 
 .dropdown-menu.dark-select .dropdown-item.text-danger:hover {
-  background-color: rgba(192, 57, 43, 0.12);
+  background-color: var(--bg-inactive);
 }
 </style>

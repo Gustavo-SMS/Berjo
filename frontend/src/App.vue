@@ -69,7 +69,7 @@ onMounted(() => {
 .sidebar {
   width: 260px;
   height: 100vh;
-  background: #111;
+  background: var(--bg-page);
   transition: transform 0.3s ease;
   z-index: 200;
 }
@@ -116,7 +116,7 @@ onMounted(() => {
     left: 15px;
     z-index: 300;
     background: #000;
-    color: #d4af37;
+    color: var(--color-primary);
     border: none;
     padding: 8px 12px;
     border-radius: 6px;

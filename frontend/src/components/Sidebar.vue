@@ -84,26 +84,26 @@ const doLogout = async () => {
 .sidebar {
   width: 260px;
   height: 100vh;
-  background-color: #111111;
-  color: #e5e5e5;
+  background-color: var(--bg-sidebar);
+  color: var(--text-primary);
   position: fixed;
   top: 0;
   left: 0;
   display: flex;
   flex-direction: column;
-  border-right: 1px solid rgba(212, 175, 55, 0.2);
+  border-right: 1px solid var(--bg-active);
 }
 
 .sidebar-brand {
   padding: 20px;
   text-align: center;
-  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+  border-bottom: 1px solid var(--bg-active);
 }
 
 .brand-title {
   font-size: 1.1rem;
   font-weight: 600;
-  color: #d4af37;
+  color: var(--color-primary);
   letter-spacing: 0.5px;
 }
 
@@ -120,7 +120,7 @@ const doLogout = async () => {
   gap: 12px;
   padding: 10px 14px;
   border-radius: 8px;
-  color: #cfcfcf;
+  color: var(--text-secondary);
   text-decoration: none;
   font-size: 0.95rem;
   transition: background-color 0.2s ease, color 0.2s ease;
@@ -131,17 +131,17 @@ const doLogout = async () => {
 }
 
 .menu-item:hover {
-  background-color: rgba(212, 175, 55, 0.12);
-  color: #ffffff;
+  background-color: var(--bg-active);
+  color: var(--text-primary)
 }
 
 .menu-item.active {
-  background-color: rgba(212, 175, 55, 0.18);
-  color: #ffffff;
+  background-color: var(--bg-actives);
+  color: var(--text-primary)
 }
 
 .menu-item.active i {
-  color: #d4af37;
+  color: var(--color-primary);
 }
 
 .sidebar-menu {
@@ -155,7 +155,7 @@ const doLogout = async () => {
 .sidebar-footer {
   margin-top: auto;
   padding: 15px;
-  border-top: 1px solid rgba(212, 175, 55, 0.2);
+  border-top: 1px solid var(--bg-active);
   display: flex;
   flex-direction: column;
   gap: 10px;

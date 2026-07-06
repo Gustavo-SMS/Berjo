@@ -266,6 +266,11 @@ const scrollToSection = (id) => {
 </script>
 
 <style scoped>
+.home-page{
+    background: var(--bg-page);
+    color: var(--text-primary);
+}
+
 .hero-section {
   position: relative;
   min-height: 100vh;
@@ -277,7 +282,7 @@ const scrollToSection = (id) => {
 .hero-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0,0,0,.65);
+  background: var(--overlay);
 }
 
 .hero-content {
@@ -289,7 +294,7 @@ const scrollToSection = (id) => {
   flex-direction: column;
   justify-content: center;
 
-  color: white;
+  color:var(--bg-page);
 }
 
 .hero-brand-wrapper {
@@ -303,7 +308,7 @@ const scrollToSection = (id) => {
   font-weight: 800;
   line-height: 1;
 
-  color: white;
+  color: var(--bg-page);
 }
 
 .hero-subtitle {
@@ -312,12 +317,12 @@ const scrollToSection = (id) => {
   margin-top: .5rem;
   padding: .35rem .9rem;
 
-  background: rgba(212,175,55,.15);
-  border: 1px solid rgba(212,175,55,.35);
+  background: var(--bg-hover);
+  border:1px solid var(--border-primary);
 
   border-radius: 999px;
 
-  color: var(--color-gold);
+  color: var(--color-primary);
 }
 
 .hero-content h1 {
@@ -339,8 +344,8 @@ const scrollToSection = (id) => {
 }
 
 .section-dark {
-  background: #121212;
-  color: white;
+  background:var(--bg-page);
+  color: var(--text-primary);
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -348,7 +353,7 @@ const scrollToSection = (id) => {
 }
 
 .section-light {
-  background: #1a1a1a;
+  background: var(--bg-surface);
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -373,13 +378,14 @@ const scrollToSection = (id) => {
   width: 120px;
   height: 2px;
 
-  background: var(--color-gold);
+  background: var(--text-primary);
 
   opacity: .4;
 }
 
 .section-title {
-  color: white;
+  color: var(--text-primary);
+  font-weight: 700;
   text-align: center;
   margin-bottom: 2rem;
 }
@@ -391,7 +397,7 @@ const scrollToSection = (id) => {
   width: 80px;
   height: 3px;
 
-  background: var(--gold);
+  background: var(--color-primary);
 
   margin: 1rem auto 0;
 }
@@ -405,10 +411,14 @@ const scrollToSection = (id) => {
   transition: .3s;
 }
 
-.feature-card {
-  background: var(--bg-card-soft);
-  padding: 2rem;
-  text-align: center;
+.feature-card{
+  background:var(--bg-card);
+  border:1px solid var(--border-color);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow-card);
+  padding:2rem;
+  text-align:center;
+  transition:var(--transition-base);
 }
 
 .feature-card i {
@@ -418,7 +428,20 @@ const scrollToSection = (id) => {
 
 .feature-card:hover,
 .modelo-card:hover{
-  transform: translateY(-8px);
+  transform:translateY(-6px);
+  box-shadow:var(--shadow-hover);
+}
+
+.feature-card h4{
+    color:var(--text-primary);
+}
+
+.feature-card p{
+    color:var(--text-secondary);
+}
+
+.feature-card i{
+    color:var(--color-primary);
 }
 
 .modelo-card img {
@@ -431,11 +454,13 @@ const scrollToSection = (id) => {
   max-width: 900px;
   margin: auto;
   font-size: 1.1rem;
+  color:var(--text-secondary);
 }
 
 .footer-home {
-  background: #000;
-  color: white;
+  background:var(--bg-sidebar);
+  border-top:1px solid var(--border-color);
+  color:var(--text-secondary);
   text-align: center;
   padding: 1.5rem;
 }
@@ -458,18 +483,19 @@ const scrollToSection = (id) => {
   color: rgba(255,255,255,.75);
 }
 
-.modelo-card {
-  background: #121212;
-  border: 1px solid rgba(255, 215, 0, .25);
-  border-radius: 20px;
-  overflow: hidden;
-  transition: all .3s ease;
-  height: 100%;
+.modelo-card{
+  background:var(--bg-card);
+  border:1px solid var(--border-color);
+  border-radius:var(--radius-lg);
+  box-shadow:var(--shadow-card);
+  overflow:hidden;
+  transition:var(--transition-base);
 }
 
-.modelo-card:hover {
-  border-color: var(--gold);
-  box-shadow: 0 15px 35px rgba(255, 215, 0, .15);
+.modelo-card:hover{
+  transform:translateY(-6px);
+  border-color:var(--border-primary);
+  box-shadow:var(--shadow-hover);
 }
 
 .modelo-image-wrapper {
@@ -513,11 +539,11 @@ const scrollToSection = (id) => {
 .modelo-body h3 {
   margin-bottom: 1rem;
   font-weight: 700;
-  color: white;
+  color: var(--text-primary);
 }
 
 .modelo-body p {
-  color: rgba(255,255,255,.75);
+  color: var(--text-secondary);
   margin-bottom: 1.5rem;
 }
 
@@ -535,11 +561,11 @@ const scrollToSection = (id) => {
   margin-bottom: .75rem;
 
   font-size: .95rem;
-  color: rgba(255,255,255,.85);
+  color: var(--text-secondary);
 }
 
 .vantagens-list i {
-  color: var(--gold);
+  color: var(--color-success);
   font-size: 1rem;
 }
 
