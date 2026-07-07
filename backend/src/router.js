@@ -26,7 +26,7 @@ router.post('/login', verifyCaptcha, userMiddleware.validateLoginData, userContr
 router.post('/logout', authenticateToken.authenticateToken, userController.doLogout)
 
 router.put('/users/login', authenticateToken.authenticateToken, userController.updateLogin)
-router.put('/users/password', authenticateToken.authenticateToken, userController.updatePassword)
+router.put('/users/password', authenticateToken.authenticateToken, userMiddleware.validatePassword, userController.updatePassword)
 router.put('/users/recoverPassword', userController.recoverPassword)
 router.post('/users/resetPassword', userMiddleware.validatePassword, userController.resetPassword)
 router.post('/users/resendReset', userController.resendResetPassword)

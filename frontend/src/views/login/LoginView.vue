@@ -1,5 +1,6 @@
 <template>
   <main class="container-page">
+    <div class="login-wrapper">
       <button
         type="button"
         class="btn btn-outline-light back-home-btn"
@@ -69,6 +70,7 @@
         </form>
       </div>
     </div>
+  </div>
   </main>
 </template>
 
@@ -186,12 +188,18 @@ const togglePassword = () => {
 .container-page {
   display: flex;
   justify-content: center;
-  padding: 2.5rem 1rem;
+  align-items: center;
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+.login-wrapper {
+  width: 100%;
+  max-width: 420px;
 }
 
 .login-card {
   width: 100%;
-  max-width: 420px;
 }
 
 button:disabled {
@@ -205,6 +213,19 @@ button:disabled {
   left: 20px;
   border-color: var(--color-primary);
   color: var(--color-primary);
+}
+
+@media (max-width:768px){
+    .back-home-btn{
+        position:static;
+        margin-bottom:1rem;
+        width:100%;
+    }
+
+    .container-page{
+        align-items:flex-start;
+        padding-top:2rem;
+    }
 }
 
 .back-home-btn:hover {
