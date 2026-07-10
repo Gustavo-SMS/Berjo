@@ -1,6 +1,7 @@
 const { prismaClient } = require('../database/prismaClient')
 const generateReportPDF = require('../utils/reportGenerator')
 const { capitalizeName } = require('../utils/capitalizeText')
+const { formatCpf, formatPhone } = require('../utils/formatText')
 
 const getAll = async (req, res) => {
     try {
@@ -397,8 +398,8 @@ const generateReportByCustomer = async (req, res) => {
 
   const content = [
     { text: `Relatório de Pedidos - ${customer.name}`, style: 'header' },
-    { text: `Documento: ${customer.docNumber}` },
-    { text: `Telefone: ${customer.phone}` },
+    { text: `Documento: ${formatCpf(customer.docNumber)}` },
+    { text: `Telefone: ${formatPhone(customer.phone.toString())}` },
     { text: `Email: ${customer.email}` },
     { text: `Criado em: ${new Date(customer.created_at).toLocaleDateString('pt-BR')}` },
     { text: `Período: ${start.toLocaleDateString('pt-BR')} até ${end.toLocaleDateString('pt-BR')}`, margin: [0, 10, 0, 10] }
