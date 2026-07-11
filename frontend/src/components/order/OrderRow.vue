@@ -12,8 +12,8 @@
     </div>
 
     <div class="cell">
-      <span class="label">Coleção / Cor</span>
-      <span class="value">{{ collection + ' ' + color }}</span>
+      <span class="label">Coleção - Cor</span>
+      <span class="value">{{ collection + ' - ' + color }}</span>
     </div>
 
     <div class="cell">

@@ -22,7 +22,7 @@
           <div class="row list-header d-none d-lg-flex">
             <div class="col-lg-1">Qtd</div>
             <div class="col-lg-2">Tipo</div>
-            <div class="col-lg-3">Modelo</div>
+            <div class="col-lg-3">Coleção - Cor</div>
 
             <div class="col-lg-1 large-label">Largura</div>
             <div class="col-lg-1 medium-label">Larg.</div>

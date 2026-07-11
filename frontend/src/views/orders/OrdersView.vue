@@ -106,7 +106,7 @@
             <div class="blinds-header">
               <div>Qtd</div>
               <div>Tipo</div>
-              <div>Coleção / Cor</div>
+              <div>Coleção - Cor</div>
               <div>Larg.</div>
               <div>Alt.</div>
               <div>Cmd.</div>

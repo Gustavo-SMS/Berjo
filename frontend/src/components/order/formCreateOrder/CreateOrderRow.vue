@@ -21,7 +21,7 @@
         </div>
 
         <div class="col-12 col-lg-3">
-          <label class="mobile-label">Modelo</label>
+          <label class="mobile-label">Coleção - Cor</label>
           <SelectBlindType  
             :key="type"
             :typeValue="type"

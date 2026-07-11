@@ -38,7 +38,7 @@ const formattedCollections = computed(() =>
 )
 
 const formatLabel = (option) => {
-  return `${option.collection} ${option.color}`
+  return `${option.collection} - ${option.color}`
 }
 
 const fetchBlindCollections = async (type) => {
