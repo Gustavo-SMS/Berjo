@@ -22,6 +22,11 @@
 
       <div class="customer-info mt-3">
         <div class="info-item mb-2">
+          <i class="bi bi-person-vcard me-2"></i>
+          <span>{{ formatDocNumber(props.customer.docNumber) }}</span>
+        </div>
+
+        <div class="info-item mb-2">
           <i class="bi bi-envelope me-2"></i>
           <span>{{ props.customer.email }}</span>
         </div>
@@ -30,6 +35,7 @@
           <i class="bi bi-telephone me-2"></i>
           <span>{{ formatPhone(props.customer.phone) }}</span>
         </div>
+
 
         <div class="info-item">
           <i class="bi bi-geo-alt me-2"></i>
@@ -48,14 +54,12 @@
               v-for="(field, index) in hiddenFields"
               :key="index"
               class="col-12 col-md-6 col-lg-4"
-              :class="field.label === 'CPF/CNPJ' ? 'col-12 col-md-6' : 'col-12 col-md-6 col-lg-4'"
             >
               <label class="form-label">
                 {{ field.label }}
               </label>
 
-              <p class="form-control-plaintext text-primary-custom"
-              :class="{ 'text-nowrap': field.label === 'CPF/CNPJ' }">
+              <p class="form-control-plaintext text-primary-custom">
                 {{ field.value || '-' }}
               </p>
             </div>
@@ -143,7 +147,6 @@ const formattedDebt = computed(() => {
 })
 
 const hiddenFields = computed(() => [
-  { label: 'CPF/CNPJ', value: formatDocNumber(props.customer.docNumber) },
   { label: 'Rua', value: props.customer.address.street },
   { label: 'Número', value: props.customer.address.house_number },
   { label: 'Complemento', value: props.customer.address.complement },
