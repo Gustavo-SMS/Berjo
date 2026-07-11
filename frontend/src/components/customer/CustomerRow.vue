@@ -12,13 +12,6 @@
             {{ formattedDebt }}
           </h3>
         </div>
-
-        <!-- <span
-          class="status-badge"
-          :class="props.customer.user ? 'active' : 'inactive'"
-        >
-          {{ props.customer.user ? 'ATIVO' : 'INATIVO' }}
-        </span> -->
         <span
           class="status-badge"
           :class="props.customer.isActive ? 'active' : 'inactive'"
@@ -55,12 +48,14 @@
               v-for="(field, index) in hiddenFields"
               :key="index"
               class="col-12 col-md-6 col-lg-4"
+              :class="field.label === 'CPF/CNPJ' ? 'col-12 col-md-6' : 'col-12 col-md-6 col-lg-4'"
             >
               <label class="form-label">
                 {{ field.label }}
               </label>
 
-              <p class="form-control-plaintext text-primary-custom">
+              <p class="form-control-plaintext text-primary-custom"
+              :class="{ 'text-nowrap': field.label === 'CPF/CNPJ' }">
                 {{ field.value || '-' }}
               </p>
             </div>
